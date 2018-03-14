@@ -1,0 +1,257 @@
+{% extends "member_base.html.twig" %}
+
+{% block title %}Profile | {{ user.firstname | capitalize }}{% endblock %}
+
+{% block banner %}
+    <section class="banner_area profile_banner">
+        <div class="profiles_inners">
+            <div class="container">
+                <div class="profile_content">
+                    <div class="user_img">
+                        <img class="img-circle" src="{{ asset('member_assets/img/members/single_members.png') }}" alt="">
+                    </div>
+                    <div class="user_name">
+                        <h3>{{ user.firstname | capitalize }} {{ user.lastname | capitalize }}</h3>
+                        <h4>{{ user.age }} years old</h4>
+                        <ul>
+                            <li><a href="#">{{ user.address.country }}, {{ user.address.city }}</a></li>
+                            <li class="dropdown extara">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">80% Match</a>
+                                <ul class="dropdown-menu">
+                                    <li>Match</li>
+                                    <li>
+                                        <div class="circle1">
+                                            <strong></strong>
+                                        </div>
+                                        <h4>Match</h4>
+                                    </li>
+                                    <li>
+                                        <div class="circle2">
+                                            <strong></strong>
+                                        </div>
+                                        <h4>Enemy</h4>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="right_side_content">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Block</a></li>
+                                    <li><a href="#">Report</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <button type="submit" value="LogIn" class="btn form-control login_btn">Like <img src="img/user.png" alt=""></button>
+                        <button type="submit" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block body %}
+    <section class="blog_grid_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="members_profile_inners">
+                        <ul class="nav nav-tabs profile_menu" role="tablist">
+                            <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                            <li role="presentation"><a href="#likes" aria-controls="likes" role="tab" data-toggle="tab">Likes</a></li>
+                            <li role="presentation"><a href="#answers" aria-controls="answers" role="tab" data-toggle="tab">Answers</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active fade in" id="profile">
+                                <div class="profile_list">
+                                    <ul>
+                                        <li><b>Gender</b></li>
+                                        <li><b>Birthdate</b></li>
+                                        <li><b>Height</b></li>
+                                        <li><b>Body type</b></li>
+                                        <li><b>Smoker</b></li>
+                                        <li><b>Drinker</b></li>
+                                        <li style="visibility: hidden;"><b>Looking for a</b></li>
+                                        <li style="visibility: hidden;"><b>Work as</b></li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            {% if( user.gender ) %}
+                                                Male
+                                            {% else %}
+                                                Female
+                                            {% endif %}
+                                        </li>
+                                        <li>{{ user.birthDate | date('F d, Y') }}</li>
+                                        <li>{{ user.height }}</li>
+                                        <li>{{ user.bodyType }}</li>
+                                        <li>
+                                            {% if( user.smoker ) %}
+                                                Yes
+                                            {% else %}
+                                                No
+                                            {% endif %}
+                                        </li>
+                                        <li>
+                                            {% if( user.drinker ) %}
+                                                Yes
+                                            {% else %}
+                                                No
+                                            {% endif %}
+                                        </li>
+                                        <li style="visibility: hidden;"><a href="#">sss</a></li>
+                                        <li style="visibility: hidden;"><a href="#">sss</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><b>Religion</b></li>
+                                        <li><b>Marital status</b></li>
+                                        <li><b>Number of children</b></li>
+                                        <li><b>Member since</b></li>
+                                        <li><b>Prefered relations</b></li>
+                                        <li><b>Prefered marital statuses</b></li>
+                                        <li><b style="visibility: hidden;">Looking for a</b></li>
+                                        <li><b style="visibility: hidden;">Work as</b></li>
+                                    </ul>
+                                    <ul>
+                                        <li>{{ user.relegion }}</li>
+                                        <li>{{ user.civilStatus  }}</li>
+                                        <li>{{ user.childrenNumber }}</li>
+                                        <li>{{ user.createdAt | date('F d, Y') }}</li>
+                                        <li>
+                                            {% for relation in user.preferedRelations %}
+                                                {{ relation.relation }}
+                                            {% endfor %}
+                                        </li>
+                                        <li>
+                                            {% for status in user.preferedStatuses %}
+                                                {{ status.status }}
+                                            {% endfor %}
+                                        </li>
+                                        <li><b style="visibility: hidden;">Man</b></li>
+                                        <li><b style="visibility: hidden;">Designer </b></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="likes">
+                                <div class="profile_list">
+                                    <ul>
+                                        <li><a href="#">Gender</a></li>
+                                        <li><a href="#">Age</a></li>
+                                        <li><a href="#">Country</a></li>
+                                        <li><a href="#">City</a></li>
+                                        <li><a href="#">Birthday</a></li>
+                                        <li><a href="#">Relationship</a></li>
+                                        <li><a href="#">Looking for a</a></li>
+                                        <li><a href="#">Work as</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="#">Female</a></li>
+                                        <li><a href="#">26 years old</a></li>
+                                        <li><a href="#">France</a></li>
+                                        <li><a href="#">Paris</a></li>
+                                        <li><a href="#">16 December 1990</a></li>
+                                        <li><a href="#">Single</a></li>
+                                        <li><a href="#">Man</a></li>
+                                        <li><a href="#">Designer</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="#">Education</a></li>
+                                        <li><a href="#">Know</a></li>
+                                        <li><a href="#">Interests</a></li>
+                                        <li><a href="#">Smoking</a></li>
+                                        <li><a href="#">Eye Color</a></li>
+                                        <li><a href="#">Marital Status</a></li>
+                                        <li><a href="#">Looking for a</a></li>
+                                        <li><a href="#">Work as</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="#">Graduate Degree</a></li>
+                                        <li><a href="#">French, Russian</a></li>
+                                        <li><a href="#">Billiards</a></li>
+                                        <li><a href="#">No</a></li>
+                                        <li><a href="#">Brown</a></li>
+                                        <li><a href="#">Single</a></li>
+                                        <li><a href="#">Man</a></li>
+                                        <li><a href="#">Designer </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="answers">
+                                <div class="profile_list">
+                                    <ul>
+                                        <li><a href="#">Gender</a></li>
+                                        <li><a href="#">Age</a></li>
+                                        <li><a href="#">Country</a></li>
+                                        <li><a href="#">City</a></li>
+                                        <li><a href="#">Birthday</a></li>
+                                        <li><a href="#">Relationship</a></li>
+                                        <li><a href="#">Looking for a</a></li>
+                                        <li><a href="#">Work as</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="#">Female</a></li>
+                                        <li><a href="#">26 years old</a></li>
+                                        <li><a href="#">France</a></li>
+                                        <li><a href="#">Paris</a></li>
+                                        <li><a href="#">16 December 1990</a></li>
+                                        <li><a href="#">Single</a></li>
+                                        <li><a href="#">Man</a></li>
+                                        <li><a href="#">Designer</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="#">Education</a></li>
+                                        <li><a href="#">Know</a></li>
+                                        <li><a href="#">Interests</a></li>
+                                        <li><a href="#">Smoking</a></li>
+                                        <li><a href="#">Eye Color</a></li>
+                                        <li><a href="#">Marital Status</a></li>
+                                        <li><a href="#">Looking for a</a></li>
+                                        <li><a href="#">Work as</a></li>
+                                    </ul>
+                                    <ul>
+                                        <li><a href="#">Graduate Degree</a></li>
+                                        <li><a href="#">French, Russian</a></li>
+                                        <li><a href="#">Billiards</a></li>
+                                        <li><a href="#">No</a></li>
+                                        <li><a href="#">Brown</a></li>
+                                        <li><a href="#">Single</a></li>
+                                        <li><a href="#">Man</a></li>
+                                        <li><a href="#">Designer </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="members_about_box">
+                            <h4>About me</h4>
+                            <p>{{ user.about }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="right_sidebar_area">
+                        <aside class="s_widget photo_widget">
+                            <div class="s_title">
+                                <h4>Photo</h4>
+                                <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
+                            </div>
+                            <ul>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-1.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-2.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-3.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-4.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-5.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-6.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-7.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-8.jpg') }}" alt=""></a></li>
+                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-9.jpg') }}" alt=""></a></li>
+                            </ul>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

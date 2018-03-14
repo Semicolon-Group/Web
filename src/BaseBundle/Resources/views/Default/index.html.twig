@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body %}
+    <div style="height: 600px; padding-top: 300px; padding-left: 30px">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

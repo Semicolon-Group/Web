@@ -1,0 +1,5 @@
+{% for answer in answers %}
+    {% for ch in answer.choice %}
+        {{ ch.choice }}
+    {% endfor %}
+{% endfor %}

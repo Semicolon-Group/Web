@@ -14,6 +14,7 @@ class MemberController extends Controller
      */
     public function profileAction()
     {
+        $v = 's';
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $user->setPreferedRelations($this->getDoctrine()->getRepository(PreferedRelation::class)->findBy(array('user' => $user)));
         $user->setPreferedStatuses($this->getDoctrine()->getRepository(PreferedStatus::class)->findBy(array('user' => $user)));

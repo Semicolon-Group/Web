@@ -1,5 +1,30 @@
+recommandation:
+    resource: "@RecommandationBundle/Controller/RecommandationController.php"
+    type:     annotation
+    prefix:   /recommandations
+
+experience:
+    resource: "@ExperienceBundle/Controller/ExperienceController.php"
+    type:     annotation
+    prefix:   /experiences
+
+event:
+    resource: "@EventBundle/Controller/EventController.php"
+    type:     annotation
+    prefix:   /events
+
+match:
+    resource: "@MatchBundle/Controller/MatchController.php"
+    type:     annotation
+    prefix:   /matches
+
+news_feed:
+    resource: "@NewsFeedBundle/Controller/NewsFeedController.php"
+    type:     annotation
+    prefix:   /news
+
 member:
-    resource: "@MemberBundle/Controller/"
+    resource: "@MemberBundle/Controller/MemberController.php"
     type:     annotation
     prefix:   /member
 
@@ -10,6 +35,7 @@ member:
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+    prefix: /
 
 # app/config/routing.yml
 fos_user_security:

@@ -1,0 +1,151 @@
+{% extends "member_base.html.twig" %}
+
+{% block title %}Experiences{% endblock %}
+
+{% block banner %}
+    <section class="banner_area">
+        <div class="container">
+            <div class="banner_content">
+                <h3 title="Discussions"><img class="left_img" src="{{ asset('member_assets/') }}img/banner/t-left-img.png" alt="">Experiences<img class="right_img" src="{{ asset('member_assets/') }}img/banner/t-right-img.png" alt=""></h3>
+                <a href="">Experiences</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block body %}
+    <section class="blog_grid_area author_posts">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="author_posts_inners">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#">Author</a></li>
+                            <li><a href="#">Posts</a></li>
+                        </ul>
+                        <div class="media">
+                            <div class="media-left">
+                                <img src="{{ asset('member_assets/') }}img/members/w-members/w-m-5.png" alt="">
+                                <h3>Dx Davis</h3>
+                            </div>
+                            <div class="media-body">
+                                <h4>Nov 2, 2016 at 11:16 am</h4>
+                                <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure.</p>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-left">
+                                <img src="{{ asset('member_assets/') }}img/members/w-members/w-m-6.png" alt="">
+                                <h3>Lena Doe</h3>
+                            </div>
+                            <div class="media-body">
+                                <h4>Nov 2, 2016 at 11:16 am</h4>
+                                <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="right_sidebar_area">
+                        <aside class="s_widget search_widget">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search Here">
+                                <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    </span>
+                            </div>
+                        </aside>
+                        <aside class="s_widget recent_post_widget">
+                            <div class="s_title">
+                                <h4>Members</h4>
+                                <img src="{{ asset('member_assets/') }}img/widget-title-border.png" alt="">
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-1.png" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Maria Doe</h4>
+                                    <a href="#">Active 16 hours ago</a>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-2.png" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Alex Jones</h4>
+                                    <a href="#">Active 16 hours ago</a>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-3.png" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Nancy Martin</h4>
+                                    <a href="#">Active 16 hours ago</a>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-4.png" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Kavin Smith</h4>
+                                    <a href="#">Active 16 hours ago</a>
+                                </div>
+                            </div>
+                        </aside>
+                        <aside class="s_widget group_widget">
+                            <div class="s_title">
+                                <h4>Groups</h4>
+                                <img src="{{ asset('member_assets/') }}img/widget-title-border.png" alt="">
+                            </div>
+                            <div class="group_list">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="img-circle" src="{{ asset('member_assets/') }}img/photo/group/group-1.png" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>VeroDate Lovers</h4>
+                                    </div>
+                                </div>
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="img-circle" src="{{ asset('member_assets/') }}img/photo/group/group-2.png" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>VeroDate Lovers</h4>
+                                    </div>
+                                </div>
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="img-circle" src="{{ asset('member_assets/') }}img/photo/group/group-3.png" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>VeroDate Lovers</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <aside class="s_widget replies_widget">
+                            <div class="s_title">
+                                <h4>Recent Replies</h4>
+                                <img src="{{ asset('member_assets/') }}img/widget-title-border.png" alt="">
+                            </div>
+                            <ul>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Lorem ipsum dolor sit amet.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Ut sed massa eget tellus.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Integer non odio ullamcorper.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Vestibulum facilisis lacus in nunc.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i> Morbi euismod turpis finibus.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Nunc quis sapien a nunc luctus</a></li>
+                            </ul>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

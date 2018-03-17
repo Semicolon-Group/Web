@@ -9,18 +9,16 @@
         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
     {% endif %}
 
-    <label for="username">{{ 'security.login.username'|trans }}</label>
     <input type="text" placeholder="Username" id="username" name="_username" value="{{ last_username }}" required="required" autocomplete="username" />
 
-    <label for="password">{{ 'security.login.password'|trans }}</label>
     <input type="password" placeholder="Password" id="password" name="_password" required="required" autocomplete="current-password" />
 
-    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-    <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+    <div class="form-check" style="margin-bottom: 20px">
+        <label for="remember_me" class="form-check-label">Remember me</label><input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me" value="on" style="width:15px;height: 15px;margin: 0 0 0 10px;">
+    </div>
 
-    <!--<input type="submit" class="btn form-control login_btn" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />-->
     <div class="login_btn_area">
-        <button type="submit" class="btn form-control login_btn" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}">{{ 'security.login.submit'|trans }}</button>
+        <button type="submit" class="btn form-control login_btn" id="_submit" name="_submit">Login</button>
         <div class="login_social">
             <h5>Login With</h5>
             <ul>

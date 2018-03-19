@@ -21,7 +21,7 @@ match:
 news_feed:
     resource: "@NewsFeedBundle/Controller/NewsFeedController.php"
     type:     annotation
-    prefix:   /news
+    prefix:   /home
 
 member:
     resource: "@MemberBundle/Controller/MemberController.php"

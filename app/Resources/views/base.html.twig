@@ -35,6 +35,7 @@
 
         <link href="{{ asset('member_assets/css/style.css') }}" rel="stylesheet">
         <link href="{{ asset('member_assets/css/responsive.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 
@@ -320,6 +321,44 @@
 
         <script src="{{ asset('member_assets/js/video_player.js') }}"></script>
         <script src="{{ asset('member_assets/js/theme.js') }}"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
+        <script>
+            jQuery(document).ready(function() {
+                $('.js-datepicker').datepicker();
+            });
+
+            $(function () {
+                $('#second').hide();
+                $('#step_two').hide();
+            })
+            $('.next_step').click(function () {
+                if(validFirst()){
+                    $('#first').hide();
+                    $('#step_one').hide();
+                    $('#second').show();
+                    $('#step_two').show();
+                }
+            })
+
+            $('.scd_step').click(function () {
+
+            })
+
+            $('.bck_scd_step').click(function () {
+                $('#first').show();
+                $('#step_one').show();
+                $('#second').hide();
+                $('#step_two').hide();
+            })
+
+            function validFirst() {
+                $('.first-control').each(function (i, v) {
+                    if(!v.checkValidity())
+                        return false;
+                })
+                return true;
+            }
+        </script>
     </body>
 
 <!-- Mirrored from demo.verodate.com/html/verodate/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 24 Jan 2018 12:29:50 GMT -->

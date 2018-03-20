@@ -2,8 +2,15 @@
 
 namespace BaseBundle\Form;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use BaseBundle\Entity\Enumerations\BodyType;
+use BaseBundle\Entity\Enumerations\Gender;
+use BaseBundle\Entity\Enumerations\Importance;
+use BaseBundle\Entity\Enumerations\Religion;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,13 +24,36 @@ class UserType extends AbstractType
     {
         $builder->add('firstname')
             ->add('lastname')
-            ->add('birthDate')
-            ->add('gender')
+            ->add('birthDate', DateType::class, [
+                'widget' => 'single_text',
+                'attr' => ['class' => 'js-datepicker', 'placeholder' => 'Birthday'],
+            ])
+            ->add('gender', ChoiceType::class, array(
+                'choices' => array('Gender' => null) + Gender::getEnumAsArray(),
+                'choice_attr' => array(
+                    'Gender' => array('selected' => 'selected', 'disabled' => true)
+                )
+            ))
             ->add('height')
-            ->add('bodyType')
+            ->add('bodyType', ChoiceType::class, array(
+                'choices' => array('Body Type' => null) + BodyType::getEnumAsArray(),
+                'choice_attr' => array(
+                    'Body Type' => array('selected' => 'selected', 'disabled' => true)
+                )
+            ))
             ->add('childrenNumber')
-            ->add('relegion')
-            ->add('relegionImportance')
+            ->add('relegion', ChoiceType::class, array(
+                'choices' => array('Religion' => null)+Religion::getEnumAsArray(),
+                'choice_attr' => array(
+                    'Religion' => array('selected' => 'selected', 'disabled' => true)
+                )
+            ))
+            ->add('relegionImportance', ChoiceType::class, array(
+                'choices' => array('Religion Importance' => null) + Importance::getEnumAsArray(),
+                'choice_attr' => array(
+                    'Religion Importance' => array('selected' => 'selected', 'disabled' => true)
+                )
+            ))
             ->add('smoker')
             ->add('drinker')
             ->add('minAge')

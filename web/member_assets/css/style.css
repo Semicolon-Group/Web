@@ -61,6 +61,23 @@ Table of Content:
 */
 /*---------------------------------------------------- */
 /*----------------------------------------------------*/
+select{
+  width: 100%;
+  height: 46px;
+  box-shadow: none;
+  border: 1px solid #f4f4f4;
+  border-radius: 3px;
+  background: #f4f4f4;
+  padding: 0px 15px 0px 28px;
+  outline: none;
+  box-shadow: none;
+  text-shadow: none;
+  font-size: 16px;
+  color: #334249;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+}
+
 ul {
   list-style: none;
   margin: 0px;
@@ -1034,7 +1051,7 @@ body, p, h1, h2, h3, h4, h5, h6 {
 }
 
 .register_form_inner .registration_man {
-  padding-top: 52px;
+  padding-top: 72px;
 }
 
 .register_form_inner .registration_form_s {
@@ -1069,6 +1086,17 @@ body, p, h1, h2, h3, h4, h5, h6 {
   color: #334249;
   font-family: "Ubuntu", sans-serif;
   font-weight: 500;
+}
+
+textarea{
+    resize: none;
+}
+
+.register_form_inner .registration_form_s .form-group input[type = "checkbox"] {
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    margin-left: 10%;
 }
 
 .register_form_inner .registration_form_s .form-group input.placeholder {

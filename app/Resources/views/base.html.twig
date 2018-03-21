@@ -35,6 +35,7 @@
 
         <link href="{{ asset('member_assets/css/style.css') }}" rel="stylesheet">
         <link href="{{ asset('member_assets/css/responsive.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 
@@ -64,45 +65,7 @@
                 <div class="col-md-6">
                     <div class="registration_form_s">
                         <h4>Registration</h4>
-                        <form>
-                            <div class="form-group">
-                                <input type="email" class="form-control" id="reg_email" placeholder="Email">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="reg_first" placeholder="Full Name">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="reg_user" placeholder="Username">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" id="reg_pass" placeholder="Password">
-                            </div>
-                            <div class="form-group">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        <span data-bind="label">Gender</span>&nbsp;<span class="arrow_carrot-down"><i class="fa fa-sort-asc" aria-hidden="true"></i><i class="fa fa-sort-desc" aria-hidden="true"></i></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Male</a></li>
-                                        <li><a href="#">Female</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="datepicker">
-                                    <input type='text' class="form-control datetimepicker4" placeholder="Birthday" />
-                                    <span class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                </div>
-                            </div>
-                            <div class="reg_chose form-group">
-                                <div class="reg_check_box">
-                                    <input type="radio" id="s-option" name="selector">
-                                    <label for="s-option">I`m Not Robot</label>
-                                    <div class="check"><div class="inside"></div></div>
-                                </div>
-                                <button type="submit" value="LogIn" class="btn form-control login_btn">Register</button>
-                            </div>
-                        </form>
+                        {{ render(url('fos_user_registration_register')) }}
                         <img class="mfp-close" src="{{ asset('member_assets/img/close-btn.png') }}" alt="">
                     </div>
                 </div>
@@ -358,6 +321,71 @@
 
         <script src="{{ asset('member_assets/js/video_player.js') }}"></script>
         <script src="{{ asset('member_assets/js/theme.js') }}"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
+        <script>
+            jQuery(document).ready(function() {
+                $('.js-datepicker').datepicker();
+            });
+
+            $(function () {
+                $('#second').hide();
+                $('#step_two').hide();
+                $('#third').hide();
+                $('#step_three').hide();
+                $('#fourth').hide();
+                $('#step_four').hide();
+            })
+            $('.next_step').click(function () {
+                if(validFirst()){
+                    $('#first').hide();
+                    $('#step_one').hide();
+                    $('#second').show();
+                    $('#step_two').show();
+                }
+            })
+
+            $('.scd_step').click(function () {
+                if(validSecond()){
+                    $('#third').show();
+                    $('#step_three').show();
+                    $('#second').hide();
+                    $('#step_two').hide();
+                }
+            })
+
+            $('.bck_scd_step').click(function () {
+                $('#first').show();
+                $('#step_one').show();
+                $('#second').hide();
+                $('#step_two').hide();
+            })
+
+            $('.thrd_step').click(function () {
+                $('#third').hide();
+                $('#step_three').hide();
+                $('#fourth').show();
+                $('#step_four').show();
+            })
+
+            $('.bck_thrd_step').click(function () {
+                $('#third').hide();
+                $('#step_three').hide();
+                $('#second').show();
+                $('#step_two').show();
+            })
+
+            function validFirst() {
+                $('.first-control').each(function (i, v) {
+                    if(!v.checkValidity())
+                        return false;
+                })
+                return true;
+            }
+
+            function validSecond() {
+                return true;
+            }
+        </script>
     </body>
 
 <!-- Mirrored from demo.verodate.com/html/verodate/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 24 Jan 2018 12:29:50 GMT -->

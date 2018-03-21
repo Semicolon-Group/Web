@@ -330,6 +330,10 @@
             $(function () {
                 $('#second').hide();
                 $('#step_two').hide();
+                $('#third').hide();
+                $('#step_three').hide();
+                $('#fourth').hide();
+                $('#step_four').hide();
             })
             $('.next_step').click(function () {
                 if(validFirst()){
@@ -341,7 +345,12 @@
             })
 
             $('.scd_step').click(function () {
-
+                if(validSecond()){
+                    $('#third').show();
+                    $('#step_three').show();
+                    $('#second').hide();
+                    $('#step_two').hide();
+                }
             })
 
             $('.bck_scd_step').click(function () {
@@ -351,11 +360,29 @@
                 $('#step_two').hide();
             })
 
+            $('.thrd_step').click(function () {
+                $('#third').hide();
+                $('#step_three').hide();
+                $('#fourth').show();
+                $('#step_four').show();
+            })
+
+            $('.bck_thrd_step').click(function () {
+                $('#third').hide();
+                $('#step_three').hide();
+                $('#second').show();
+                $('#step_two').show();
+            })
+
             function validFirst() {
                 $('.first-control').each(function (i, v) {
                     if(!v.checkValidity())
                         return false;
                 })
+                return true;
+            }
+
+            function validSecond() {
                 return true;
             }
         </script>

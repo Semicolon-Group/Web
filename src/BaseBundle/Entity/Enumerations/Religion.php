@@ -38,6 +38,6 @@ abstract class Religion
     }
 
     public static function getEnumAsArray(){
-        return array('Indifferent' => 0, 'Somewhat Important' => 1, 'Important' => 2);
+        return array('Islam' => 0, 'Judaism' => 1, 'Christianity' => 2, 'Atheism' => 3, 'Agnosticism' => 4);
     }
 }

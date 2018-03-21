@@ -3,13 +3,18 @@
 namespace BaseBundle\Form;
 
 use BaseBundle\Entity\Enumerations\BodyType;
+use BaseBundle\Entity\Enumerations\CivilStatus;
 use BaseBundle\Entity\Enumerations\Gender;
 use BaseBundle\Entity\Enumerations\Importance;
+use BaseBundle\Entity\Enumerations\RelationType;
 use BaseBundle\Entity\Enumerations\Religion;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -59,18 +64,31 @@ class UserType extends AbstractType
             ->add('minAge')
             ->add('maxAge')
             ->add('phone')
-            ->add('locked')
-            ->add('ip')
-            ->add('port')
-            ->add('role')
-            ->add('createdAt')
-            ->add('updatedAt')
+            ->add('locked', HiddenType::class, array(
+                'data' => 0
+            ))
+            ->add('createdAt', DateTimeType::class, array(
+                'data' => new \DateTime(),
+                'attr' => array('style' => 'display: none;'),
+                'label' => false
+            ))
             ->add('about')
-            ->add('civilStatus')
-            ->add('connected')
-            ->add('category')
-            ->add('priceRange')
-            ->add('link');
+            ->add('civilStatus', ChoiceType::class, array(
+                'choices' => array('Marital Status' => null) + CivilStatus::getEnumAsArray(),
+                'choice_attr' => array(
+                    'Marital Status' => array('selected' => 'selected', 'disabled' => true)
+                )
+            ))
+            ->add('preferedStatuses', ChoiceType::class, array(
+                'choices' => CivilStatus::getEnumAsArray(),
+                'multiple' => true,
+                'expanded' => true
+            ))
+            ->add('preferedRelations', ChoiceType::class, array(
+                'choices' => RelationType::getEnumAsArray(),
+                'multiple' => true,
+                'expanded' => true)
+            );
     }
 
     public function getParent()

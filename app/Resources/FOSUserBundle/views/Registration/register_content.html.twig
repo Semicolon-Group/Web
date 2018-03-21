@@ -29,22 +29,20 @@
     </div>
     <div id="second" class="form-group">
         <div class="form-group">
-            {{ form_widget(form.birthDate, { 'attr': {'class': "second-control" } }) }}
+            <label for="fos_user_registration_form_birthDate">Birthday</label>
+            {{ form_widget(form.birthDate, { 'attr': {'class': "form-control second-control", 'placeholder': "Birthday" } }) }}
         </div>
-        <div class="form-group">
-            {{ form_widget(form.birthDate, { 'attr': {'class': "second-control" } }) }}
-        </div>
-        <h5 style="margin-bottom: 10px;">Looking for {% if(form.gender) %}girls{% else %}guys{% endif %} between</h5>
+        <label>Looking for {% if(form.gender) %}girls{% else %}guys{% endif %} between</label>
         <div class="row">
             <div class="form-group col-xs-6">
-                {{ form_widget(form.minAge, { 'attr': {'class': "second-control", 'value': 18, 'min': 18, 'placeholder': 'Min age' } }) }}
+                {{ form_widget(form.minAge, { 'attr': {'class': "form-control second-control", 'value': 18, 'min': 18, 'placeholder': 'Min age' } }) }}
             </div>
             <div class="form-group col-xs-6">
-                {{ form_widget(form.maxAge, { 'attr': {'class': "second-control", 'placeholder': 'Max age' } }) }}
+                {{ form_widget(form.maxAge, { 'attr': {'class': "form-control second-control", 'placeholder': 'Max age' } }) }}
             </div>
         </div>
         <div class="form-group">
-            {{ form_widget(form.height, { 'attr': {'class': "second-control", 'placeholder': "Height" } }) }}
+            {{ form_widget(form.height, { 'attr': {'class': "form-control second-control", 'placeholder': "Height" } }) }}
         </div>
         <div class="form-group">
             {{ form_widget(form.bodyType, { 'attr': {'class': "second-control" } }) }}
@@ -56,6 +54,40 @@
             {{ form_widget(form.relegionImportance, { 'attr': {'class': "second-control" } }) }}
         </div>
     </div>
+    <div id="third" class="form-group">
+        <div class="form-group">
+            {{ form_widget(form.childrenNumber, { 'attr': {'class': "form-control third-control", 'placeholder': "Number of children" } }) }}
+        </div>
+        <div class="form-group">
+            <label>Do you smoke?</label>
+            {{ form_widget(form.smoker, { 'attr': {'class': "form-control third-control"} }) }}
+            <label for="fos_user_registration_form_smoker">Yes</label>
+        </div>
+        <div class="form-group">
+            <label>Do you drink?</label>
+            {{ form_widget(form.drinker, { 'attr': {'class': "form-control third-control"} }) }}
+            <label for="fos_user_registration_form_drinker">Yes</label>
+        </div>
+        <div class="form-group">
+            {{ form_widget(form.phone, { 'attr': {'class': "form-control third-control", 'placeholder': "Phone number"} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_widget(form.civilStatus, { 'attr': {'class': "second-control" } }) }}
+        </div>
+        <div class="form-group">
+            <label>Preferd marital statuses</label>
+            {{ form_widget(form.preferedStatuses, { 'attr': {'class': "second-control" } }) }}
+        </div>
+        <div class="form-group">
+            <label>Preferd relations</label>
+            {{ form_widget(form.preferedRelations, { 'attr': {'class': "second-control" } }) }}
+        </div>
+    </div>
+    <div id="fourth" class="form-group">
+        <div class="form-group">
+            {{ form_widget(form.about, { 'attr': {'class': "form-control third-control", 'placeholder': "About" } }) }}
+        </div>
+    </div>
 <div class="reg_chose form-group">
     <div id="step_one">
         <button type="button" style="margin-bottom: 20px;" class="btn form-control login_btn next_step">Register</button>
@@ -64,6 +96,12 @@
         <button type="button" style="margin-bottom: 20px; margin-left: 10px;" class="btn form-control login_btn scd_step">Next</button>
         <button type="button" style="margin-bottom: 20px;" class="btn form-control login_btn bck_scd_step">Back</button>
     </div>
-    <button type="submit" value="{{ 'registration.submit'|trans }}" class="btn form-control login_btn" style="display: none;">Register</button>
+    <div id="step_three">
+        <button type="button" style="margin-bottom: 20px; margin-left: 10px;" class="btn form-control login_btn thrd_step">Next</button>
+        <button type="button" style="margin-bottom: 20px;" class="btn form-control login_btn bck_thrd_step">Back</button>
+    </div>
+    <div id="step_four">
+        <button type="submit" value="{{ 'registration.submit'|trans }}" class="btn form-control login_btn">Register</button>
+    </div>
 </div>
-{{ form_end(form, {'render_rest': false}) }}
+{{ form_end(form) }}

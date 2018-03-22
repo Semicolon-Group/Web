@@ -4,9 +4,13 @@ namespace MemberBundle\Controller;
 
 use BaseBundle\Entity\PreferedRelation;
 use BaseBundle\Entity\PreferedStatus;
+use BaseBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class MemberController extends Controller
 {
@@ -57,5 +61,4 @@ class MemberController extends Controller
             'form' => $form->createView()
         ));
     }
-
 }

@@ -7,39 +7,40 @@ publicite_admin:
     type:     annotation
     prefix:   /publiciteAdmin
 
+#MEMBER ROUTES#
 recommandation:
     resource: "@RecommandationBundle/Controller/RecommandationController.php"
     type:     annotation
-    prefix:   /recommandations
+    prefix:   /member/recommandations
 
 experience:
     resource: "@ExperienceBundle/Controller/ExperienceController.php"
     type:     annotation
-    prefix:   /experiences
+    prefix:   /member/experiences
 
 event:
     resource: "@EventBundle/Controller/EventController.php"
     type:     annotation
-    prefix:   /events
+    prefix:   /member/events
 
 match:
     resource: "@MatchBundle/Controller/MatchController.php"
     type:     annotation
-    prefix:   /matches
+    prefix:   /member/matches
 
 news_feed:
     resource: "@NewsFeedBundle/Controller/NewsFeedController.php"
     type:     annotation
-    prefix:   /home
+    prefix:   /member/home
 
 member:
     resource: "@MemberBundle/Controller/MemberController.php"
     type:     annotation
     prefix:   /member
 
-#base:
-#    resource: "@BaseBundle/Resources/config/routing.yml"
-#    prefix:   /
+base:
+    resource: "@BaseBundle/Resources/config/routing.yml"
+    prefix:   /base
 
 app:
     resource: '@AppBundle/Controller/'

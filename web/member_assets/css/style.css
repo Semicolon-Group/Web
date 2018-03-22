@@ -5034,10 +5034,8 @@ textarea{
 /* Banner area css
 ============================================================================================ */
 .banner_area {
-  background: url(../img/banner/banner-bg-1.jpg) no-repeat scroll center center;
   min-height: 311px;
   position: relative;
-  background-size: cover;
   z-index: 3;
 }
 

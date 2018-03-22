@@ -29,9 +29,9 @@ member:
     type:     annotation
     prefix:   /member
 
-#base:
-#    resource: "@BaseBundle/Resources/config/routing.yml"
-#    prefix:   /
+base:
+    resource: "@BaseBundle/Resources/config/routing.yml"
+    prefix:   /base
 
 app:
     resource: '@AppBundle/Controller/'

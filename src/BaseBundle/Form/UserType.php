@@ -84,6 +84,9 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => true
             ))
+            ->add('address', AddressType::class, array(
+                'label' => false
+            ))
             ->add('preferedRelations', ChoiceType::class, array(
                 'choices' => RelationType::getEnumAsArray(),
                 'multiple' => true,

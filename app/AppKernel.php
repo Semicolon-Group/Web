@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new EventBundle\EventBundle(),
             new ExperienceBundle\ExperienceBundle(),
             new RecommandationBundle\RecommandationBundle(),
+            new PubliciteBundle\PubliciteBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

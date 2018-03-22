@@ -1,0 +1,106 @@
+
+
+{% block title %}Ajouter Pub{% endblock %}
+
+{% block body %}
+    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+    <script type="text/javascript" >
+        $(document).ready(function () {
+            var s = 0 ;
+            $('#1').click(function () {
+
+                $('#photo').show();
+                $('#video').hide();
+
+
+
+            });
+            $('#2').click(function () {
+                $('#photo').hide();
+                $('#video').show();
+            });
+            $('#25').click(function () {
+
+
+            });
+            $('#20').click(function () {
+
+                $('#b').html("20");
+            });
+            $('#15').click(function () {
+
+                $('#prix').val("15");
+                s=15;
+            });
+function CalculPrix() {
+
+}
+
+
+
+        });</script>
+    {{ form_start(form) }}<br>
+    <table>
+        <tr>
+            <td>Offre : </td> <td> <img src="{{ asset('member_assets/images/pub1.png') }}"
+                                        style="height : 200px ;width: 200px ; border: #00A0D1 ;" id="25"></td>
+            <td><img src="{{ asset('member_assets/images/pub2.png') }}" style="height : 200px ;width: 200px" id="20"> </td>
+            <td><img src="{{ asset('member_assets/images/pub3.png') }}" style="height : 200px ;width: 200px" id="15"> </td>
+        </tr>
+        <tr>
+            <td>formule : </td><td> 25dt</td><td> 20dt</td><td> 15dt</td>
+        </tr>
+
+
+        <tr>
+            <td>Content : </td>
+            <td>{{ form_widget(form.content) }}</td>
+        </tr>
+        <tr>
+            <td>Got a photo ? click here</td> <td><input type="button" value="photo" name="radio" id="1"></td>
+            <td> Got a video ? click here</td><td><input type="button" value="video" name="radio" id="2"></td>
+        </tr>
+
+            <tr id="photo" >
+                <td>Photo Url : </td>
+                <td>{{ form_widget(form.photoUrl) }}</td>
+            </tr>
+
+
+            <td>Video Url : </td>
+            <td>{{ form_widget(form.videoUrl)}}</td>
+        </tr>
+
+        <tr>
+            <td>Reason</td>
+            <td>{{ form_widget(form.reason) }}</td>
+        </tr>
+
+        <tr>
+            <td>end date</td>
+            <td>{{ form_widget(form.endDate) }}</td>
+        </tr>
+
+        <tr>
+
+            <td>{{ form_widget(form.Valider) }}</td>
+        </tr>
+        <tr>
+
+            <td id="date">{{ form_widget(form.state) }}</td>
+        </tr>
+        <tr>
+
+            <td>{{ form_widget(form.clicks) }}</td>
+        </tr>
+        <tr>
+            <td>prix :</td>
+            <td><a name="{{ form_widget(form.price)  }}"></a></td>
+        </tr>
+
+    </table>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+

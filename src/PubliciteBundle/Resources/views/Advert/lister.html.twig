@@ -1,0 +1,29 @@
+
+
+{% block title %}PubliciteBundle:Advert:Lister{% endblock %}
+
+{% block body %}
+    {% for m in pubs %}
+    <table border="1">
+
+        <tr>
+            <th>business id </th>
+            <th>content</th>
+            <th>reason</th>
+            <th>state</th>
+            <th>price</th>
+            <th>payed</th>
+        </tr>
+
+        <tr>
+            <td>{{ m.business }}</td><td>{{ m.content }}</td><td>{{ m.reason }}</td>
+            <td> {% if m.state==1 %} approved </td>{% else %} not approved{% endif %}</td>
+            <td>{{ m.price }}</td><td>{% if m.payed==1 %} Yes {% else %} No {% endif %}</td>
+            <td>    <a href="{{ path('traiter', {'id':m.id}) }}">Modifier</a></td>
+        </tr>
+
+
+
+    </table>
+{% endfor %}
+{% endblock %}

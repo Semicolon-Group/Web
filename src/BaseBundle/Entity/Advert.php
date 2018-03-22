@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Advert
  *
  * @ORM\Table(name="advert", indexes={@ORM\Index(name="business_id", columns={"business_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PubliciteBundle\Repository\AdvertRepository")
  */
 class Advert
 {
@@ -79,7 +79,18 @@ class Advert
      * })
      */
     private $business;
-
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="price", type="integer", nullable=true)
+     */
+    private $price;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="payed", type="integer", nullable=true)
+     */
+    private $payed;
 
 
     /**
@@ -282,5 +293,53 @@ class Advert
     public function getBusiness()
     {
         return $this->business;
+    }
+
+    /**
+     * Set price
+     *
+     * @param integer $price
+     *
+     * @return Advert
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return integer
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set payed
+     *
+     * @param integer $payed
+     *
+     * @return Advert
+     */
+    public function setPayed($payed)
+    {
+        $this->payed = $payed;
+
+        return $this;
+    }
+
+    /**
+     * Get payed
+     *
+     * @return integer
+     */
+    public function getPayed()
+    {
+        return $this->payed;
     }
 }

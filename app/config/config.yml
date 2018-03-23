@@ -3,12 +3,12 @@ imports:
     - { resource: security.yml }
     - { resource: services.yml }
     - { resource: "@BaseBundle/Resources/config/services.yml" }
-    - { resource: "@MemberMemberBundle/Resources/config/services.yml" }
-    - { resource: "@MemberNewsFeedBundle/Resources/config/services.yml" }
-    - { resource: "@MemberMatchBundle/Resources/config/services.yml" }
-    - { resource: "@MemberEventBundle/Resources/config/services.yml" }
-    - { resource: "@MemberExperienceBundle/Resources/config/services.yml" }
-    - { resource: "@MemberRecommandationBundle/Resources/config/services.yml" }
+    - { resource: "@MemberBundle/Resources/config/services.yml" }
+    - { resource: "@NewsFeedBundle/Resources/config/services.yml" }
+    - { resource: "@MatchBundle/Resources/config/services.yml" }
+    - { resource: "@EventBundle/Resources/config/services.yml" }
+    - { resource: "@ExperienceBundle/Resources/config/services.yml" }
+    - { resource: "@RecommandationBundle/Resources/config/services.yml" }
     - { resource: "@BusinessHomeBundle/Resources/config/services.yml" }
     - { resource: "@BusinessEventBundle/Resources/config/services.yml" }
     - { resource: "@BusinessAdvertBundle/Resources/config/services.yml" }

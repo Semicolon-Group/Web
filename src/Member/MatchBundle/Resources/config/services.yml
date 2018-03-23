@@ -1,4 +1,0 @@
-services:
-#    match.example:
-#        class: MemberMatchBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]

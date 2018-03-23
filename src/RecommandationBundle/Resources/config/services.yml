@@ -1,4 +1,4 @@
 services:
-#    admin_member.example:
-#        class: Admin\MemberBundle\Example
+#    recommandation.example:
+#        class: RecommandationBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]

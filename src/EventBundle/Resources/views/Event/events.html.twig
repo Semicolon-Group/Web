@@ -6,7 +6,7 @@
     <section class="banner_area">
         <div class="container">
             <div class="banner_content">
-                <h3 title="Success Stories"><img class="left_img" src="{{ asset('member_assets/') }}img/banner/t-left-img.png" alt="">Events<img class="right_img" src="{{ asset('member_assets/') }}img/banner/t-right-img.png" alt=""></h3>
+                <h3 title="MySoulmate"><img class="left_img" src="{{ asset('member_assets/') }}img/banner/t-left-img.png" alt="">Events<img class="right_img" src="{{ asset('member_assets/') }}img/banner/t-right-img.png" alt=""></h3>
                 <a href="">Events</a>
             </div>
         </div>
@@ -18,91 +18,36 @@
     <section class="blog_grid_area sticky_story_area">
         <div class="container">
             <div class="welcome_title">
-                <h3>Sticky Story</h3>
+                <h3>haithem Story</h3>
                 <img src="{{ asset('member_assets/') }}img/w-title-b.png" alt="">
+
+                <bouton  class = "btn btn-succès btn-lg"  data-toggle = "modal"  data-target = "#modalForm" >Ajouter évnement</button >
+
             </div>
-            <div class="row m0">
+                <div class="row m0">
                 <div class="blog_grid_inner sticky_slider">
-                    <div class="item">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-1.jpg" alt="">
-                                <div class="author_name">
-                                    <h4>Maria & Kavin</h4>
+                    {% for event in events %}
+                        <div class="item">
+                            <div class="blog_grid_item">
+                                <div class="blog_grid_img">
+                                    <img src="{{ asset('member_assets/') }}img/blog/stories/stories-1.jpg" alt="">
+                                    <div class="author_name">
+                                        <h4>{{ event.title }}</h4>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
+                                <div class="blog_grid_content">
+                                    <h3>{{ event.title }}</h3>
+                                    <div class="blog_grid_date">
+                                        <a href="#">{{ event.business }}</a>
+                                        <a href="#">{{ event.startDate | date('y-M-d') }}</a>
+                                        <a href="#">Dating</a>
+                                    </div>
+                                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
+                                    <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
                                 </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
                             </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-2.jpg" alt="">
-                                <div class="author_name">
-                                    <h4>Rocky Ahmed</h4>
-                                </div>
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-3.jpg" alt="">
-                                <div class="author_name">
-                                    <h4>Maria & Kavin</h4>
-                                </div>
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-4.jpg" alt="">
-                                <div class="author_name">
-                                    <h4>Rocky Ahmed</h4>
-                                </div>
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -110,176 +55,44 @@
     <!--================End Blog grid Area =================-->
 
     <!--================Blog grid Area =================-->
-    <section class="blog_grid_area stories_area">
-        <div class="container">
-            <div class="welcome_title">
-                <h3> Our Success Stories</h3>
-                <img src="{{ asset('member_assets/') }}img/w-title-b.png" alt="">
-            </div>
-            <div class="row">
-                <div class="blog_grid_inner">
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-1.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
+<! - Modal ->
+<div  class = "modal fondu"  id = "modalForm"  rôle = "dialog" >
+    <div  class = "modal-dialog" >
+        <div  class = "modal-content" >
+            <! - En-tête modal ->
+                    <div>
+                        <bouton  type = "bouton"  class = "fermer"  data-dismiss = "modal" >
+                            <span  aria-hidden = "true" > Close </span >
+                            <span  class = "sr-only" > Fermer </span >
+                        </button >
+                            <h4  class = "modal-title"  id = "myModalLabel" >Add Event</h4 >
                     </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-2.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
+
+            <! - Corps modal ->
+                    <div  class = "modal-body" >
+                        <p  class = "statusMsg" > </p >
+                        <form  role = "form" >
+                            <div  class = "form-group" >
+                                <label  for = "nomEntrée" > Nom </label >
+                                <input  type = "text"  class = "form-control"  id = "inputName"  placeholder = "Entrez votre nom" />
+                            </div >
+                            <div  class = "form-group" >
+                                <label  for = "inputEmail" > E-mail </label >
+                                <input  type = "email"  class = "form-control"  id = "inputEmail"  placeholder = "Entrez votre email" />
+                            </div >
+                            <div  class = "form-group" >
+                                <label  for = "inputMessage" > Message </label >
+                                <textarea  class = "form-control"  id = "inputMessage"  placeholder = "Entrez votre message" > </textarea >
+                            </div >
+                        </form >
+                    </div >
+            <! - Pied de page modal ->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-3.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-4.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-5.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-6.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-7.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-8.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="blog_grid_item">
-                            <div class="blog_grid_img">
-                                <img src="{{ asset('member_assets/') }}img/blog/stories/stories-9.jpg" alt="">
-                            </div>
-                            <div class="blog_grid_content">
-                                <h3>Your Blog title here</h3>
-                                <div class="blog_grid_date">
-                                    <a href="#">By David</a>
-                                    <a href="#">03 Sep, 2016</a>
-                                    <a href="#">Dating</a>
-                                </div>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
-                                <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="pagination_area">
-                <a class="prev" href="#">Previous</a>
-                <a class="arrow_left" href="#"><i class="fa fa-angle-left"></i></a>
-                <a class="arrow_right" href="#"><i class="fa fa-angle-right"></i></a>
-                <a class="next" href="#">Next</a>
-            </div>
-        </div>
-    </section>
+        </div >
+    </div >
+</div >
     <!--================End Blog grid Area =================-->
 {% endblock %}

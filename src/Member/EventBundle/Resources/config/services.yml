@@ -1,4 +1,4 @@
 services:
-#    admin_member.example:
-#        class: Admin\MemberMemberBundle\Example
+#    event.example:
+#        class: MemberEventBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]

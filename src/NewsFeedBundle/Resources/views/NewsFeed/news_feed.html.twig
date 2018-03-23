@@ -106,7 +106,7 @@
                                     <img class="post_pic" src="/mysoulmateuploads/images/{{ post.photoUrl }}" alt="">
                                 </div>
                                 <div class="media-body">
-                                    <b>{{ online.firstname ~ ' ' ~ online.lastname }}</b>
+                                    <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
                                     <p>{{ post.date | date('d-m-Y') }}</p><br>
                                     {% if post.type == false %}
                                         <p id="{{ post.id }}">{{ post.content }}</p>

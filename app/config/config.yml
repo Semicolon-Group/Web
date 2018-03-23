@@ -12,6 +12,16 @@ imports:
     - { resource: "@FeedbackBundle/Resources/config/services.yml" }
     - { resource: "@SignalBundle/Resources/config/services.yml" }
     - { resource: "@FeedbacksBundle/Resources/config/services.yml" }
+    - { resource: "@BusinessHomeBundle/Resources/config/services.yml" }
+    - { resource: "@BusinessEventBundle/Resources/config/services.yml" }
+    - { resource: "@BusinessAdvertBundle/Resources/config/services.yml" }
+    - { resource: "@BusinessChartBundle/Resources/config/services.yml" }
+    - { resource: "@AdminHomeBundle/Resources/config/services.yml" }
+    - { resource: "@AdminMemberBundle/Resources/config/services.yml" }
+    - { resource: "@AdminBusinessBundle/Resources/config/services.yml" }
+    - { resource: "@AdminChartBundle/Resources/config/services.yml" }
+    - { resource: "@BusinessFOSSecurityBundle/Resources/config/services.yml" }
+    - { resource: "@AdminFOSSecurityBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration

@@ -1,0 +1,73 @@
+/************************************************/
+
+/* Start Blog Grid Area */
+
+.blog_grid_area{
+    padding: 100px 0px 80px 0px;
+    background-color: #fff;
+}
+
+/* End blog grid area
+============================================================================================ */
+/*************************************************/
+
+/* Start Media */
+
+.media{
+    /*background-color: #fff;*/
+}
+
+/* End Media
+============================================================================================ */
+/*************************************************/
+
+/* Start Post Writing Space */
+.writing_post{
+    width: auto;
+    outline: none;
+    min-height: 70px;
+    cursor: text;
+    text-align: left;
+}
+[contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-text)
+}
+.post_pic{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+#post_button{
+    float: right;
+}
+.pic_post{
+    width: 70%;
+    padding: 0 0 0 0 !important;
+    border-radius: 20px;
+}
+.media{
+    padding-top: 30px !important;
+    position: relative;
+}
+.update_box{
+    position: absolute;
+    top: 30px;
+    right: 0;
+}
+.update_img{
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+.update_btn{
+    outline: none;
+}
+
+/* End Post Writing Space
+============================================================================================ */
+/*************************************************/
+
+/* Start Modal */
+.modal-body{
+    text-align: center;
+}

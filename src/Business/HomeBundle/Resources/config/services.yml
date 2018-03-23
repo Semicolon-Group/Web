@@ -1,0 +1,4 @@
+services:
+#    business_home.example:
+#        class: Business\HomeBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

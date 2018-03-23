@@ -1,12 +1,3 @@
-base_feedback:
-    resource: "@FeedbacksBundle/Controller/FeedbackController.php"
-    type:     annotation
-    prefix:   /feedback
-
-base_user_signal:
-    resource: "@SignalBundle/Controller/UserSignalController.php"
-    type:     annotation
-    prefix:   /signal
 admin_chart:
     resource: "@AdminChartBundle/Controller/"
     type:     annotation

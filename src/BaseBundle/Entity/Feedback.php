@@ -52,14 +52,6 @@ class Feedback
      */
     private $sender;
 
-    /**
-     * Feedback constructor.
-     */
-    public function __construct()
-    {
-        $this->date = new \DateTime();
-    }
-
 
 
     /**

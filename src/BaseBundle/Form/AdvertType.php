@@ -8,10 +8,12 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class AdvertType extends AbstractType
 {
@@ -27,11 +29,15 @@ class AdvertType extends AbstractType
         add('videoUrl')->
         add('reason')->
         add('state',HiddenType::class,['data' => 0])->
-        add('endDate' )->
-        add('clicks',HiddenType::class,['data' => 0])
-        ->add('price')
-        ->add('payed',HiddenType::class,['data' => 0])
-            ->add('Valider',SubmitType::class);
+        add('endDate' , DateType::class)->
+
+        add('clicks',HiddenType::class,['data' => 0])->
+        add('price' ,TextType::class ,
+            array('attr' => array(
+        'readonly' => true,
+
+    )))->
+        add('payed',HiddenType::class,['data' => 0]);
 
     }/**
      * {@inheritdoc}

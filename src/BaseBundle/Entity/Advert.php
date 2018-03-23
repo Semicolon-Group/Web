@@ -91,6 +91,12 @@ class Advert
      * @ORM\Column(name="payed", type="integer", nullable=true)
      */
     private $payed;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     */
+    private $position;
 
 
     /**
@@ -341,5 +347,29 @@ class Advert
     public function getPayed()
     {
         return $this->payed;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     *
+     * @return Advert
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }

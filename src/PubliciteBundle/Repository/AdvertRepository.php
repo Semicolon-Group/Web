@@ -12,16 +12,24 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findSidePubDQL()
     {
-        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.state=:state ')
-        ->setParameter('state','1');
-        return $q->getResult();
+        $q=$this->getEntityManager();
+        $max = $q->createQuery('Select MAX(m.id) from BaseBundle:Advert m 
+        where m.state=:state 
+        and m.position=:pos ')->setParameter('state','1')->setParameter('pos' , '2')->getSingleScalarResult();
+
+        return $q->createQuery('select m from BaseBundle:Advert m where  m.id<=:rand 
+        ORDER BY m.id ASC ')  ->setParameter('rand',rand(0,$max))
+            ->setMaxResults($max)
+            ->getResult();
+
     }
     public function findBigPubDQL()
     {
         $q=$this->getEntityManager();
-        $max = $q->createQuery('Select MAX(m.id) FROM BaseBundle:Advert m')->getSingleScalarResult();
-        return $q->createQuery('select m from BaseBundle:Advert m where   m.id>=:rand
-ORDER BY m.id ASC ')  ->setParameter('rand',rand(0,$max))
+        $max = $q->createQuery('Select MAX(m.id) FROM BaseBundle:Advert m where   m.position=:pos ')
+            ->setParameter('pos','1')->getSingleScalarResult();
+        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand 
+        ORDER BY m.id ASC ')  ->setParameter('rand',rand(0,$max))
             ->setMaxResults(1)
             ->getResult();
     }

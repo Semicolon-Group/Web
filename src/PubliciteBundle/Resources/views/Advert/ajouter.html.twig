@@ -6,6 +6,9 @@
     <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
     <script type="text/javascript" >
         $(document).ready(function () {
+            $('#basebundle_advert_price').attr('readonly',"true");
+
+
             var s = 0 ;
             $('#1').click(function () {
 
@@ -20,17 +23,19 @@
                 $('#video').show();
             });
             $('#25').click(function () {
-
+                $('#basebundle_advert_price').val("25");
+                $('#basebundle_advert_position').val(1);
 
             });
             $('#20').click(function () {
 
-                $('#b').html("20");
+                $('#basebundle_advert_price').val("20");
+                $('#basebundle_advert_position').val(2);
             });
-            $('#15').click(function () {
 
-                $('#prix').val("15");
-                s=15;
+            $('#15').click(function () {
+                $('#basebundle_advert_price').val("15");
+                $('#basebundle_advert_position').val(3);
             });
 function CalculPrix() {
 
@@ -78,13 +83,10 @@ function CalculPrix() {
 
         <tr>
             <td>end date</td>
-            <td>{{ form_widget(form.endDate) }}</td>
+            <td>{{ form_widget(form.endDate)}}</td>
         </tr>
 
-        <tr>
 
-            <td>{{ form_widget(form.Valider) }}</td>
-        </tr>
         <tr>
 
             <td id="date">{{ form_widget(form.state) }}</td>
@@ -95,8 +97,14 @@ function CalculPrix() {
         </tr>
         <tr>
             <td>prix :</td>
-            <td><a name="{{ form_widget(form.price)  }}"></a></td>
+            <td>{{ form_widget(form.price)  }}</td>
         </tr>
+        <tr>
+            <td>position:</td>
+            <td>{{ form_widget(form.position)  }}</td>
+        </tr>
+
+
 
     </table>
 

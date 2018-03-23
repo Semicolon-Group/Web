@@ -7,6 +7,8 @@ use BaseBundle\Form\AdvertType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
@@ -40,7 +42,16 @@ class AdminController extends Controller
             'Payed' => '1',
             'Not payed' => '0'
         ]
-    ]);
+    ])
+        ->add('position',ChoiceType::class,[
+            'choices' => [
+                'TOP' => '1',
+                'Side' => '2',
+                'Bottom'=>'3'
+            ]
+        ] )
+            ->
+            add('Valider',SubmitType::class);;
         $form->handleRequest($request);
         if ($form->isSubmitted())
         {

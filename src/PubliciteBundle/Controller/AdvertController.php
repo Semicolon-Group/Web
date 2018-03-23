@@ -8,6 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use BaseBundle\Entity\Advert;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use PubliciteBundle\Repository\AdvertRepository;
 class AdvertController extends Controller
@@ -34,7 +37,21 @@ class AdvertController extends Controller
     {
 
         $advert = new Advert();
-        $form = $this->createForm(AdvertType::class,$advert);
+        $form = $this->createForm(AdvertType::class,$advert)
+            ->
+            add('position',ChoiceType::class,[
+                'choices' => [
+                    'No'=>'0',
+                    'TOP' => '1',
+                    'Side' => '2',
+                    'Bottom'=>'3'
+                ],
+                    'attr' => array(
+                        'readonly' => true,
+                        'hidden'=>true
+                    )])
+            ->
+            add('Valider',SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted())
         {
@@ -76,7 +93,17 @@ class AdvertController extends Controller
         $advert = new Advert();
         $repo = $this->getDoctrine()->getRepository(Advert::class);
         $advert=$repo->find($id);
-        $form=$this->createForm(AdvertType::class,$advert);
+        $form=$this->createForm(AdvertType::class,$advert)->
+        add('position',ChoiceType::class,[
+            'choices' => [
+                'No'=>'0',
+                'TOP' => '1',
+                'Side' => '2',
+                'Bottom'=>'3'
+            ],
+        'disabled'=>true])
+            ->
+            add('Valider',SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted())
         {

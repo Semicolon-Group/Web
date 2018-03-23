@@ -24,6 +24,14 @@ class AppKernel extends Kernel
             new EventBundle\EventBundle(),
             new ExperienceBundle\ExperienceBundle(),
             new RecommandationBundle\RecommandationBundle(),
+            new Business\HomeBundle\BusinessHomeBundle(),
+            new Business\EventBundle\BusinessEventBundle(),
+            new Business\AdvertBundle\BusinessAdvertBundle(),
+            new Business\ChartBundle\BusinessChartBundle(),
+            new Admin\HomeBundle\AdminHomeBundle(),
+            new Admin\MemberBundle\AdminMemberBundle(),
+            new Admin\BusinessBundle\AdminBusinessBundle(),
+            new Admin\ChartBundle\AdminChartBundle(),
             new PubliciteBundle\PubliciteBundle(),
         ];
 

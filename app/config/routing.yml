@@ -1,3 +1,23 @@
+business_chart:
+    resource: "@BusinessChartBundle/Controller/"
+    type:     annotation
+    prefix:   /business/charts
+
+business_advert:
+    resource: "@BusinessAdvertBundle/Controller/"
+    type:     annotation
+    prefix:   /business/adverts
+
+business_event:
+    resource: "@BusinessEventBundle/Controller/"
+    type:     annotation
+    prefix:   /business/events
+
+business_home:
+    resource: "@BusinessHomeBundle/Controller/"
+    type:     annotation
+    prefix:   /business
+
 #MEMBER ROUTES#
 recommandation:
     resource: "@RecommandationBundle/Controller/RecommandationController.php"

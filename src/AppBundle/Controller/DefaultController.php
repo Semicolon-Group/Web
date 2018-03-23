@@ -17,6 +17,10 @@ class DefaultController extends Controller
     {
         if (($this->container->get('security.authorization_checker')->isGranted('ROLE_USER')))
             return $this->redirectToRoute('news_feed');
+        if (($this->container->get('security.authorization_checker')->isGranted('ROLE_BUSINESS')))
+            return $this->redirectToRoute('business_home');
+        if (($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')))
+            return $this->redirectToRoute('admin_home');
         return $this->render('base.html.twig');
     }
 }

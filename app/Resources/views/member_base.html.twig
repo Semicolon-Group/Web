@@ -115,7 +115,16 @@
            </nav>
        </header>
        <!--================Frist Main hader Area =================-->
-       {% block banner %}{% endblock %}
+       {% block banner %}
+           <section class="banner_area" style="background: url({% block banner_img %}{% endblock %}) no-repeat scroll center center; background-size: cover;">
+               <div class="container">
+                   <div class="banner_content">
+                       <h3 title="Success Stories"><img class="left_img" src="{{ asset('member_assets/') }}img/banner/t-left-img.png" alt="">{% block banner_title%}{% endblock %}<img class="right_img" src="{{ asset('member_assets/') }}img/banner/t-right-img.png" alt=""></h3>
+                       <a href="">{{ block("banner_title") }}</a>
+                   </div>
+               </div>
+           </section>
+       {% endblock %}
        {% block body %}{% endblock %}
 
         <!--================Footer Area =================-->

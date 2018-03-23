@@ -24,6 +24,10 @@ class AppKernel extends Kernel
             new EventBundle\EventBundle(),
             new ExperienceBundle\ExperienceBundle(),
             new RecommandationBundle\RecommandationBundle(),
+            new Business\HomeBundle\BusinessHomeBundle(),
+            new Business\EventBundle\BusinessEventBundle(),
+            new Business\AdvertBundle\BusinessAdvertBundle(),
+            new Business\ChartBundle\BusinessChartBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

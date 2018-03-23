@@ -28,6 +28,10 @@ class AppKernel extends Kernel
             new Business\EventBundle\BusinessEventBundle(),
             new Business\AdvertBundle\BusinessAdvertBundle(),
             new Business\ChartBundle\BusinessChartBundle(),
+            new Admin\HomeBundle\AdminHomeBundle(),
+            new Admin\MemberBundle\AdminMemberBundle(),
+            new Admin\BusinessBundle\AdminBusinessBundle(),
+            new Admin\ChartBundle\AdminChartBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

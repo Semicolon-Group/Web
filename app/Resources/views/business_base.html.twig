@@ -130,7 +130,27 @@
                             <div class="{% block notification_notify %}{% endblock %}"> <span class="heartbit"></span> <span class="point"></span> </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right mailbox animated zoomIn">
-                            {% block notifications %}{% endblock %}
+                            <ul>
+                                <li>
+                                    <div class="drop-title">Notifications</div>
+                                </li>
+                                <li>
+                                    <div class="message-center">
+                                        <!-- Message -->
+                                        {% block notifications %}
+                                            <a href="#">
+                                                <div class="btn btn-danger btn-circle m-r-10"><i class="fa fa-link"></i></div>
+                                                <div class="mail-contnet">
+                                                    <h5>This is title</h5> <span class="mail-desc">Just see the my new admin!</span> <span class="time">9:30 AM</span>
+                                                </div>
+                                            </a>
+                                        {% endblock %}
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="nav-link text-center" href="javascript:void(0);"> <strong>Check all notifications</strong> <i class="fa fa-angle-right"></i> </a>
+                                </li>
+                            </ul>
                         </div>
                     </li>
                     <!-- End Comment -->
@@ -140,7 +160,27 @@
                             <div class="{% block message_notify %}{% endblock %}"> <span class="heartbit"></span> <span class="point"></span> </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right mailbox animated zoomIn" aria-labelledby="2">
-                            {% block messages %}{% endblock %}
+                            <ul>
+                                <li>
+                                    <div class="drop-title">Messages</div>
+                                </li>
+                                <li>
+                                    <div class="message-center">
+                                        <!-- Message -->
+                                        {% block messages %}
+                                            <a href="#">
+                                                <div class="user-img"> <img src="images/users/5.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
+                                                <div class="mail-contnet">
+                                                    <h5>Michael Qin</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:30 AM</span>
+                                                </div>
+                                            </a>
+                                        {% endblock %}
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="nav-link text-center" href="javascript:void(0);"> <strong>See all e-Mails</strong> <i class="fa fa-angle-right"></i> </a>
+                                </li>
+                            </ul>
                         </div>
                     </li>
                     <!-- End Messages -->
@@ -174,7 +214,7 @@
                     <!--{% if app.request.attributes.get('_route') == 'news_feed' %}active{% endif %}-->
                     <li class="{% if app.request.attributes.get('_route') == 'business_home' %}active{% endif %}"> <a class="" href="{{ path('business_home') }}" aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Dashboard</span></a></li>
                     <li class="nav-label">Actions</li>
-                    <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Events</span></a>
+                    <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-calendar"></i><span class="hide-menu">Events</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li class="{% if app.request.attributes.get('_route') == 'business_events' %}active{% endif %}"><a href="{{ path('business_events') }}">List</a></li>
                             <li class="{% if app.request.attributes.get('_route') == 'business_create_event' %}active{% endif %}"><a href="{{ path('business_create_event') }}">Create</a></li>

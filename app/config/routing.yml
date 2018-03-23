@@ -1,3 +1,23 @@
+admin_chart:
+    resource: "@AdminChartBundle/Controller/"
+    type:     annotation
+    prefix:   /admin/charts
+
+admin_business:
+    resource: "@AdminBusinessBundle/Controller/"
+    type:     annotation
+    prefix:   /admin/businesses
+
+admin_member:
+    resource: "@AdminMemberBundle/Controller/"
+    type:     annotation
+    prefix:   /admin/members
+
+admin_home:
+    resource: "@AdminHomeBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+
 business_chart:
     resource: "@BusinessChartBundle/Controller/"
     type:     annotation

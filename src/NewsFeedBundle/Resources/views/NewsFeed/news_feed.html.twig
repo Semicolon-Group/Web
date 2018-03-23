@@ -2,61 +2,128 @@
 
 {% block title %}News Feed{% endblock %}
 
-{% block banner_img %}
-    {{ asset('member_assets/img/banner/banner-bg-1.jpg') }}
+{% block stylesheets %}
+    <link href="{{ asset("member_assets/css/newsfeed.css") }}" rel="stylesheet">
 {% endblock %}
 
-{% block banner_title %}News Feed{% endblock %}
+{% block scripts %}
+    <script src="{{ asset("member_assets/js/jquery-2.1.4.min.js") }}"></script>
+    <script src="{{ asset("member_assets/js/newsfeed.js") }}"></script>
+{% endblock %}
 
+{% block banner %}
+    <!--<section class="banner_area">
+        <div class="container">
+            <div class="banner_content">
+                <h3 title="Discussions"><img class="left_img" src="{{ asset('member_assets/img/banner/t-left-img.png') }}" alt="">News Feed<img class="right_img" src="{{ asset('member_assets/img/banner/t-right-img.png') }}" alt=""></h3>
+                <a href="">Home</a>
+            </div>
+        </div>
+    </section>-->
+{% endblock %}
 
 {% block body %}
+    <!-- Data elements -->
+    <div id="create_post_path" data-path = "{{ path('create_post') }}"></div>
+    <div id="edit_post_path" data-path = "{{ path('edit_post') }}"></div>
+    <div id="delete_post_path" data-path = "{{ path('delete_post') }}"></div>
+    <div id="selected_post" data-id=""></div>
+
+    <!-- Edit Post Modal -->
+    <div class="modal fade" id="edit_post_modal" tabindex="-1" role="dialog" aria-labelledby="edit_post_modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="media-left">
+                        <img id="post_writing_pic" class="post_pic" src="/mysoulmateuploads/images/{{ photo }}" alt="">
+                    </div>
+                    <div class="media-body">
+                        <div contenteditable="true" id="modal_post" class="writing_post"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="save_changes" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Post Modal -->
+    <div class="modal fade" id="delete_post_modal" tabindex="-1" role="dialog" aria-labelledby="delete_post_modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <h4 class="modal-title">Are you sure?</h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="delete" type="button" class="btn btn-primary" data-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid -->
     <section class="blog_grid_area">
+        <div id="online_name" data-name = "{{ online.firstname ~ ' ' ~ online.lastname }}"></div>
         <div class="container">
             <div class="row">
-                <div class="col-md-9">
+
+                <!-- Suggestions -->
+                <div class="col-md-3" id="suggestions">
+
+                </div>
+
+                <!-- NewsFeed -->
+                <div class="col-md-6">
                     <div class="community_activity">
+
+                        <!-- Writing Space -->
                         <div class="media">
                             <div class="media-left">
-                                <img src="{{ asset('member_assets/img/members/community/community-1.png') }}" alt="">
+                                <img id="post_writing_pic" class="post_pic" src="/mysoulmateuploads/images/{{ photo }}" alt="">
                             </div>
                             <div class="media-body">
-                                <h3>David Parker <span>and</span> Maria Watson <span>are now friends</span></h3>
-                                <h4>3 Days Ago</h4>
+                                <div contenteditable="true" id="post_space" class="writing_post" data-text="Share your thoughts..."></div>
+                                <button id="post_button">Post</button>
                             </div>
                         </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <img src="{{ asset('member_assets/img/members/community/community-1.png') }}" alt="">
+
+                        <!-- Posts -->
+                        <div id="feed">
+                        {% for post in posts %}
+                            <div class="media">
+                                {% if post.type == false and post.user.id == online.id %}
+                                    <div class="update_box">
+                                        <button class="update_btn" data-toggle="modal" data-target="#edit_post_modal"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}" onclick="updateModalText({{ post.id }})"></button>
+                                        <button class="update_btn" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
+                                    </div>
+                                {% endif %}
+                                <div class="media-left">
+                                    <img class="post_pic" src="/mysoulmateuploads/images/{{ post.photoUrl }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
+                                    <p>{{ post.date | date('d-m-Y') }}</p><br>
+                                    {% if post.type == false %}
+                                        <p id="{{ post.id }}">{{ post.content }}</p>
+                                    {% else %}
+                                        <img class="pic_post" src="/mysoulmateuploads/images/{{ post.content }}">
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="media-body">
-                                <h3>David Parker and Maria Watson <span>are now friends</span></h3>
-                                <h4>3 Days Ago</h4>
-                                <img src="{{ asset('member_assets/img/members/community/community-big-1.png') }}" alt="">
-                                <img src="{{ asset('member_assets/img/members/community/community-big-2.png') }}" alt="">
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <img src="{{ asset('member_assets/img/members/community/community-1.png') }}" alt="">
-                            </div>
-                            <div class="media-body">
-                                <h3>David Parker and Maria Watson <span>are now friends</span></h3>
-                                <h4>3 Days Ago</h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <img src="{{ asset('member_assets/img/members/community/community-2.png') }}" alt="">
-                            </div>
-                            <div class="media-body">
-                                <h3>David Parker and Maria Watson <span>are now friends</span></h3>
-                                <h4>3 Days Ago</h4>
-                            </div>
+                        {% endfor %}
                         </div>
                     </div>
                 </div>
+
+                <!-- Adverts -->
                 <div class="col-md-3">
                     <div class="right_sidebar_area">
+                        <!-- *****Default template content*****
                         <aside class="s_widget search_widget">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search Here">
@@ -67,10 +134,10 @@
                         </aside>
                         <aside class="s_widget recent_post_widget">
                             <div class="s_title">
-                                <h4>Members</h4>
+                                <h4>Memers</h4>
                                 <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
                             </div>
-                            <div class="media">
+                            <div class="mbedia">
                                 <div class="media-left">
                                     <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-1.png') }}" alt="">
                                 </div>
@@ -153,6 +220,7 @@
                                 <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Nunc quis sapien a nunc luctus</a></li>
                             </ul>
                         </aside>
+                        -->
                     </div>
                 </div>
             </div>

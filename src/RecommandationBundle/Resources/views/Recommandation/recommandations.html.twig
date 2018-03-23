@@ -13,11 +13,31 @@
 {% endblock %}
 
 {% block body %}
+    <div id="map" class="modal fade centered-modal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div class="content">
         <div style="margin-top: 40px; margin-bottom: 40px;">
             <div class="row card-container" style="width: 100%;">
                 <div class="col-sm-offset-1 col-md-10">
-                    <div class="card horizontal clickable">
+                    <div class="card horizontal clickable" data-toggle="modal" data-target="#map">
                         <div class="card-image" style="width: 25%; min-width: 120px;">
                             <img style="" src="{{ asset('member_assets/img/who-we-right.jpg') }}">
                         </div>
@@ -35,9 +55,9 @@
             </div>
             <div class="row card-container" style="width: 100%;">
                 <div class="col-sm-offset-1 col-md-10">
-                    <div class="card horizontal clickable">
+                    <div class="card horizontal clickable" data-toggle="modal" data-target="#map">
                         <div class="card-image" style="width: 25%; min-width: 120px;">
-                            <img src="{{ asset('member_assets/img/logo.png') }}">
+                            <img style="" src="{{ asset('member_assets/img/who-we-right.jpg') }}">
                         </div>
                         <div class="card-stacked">
                             <div class="card-content">
@@ -51,11 +71,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row card-container">
+            <div class="row card-container" style="width: 100%;">
                 <div class="col-sm-offset-1 col-md-10">
-                    <div class="card horizontal clickable">
+                    <div class="card horizontal clickable" data-toggle="modal" data-target="#map">
                         <div class="card-image" style="width: 25%; min-width: 120px;">
-                            <img src="{{ asset('member_assets/img/logo.png') }}">
+                            <img style="" src="{{ asset('member_assets/img/who-we-right.jpg') }}">
                         </div>
                         <div class="card-stacked">
                             <div class="card-content">
@@ -72,6 +92,6 @@
         </div>
     </div>
 {% endblock %}
-
 {% block scripts %}
+    <script src="{{ asset('member_assets/js/recommandation/recommandation.js') }}"></script>
 {% endblock %}

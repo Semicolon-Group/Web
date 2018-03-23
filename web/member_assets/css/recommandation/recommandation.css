@@ -344,3 +344,10 @@
 .row.card-container{
     width: 100%; margin-top: 30px; margin-bottom: 30px;
 }
+
+.centered-modal.in {
+    display: flex !important;
+}
+.centered-modal .modal-dialog {
+    margin: auto;
+}

@@ -40,32 +40,32 @@ business_home:
 
 #MEMBER ROUTES#
 recommandation:
-    resource: "@RecommandationBundle/Controller/RecommandationController.php"
+    resource: "@MemberRecommandationBundle/Controller/RecommandationController.php"
     type:     annotation
     prefix:   /member/recommandations
 
 experience:
-    resource: "@ExperienceBundle/Controller/ExperienceController.php"
+    resource: "@MemberExperienceBundle/Controller/ExperienceController.php"
     type:     annotation
     prefix:   /member/experiences
 
 event:
-    resource: "@EventBundle/Controller/EventController.php"
+    resource: "@MemberEventBundle/Controller/EventController.php"
     type:     annotation
     prefix:   /member/events
 
 match:
-    resource: "@MatchBundle/Controller/MatchController.php"
+    resource: "@MemberMatchBundle/Controller/MatchController.php"
     type:     annotation
     prefix:   /member/matches
 
 news_feed:
-    resource: "@NewsFeedBundle/Controller/NewsFeedController.php"
+    resource: "@MemberNewsFeedBundle/Controller/NewsFeedController.php"
     type:     annotation
     prefix:   /member/home
 
 member:
-    resource: "@MemberBundle/Controller/MemberController.php"
+    resource: "@MemberMemberBundle/Controller/MemberController.php"
     type:     annotation
     prefix:   /member
 

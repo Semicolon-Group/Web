@@ -1,0 +1,4 @@
+services:
+#    business_chart.example:
+#        class: Business\ChartBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

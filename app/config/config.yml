@@ -9,9 +9,6 @@ imports:
     - { resource: "@EventBundle/Resources/config/services.yml" }
     - { resource: "@ExperienceBundle/Resources/config/services.yml" }
     - { resource: "@RecommandationBundle/Resources/config/services.yml" }
-    - { resource: "@FeedbackBundle/Resources/config/services.yml" }
-    - { resource: "@SignalBundle/Resources/config/services.yml" }
-    - { resource: "@FeedbacksBundle/Resources/config/services.yml" }
     - { resource: "@BusinessHomeBundle/Resources/config/services.yml" }
     - { resource: "@BusinessEventBundle/Resources/config/services.yml" }
     - { resource: "@BusinessAdvertBundle/Resources/config/services.yml" }

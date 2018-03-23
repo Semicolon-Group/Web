@@ -69,13 +69,6 @@ class UserSignal
      */
     private $sender;
 
-    /**
-     * UserSignal constructor.
-     */
-    public function __construct()
-    {
-        $this->date = new \DateTime();
-    }
 
 
     /**

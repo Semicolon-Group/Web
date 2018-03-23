@@ -33,14 +33,14 @@
                             <div class="logo text-center"><img src="{{ asset('admin_assets/') }}img/logo-dark.png" alt="Klorofil Logo"></div>
                             <p class="lead">Login to your account</p>
                         </div>
-                        <form class="form-auth-small" action="index.php">
+                        <form class="form-auth-small" action="{{ path("fos_user_security_check") }}">
                             <div class="form-group">
-                                <label for="signin-email" class="control-label sr-only">Email</label>
-                                <input type="email" class="form-control" id="signin-email" value="" placeholder="Email">
+                                <label for="username" class="control-label sr-only">Username</label>
+                                <input type="text" class="form-control" id="username" value="" placeholder="Username">
                             </div>
                             <div class="form-group">
-                                <label for="signin-password" class="control-label sr-only">Password</label>
-                                <input type="password" class="form-control" id="signin-password" value="" placeholder="Password">
+                                <label for="password" class="control-label sr-only">Password</label>
+                                <input type="password" class="form-control" id="password" value="" placeholder="Password">
                             </div>
                             <div class="form-group clearfix">
                                 <label class="fancy-checkbox element-left">

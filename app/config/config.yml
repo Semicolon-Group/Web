@@ -9,6 +9,9 @@ imports:
     - { resource: "@EventBundle/Resources/config/services.yml" }
     - { resource: "@ExperienceBundle/Resources/config/services.yml" }
     - { resource: "@RecommandationBundle/Resources/config/services.yml" }
+    - { resource: "@FeedbackBundle/Resources/config/services.yml" }
+    - { resource: "@SignalBundle/Resources/config/services.yml" }
+    - { resource: "@FeedbacksBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration

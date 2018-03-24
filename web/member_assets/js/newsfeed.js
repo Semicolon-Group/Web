@@ -6,21 +6,28 @@ $(function () {
 
         var DATA = {'text':text};
         var path = $("#create_post_path").data('path');
+        var editIcon = $("#edit_icon_path").data('path');
+        var deleteIcon = $("#delete_icon_path").data('path');
         $.ajax({
             type:"POST",
             url:path,
             data:DATA,
             success:function(data){
+                var id = data['id'];
                 var pic = $("#post_writing_pic").attr('src');
                 var username = $("#online_name").data('name');
                 var post_html = "<div class='media'>" +
+                    "<div class='update_box'>" +
+                    "<button class='update_btn' data-toggle='modal' data-target='#edit_post_modal'><img class='update_img' src='" + editIcon + "' onclick='updateModalText(" + id + ")'></button>" +
+                    "<button class='update_btn' data-toggle='modal' data-target='#delete_post_modal' onclick='showDeleteModal(" + id + ")'><img class='update_img' src='" + deleteIcon + "'></button>" +
+                    "</div>" +
                     "<div class='media-left'>" +
                     "<img class='post_pic' src='" + pic + "' alt=''>" +
                     "</div>" +
                     "<div class='media-body'>" +
                     "<b>" + username + "</b>" +
                     "<p>Now</p><br>" +
-                    "<p>" + text + "</p>" +
+                    "<p  id = '" + id + "'>" + text + "</p>" +
                     "</div>" +
                     "</div>";
                 var current_html = $("#feed").html();

@@ -27,6 +27,8 @@
     <div id="create_post_path" data-path = "{{ path('create_post') }}"></div>
     <div id="edit_post_path" data-path = "{{ path('edit_post') }}"></div>
     <div id="delete_post_path" data-path = "{{ path('delete_post') }}"></div>
+    <div id="edit_icon_path" data-path = "{{ asset("member_assets/img/edit.png") }}"></div>
+    <div id="delete_icon_path" data-path = "{{ asset("member_assets/img/close.png") }}"></div>
     <div id="selected_post" data-id=""></div>
 
     <!-- Edit Post Modal -->
@@ -84,7 +86,7 @@
                         <!-- Writing Space -->
                         <div class="media">
                             <div class="media-left">
-                                <img id="post_writing_pic" class="post_pic" src="/mysoulmateuploads/images/{{ photo }}" alt="">
+                                <img id="post_writing_pic" class="post_pic" src="{{ photo }}" alt="">
                             </div>
                             <div class="media-body">
                                 <div contenteditable="true" id="post_space" class="writing_post" data-text="Share your thoughts..."></div>
@@ -103,7 +105,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="media-left">
-                                    <img class="post_pic" src="/mysoulmateuploads/images/{{ post.photoUrl }}" alt="">
+                                    <img class="post_pic" src="{{ post.photoUrl }}" alt="">
                                 </div>
                                 <div class="media-body">
                                     <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>

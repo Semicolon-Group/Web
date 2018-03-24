@@ -33,7 +33,7 @@ business_chart:
     prefix:   /business/charts
 
 business_advert:
-    resource: "@BusinessAdvertBundle/Controller/"
+    resource: "@BusinessAdvertBundle/Controller/BusinessAdvertController.php"
     type:     annotation
     prefix:   /business/adverts
 

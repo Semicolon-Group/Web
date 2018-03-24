@@ -23,18 +23,19 @@ class AdvertType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('content')->
+        $builder->add('content',TextType::class, ['required' => true])->
            // add('file',FileType::class)->
-        add('photoUrl')->
-        add('videoUrl')->
-        add('reason')->
+        add('photoUrl',TextType::class, ['required' => true])->
+        add('videoUrl',TextType::class, ['required' => true])->
+        add('reason',TextType::class, ['required' => true])->
         add('state',HiddenType::class,['data' => 0])->
-        add('endDate' , DateType::class)->
+        add('endDate' , DateType::class, ['required' => true])->
 
         add('clicks',HiddenType::class,['data' => 0])->
         add('price' ,TextType::class ,
             array('attr' => array(
         'readonly' => true,
+                'required' => true
 
     )))->
         add('payed',HiddenType::class,['data' => 0]);

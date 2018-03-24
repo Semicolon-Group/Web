@@ -1,0 +1,61 @@
+{% extends 'business_base.html.twig' %}
+
+
+{% block title %}PubliciteBundle:Advert:Lister{% endblock %}
+
+{% block body %}
+
+    <!-- RECENT PURCHASES -->
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Recent Purchases</h3>
+
+        </div>
+        <div class="panel-body no-padding">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+
+                    <th>content</th>
+                    <th>reason</th>
+
+                    <th>photo</th>
+                    <th>price</th>
+                    <th>payed</th>
+
+                    <th>state</th>
+                    <th>date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for m in pubs %}
+                <tr>
+
+                    <td>{{ m.content }}</td>
+                    <td>{{ m.reason }}</td>
+                    <td> <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
+                                style="height : 150px ;width:150px" alt=""></td>
+                    <td>{{ m.price }}</td>
+                    <td>{% if m.payed==1 %} Yes {% else %} No {% endif %}</td>
+
+                    <td><span class="label label-{% if m.state==1 %}success{% elseif m.state==0 %}warning{% elseif m.state==2 %}danger{% endif %}">{% if m.state==1 %} approved {% elseif m.state==0 %}not processed{% elseif m.state==2 %} denied {% endif %}</span></td>
+                    <td>{{ m.endDate | date}}</td>
+                    <td ><button type="button" class="btn btn-warning" ><i class="fa fa-warning"></i><a href="{{ path('traiter_business', {'id':m.id}) }}"> Modify </a></button>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete </button></td>
+
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-6"><span class="panel-note"><i class="fa fa-clock-o"></i> Your recent orders .</span></div>
+
+            </div>
+        </div>
+    </div>
+    <!-- END RECENT PURCHASES -->
+{% endblock %}

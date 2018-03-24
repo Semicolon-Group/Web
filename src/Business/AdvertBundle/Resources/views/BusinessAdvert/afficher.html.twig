@@ -1,0 +1,92 @@
+{% extends "member_base.html.twig" %}
+
+{% block scripts %}
+
+
+
+{% endblock %}
+
+{% block title %}News Feed{% endblock %}
+
+       {% block banner %}
+
+           {% for m in bigs %}
+               <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+               <script type="text/javascript" >
+
+
+               </script>
+
+
+               <section class="banner_area" style="background: url({% block banner_img %} {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %}) no-repeat scroll center center; background-size: cover;">
+                   <div class="container">
+                       <div class="banner_content">
+                           <h3 title="{{ m.content }}"><img class="left_img" src="{{ asset('member_assets/') }}img/banner/t-left-img.png" alt="">{{ m.content }}<img class="right_img" src="{{ asset('member_assets/') }}img/banner/t-right-img.png" alt=""></h3>
+                           <a href="">{{ m.reason }}</a>
+                       </div>
+                   </div>
+               </section>
+
+
+           {% endfor %}
+       {% endblock %}
+{% block body %}
+
+    <section class="blog_grid_area">
+        <div class="container">
+
+
+            <div class="col-md-3">
+                <div class="right_sidebar_area">
+
+                    <aside class="s_widget recent_post_widget">
+                        <div class="s_title">
+                            <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
+                        </div>
+                        {% for m in sides %}
+                            <div class="media">
+                                <div class="media-left">
+                                    <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
+                                           style="height : 150px ;width:150px" alt="">
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+                    </aside>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <br>
+    <br>
+
+    <br>
+    <br><br><br><br><br>
+
+
+    <!--================Blog slider Area =================-->
+    <section class="blog_slider_area">
+
+        <div class="blog_slider_inner">
+            {% for m in sides %}
+                <div class="item">
+                <div class="single_blog_slider">
+                    <img src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"alt="" style="width: 350px ; height: 400px">
+                    <div class="blog_item_content">
+                        <h4>{{ m.content }}</h4>
+                        <h5>{{ m.reason }}<span>|</span> {{ m.reason }}</h5>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-search"></i></a></li>
+                            <li><a href="#"><i class="fa fa-link"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                </div>{% endfor %}
+        </div>
+    </section>
+    <!--================End Blog slider Area =================-->
+
+{% endblock %}

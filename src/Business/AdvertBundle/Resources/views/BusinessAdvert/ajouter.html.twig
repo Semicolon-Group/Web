@@ -1,0 +1,166 @@
+
+{% extends 'business_base.html.twig' %}
+{% block title %}Advert | Create{% endblock %}
+ {% block stylesheets %}
+
+
+     <link href="{{ asset('business_assets/') }}css/demo.css" rel="stylesheet" />
+     <link href="{{ asset('business_assets/') }}css/main.css" rel="stylesheet" />
+
+ {% endblock %}
+{% block page_title %}Advert creation form{% endblock %}
+{% block page_path %}
+    <li class="breadcrumb-item">Advert</li>
+    <li class="breadcrumb-item active">Create</li>
+{% endblock %}
+
+{% block body %}
+
+    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+    <script type="text/javascript" >
+        $(document).ready(function () {
+            $('#basebundle_advert_price').attr('readonly',"true");
+            $('#valider').addClass("btn btn-success","fa fa-check-circle");
+            $('#basebundle_advert_endDate_year').addClass("form-control")
+            $('#basebundle_advert_endDate_month').addClass("form-control")
+            $('#basebundle_advert_endDate_day').addClass("form-control");
+
+            $('#basebundle_advert_content').addClass("form-control")
+                $('#basebundle_advert_photoUrl').addClass("form-control")
+                $('#basebundle_advert_videoUrl').addClass("form-control")
+            $('#basebundle_advert_reason').addClass("form-control")
+            $('#basebundle_advert_price').addClass("form-control")
+
+            $('#valider').click(function(e){
+                if ( $('#25').val()=='' && $('#20').val()=='' && $('#15').val()=='')
+                {$(function(){ alert("Choose type") ;  $('#basebundle_advert_price').val("25"); } );
+                e.preventDefault();}
+            });
+
+
+            var s = 0 ;
+            $('#1').click(function () {
+
+                $('#photo').show();
+                $('#video').hide();
+
+
+
+            });
+            $('#2').click(function () {
+                $('#photo').hide();
+                $('#video').show();
+            });
+            $('#25').click(function () {
+                $('#basebundle_advert_price').val("25");
+                $('#basebundle_advert_position').val(1);
+
+            });
+            $('#20').click(function () {
+
+                $('#basebundle_advert_price').val("20");
+                $('#basebundle_advert_position').val(2);
+            });
+
+            $('#15').click(function () {
+                $('#basebundle_advert_price').val("15");
+                $('#basebundle_advert_position').val(3);
+            });
+            function CalculPrix() {
+
+            }
+
+
+
+        });
+</script>
+    {{ form_start(form,  { 'id': 'formtwig' }) }}<br>
+    <table>
+
+        <tr>
+            <label class="fancy-radio">
+                <td> Formule Top banner 25dt: </td>
+                <td>
+                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="25">
+                </td>
+            </label>
+        </tr>
+        <tr>
+
+            <label class="fancy-radio">
+                <td> Formule Side banner 20dt : </td>
+                <td>
+                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="20">
+                </td>
+            </label>
+        </tr>
+        <tr>
+
+            <label class="fancy-radio">
+                <td> Formule Slider 15dt : </td>
+                <td>
+                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="15">
+                </td>
+            </label>
+        </tr>
+
+
+
+        <tr>
+            <td>Content : </td>
+            <td>{{ form_widget(form.content) }}</td>
+        </tr>
+
+        <tr id="photo" >
+            <td>Photo Url : </td>
+            <td>{{ form_widget(form.photoUrl) }}</td>
+        </tr>
+
+
+        <td>Video Url : </td>
+        <td>{{ form_widget(form.videoUrl)}}</td>
+        </tr>
+
+        <tr>
+            <td>Reason</td>
+            <td>{{ form_widget(form.reason) }}</td>
+        </tr>
+
+        <tr>
+            <td>end date</td>
+            <td>{{ form_widget(form.endDate)}}</td>
+        </tr>
+
+
+        <tr>
+
+            <td id="date">{{ form_widget(form.state) }}</td>
+        </tr>
+        <tr>
+
+            <td>{{ form_widget(form.clicks) }}</td>
+        </tr>
+        <tr>
+            <td>prix :</td>
+            <td>{{ form_widget(form.price)  }}</td>
+        </tr>
+        <tr>
+            <td>position:</td>
+            <td>{{ form_widget(form.position)  }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="demo-button">{{ form_widget(form.Valider ,  { 'id': 'valider' })  }}</td>
+        </tr>
+
+
+
+    </table>
+    <div class="alert alert-warning alert-dismissible" role="alert" hidden="true" id="warning" >
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <i class="fa fa-warning"></i> Warning, Please fill all the fields
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+

@@ -222,8 +222,9 @@
                     </li>
                     <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-suitcase"></i><span class="hide-menu">Ads</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li class="{% if app.request.attributes.get('_route') == 'business_adverts' %}active{% endif %}"><a href="{{ path('business_adverts') }}">List</a></li>
-                            <li class="{% if app.request.attributes.get('_route') == 'business_create_advert' %}active{% endif %}"><a href="{{ path('business_create_advert') }}">Create</a></li>
+                            <li class="{% if app.request.attributes.get('_route') == 'business_adverts_list' %}active{% endif %}"><a href="{{ path('business_adverts_list') }}">List</a></li>
+                            <li class="{% if app.request.attributes.get('_route') == 'business_adverts_add' %}active{% endif %}"><a href="{{ path('business_adverts_add') }}">Create</a></li>
+
                         </ul>
                     </li>
                     <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span class="hide-menu">Charts</span></a>

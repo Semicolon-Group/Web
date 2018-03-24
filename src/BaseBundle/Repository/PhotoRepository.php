@@ -8,16 +8,20 @@
 
 namespace BaseBundle\Repository;
 
+use BaseBundle\Entity\Enumerations\PhotoType;
 
 class PhotoRepository extends \Doctrine\ORM\EntityRepository
 {
     public function getProfilePhotoUrl($user)
     {
-        return $this->getEntityManager()->createQuery(
-            "SELECT p.url FROM BaseBundle:Photo p WHERE p.user = :user AND p.type = 1"
+        $result = $this->getEntityManager()->createQuery(
+            "SELECT p.url FROM BaseBundle:Photo p WHERE p.user = :user AND p.type = " . PhotoType::Profile
         )
             ->setParameter('user', $user)
-            ->getResult()[0]['url'];
+            ->getResult();
+        if(!empty($result))
+            return '/mysoulmateuploads/images/' . $result[0]['url'];
+        return '/mysoulmateuploads/images/member.jpg';
     }
 
     public function getPostPics($user)

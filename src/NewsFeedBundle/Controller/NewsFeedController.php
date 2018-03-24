@@ -26,6 +26,7 @@ class NewsFeedController extends Controller
         $posts = PostService::getPosts($this->getDoctrine(), $user);
         $repo = $this->getDoctrine()->getRepository(Photo::class);
         $photoUrl = $repo->getProfilePhotoUrl($user);
+
         return $this->render('NewsFeedBundle:NewsFeed:news_feed.html.twig', array(
             'posts' => $posts,
             'photo' => $photoUrl,
@@ -48,7 +49,10 @@ class NewsFeedController extends Controller
             $em->persist($post);
             $em->flush();
 
-            return new JsonResponse();
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $data = $serializer->normalize(['id' => $post->getId()]);
+
+            return new JsonResponse($data);
         }
     }
 

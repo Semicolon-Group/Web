@@ -47,4 +47,11 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         return $q->getResult();
     }
 
+    public function UpdateThisAddDQL($id)
+    {
+        $q=$this->getEntityManager()->createQuery('update BaseBundle:Advert m set m.payed=1 where m.id=:a')
+            ->setParameter('a',$id);
+        $q->execute();
+    }
+
 }

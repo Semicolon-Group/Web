@@ -21,6 +21,7 @@ class AdvertController extends Controller
      */
     public function AfficherAction()
     {  $var2 =$this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
+
         $var =$this->getDoctrine()->getRepository(Advert::class)->findSidePubDQL();
         return $this->render('PubliciteBundle:Advert:afficher.html.twig', array(
             'sides'=>$var,

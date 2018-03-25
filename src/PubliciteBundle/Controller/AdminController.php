@@ -70,6 +70,7 @@ class AdminController extends Controller
     {
         $em= $this->getDoctrine()->getManager();
         $advert=$em->getRepository(Advert::class)->find($id);
+
         $em->remove($advert);
         $em->flush();
         return $this->redirectToRoute("lister_admin");

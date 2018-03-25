@@ -27,6 +27,7 @@
     <div id="create_post_path" data-path = "{{ path('create_post') }}"></div>
     <div id="edit_post_path" data-path = "{{ path('edit_post') }}"></div>
     <div id="delete_post_path" data-path = "{{ path('delete_post') }}"></div>
+    <div id="react_path" data-path = "{{ path('react') }}"></div>
     <div id="edit_icon_path" data-path = "{{ asset("member_assets/img/edit.png") }}"></div>
     <div id="delete_icon_path" data-path = "{{ asset("member_assets/img/close.png") }}"></div>
     <div id="selected_post" data-id=""></div>
@@ -37,7 +38,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="media-left">
-                        <img id="post_writing_pic" class="post_pic" src="/mysoulmateuploads/images/{{ photo }}" alt="">
+                        <img class="post_pic" src="{{ photo }}" alt="">
                     </div>
                     <div class="media-body">
                         <div contenteditable="true" id="modal_post" class="writing_post"></div>
@@ -98,23 +99,48 @@
                         <div id="feed">
                         {% for post in posts %}
                             <div class="media">
-                                {% if post.type == false and post.user.id == online.id %}
+
+                                <!-- Edit/Delete Buttons -->
+                                {% if post.type == StatusType and post.user.id == online.id %}
                                     <div class="update_box">
                                         <button class="update_btn" data-toggle="modal" data-target="#edit_post_modal"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}" onclick="updateModalText({{ post.id }})"></button>
                                         <button class="update_btn" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
                                     </div>
                                 {% endif %}
+
+                                <!-- Post Body -->
                                 <div class="media-left">
                                     <img class="post_pic" src="{{ post.photoUrl }}" alt="">
                                 </div>
                                 <div class="media-body">
                                     <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
                                     <p>{{ post.date | date('d-m-Y') }}</p><br>
-                                    {% if post.type == false %}
+                                    {% if post.type == StatusType %}
                                         <p id="{{ post.id }}">{{ post.content }}</p>
-                                    {% else %}
-                                        <img class="pic_post" src="/mysoulmateuploads/images/{{ post.content }}">
+                                    {% elseif post.type == PictureType %}
+                                        <img class="pic_post" src="{{ post.content }}">
                                     {% endif %}
+                                </div>
+                                <hr>
+
+                                <!-- Reactions -->
+                                <div class="reaction-box">
+                                    {% if post.user.id != online.id %}
+                                        <img src="{{ asset('member_assets/img/Emoticons/Smile.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Smile')">
+                                        <img src="{{ asset('member_assets/img/Emoticons/Love.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Love')">
+                                        <img src="{{ asset('member_assets/img/Emoticons/Laugh.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Laugh')">
+                                        <img src="{{ asset('member_assets/img/Emoticons/Scowl.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Scowl')">
+                                    {% endif %}
+
+                                    <!-- Statistics -->
+                                    <span class="reaction-statistics">
+
+                                    </span>
+
+                                    <!-- React Action -->
+                                    <span class="react-action">
+                                        <span id="{{ post.id }}-current-reaction"></span>
+                                    </span>
                                 </div>
                             </div>
                         {% endfor %}

@@ -9,10 +9,13 @@
 namespace NewsFeedBundle\Service;
 
 
+use BaseBundle\Entity\Enumerations\PostType;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
+use BaseBundle\Entity\PostReaction;
 use BaseBundle\Entity\User;
 use BaseBundle\Repository\PhotoRepository;
+use BaseBundle\Repository\PostReactionRepository;
 use BaseBundle\Repository\PostRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -23,28 +26,45 @@ class PostService
         /** @var User $user */
         /** @var PhotoRepository $photoRepo */
         /** @var PostRepository $postRepo */
+        /** @var PostReactionRepository $reactRepo */
         /** @var Post $post */
         /** @var Photo $photo */
 
         $postRepo = $doctrine->getRepository(Post::class);
+        $reactRepo = $doctrine->getRepository(PostReaction::class);
         $photoRepo = $doctrine->getRepository(Photo::class);
 
         $posts = $postRepo->getPosts($user);
         $posts = array_merge($posts, $postRepo->findBy(['user' => $user]));
         foreach($posts as $post){
             $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($post->getUser()));
-            $post->setType(false);
+            $post->setType(PostType::Status);
+            $post->setReactions($reactRepo->findBy(['postId' => $post->getId()]));
+            $currentReaction = $reactRepo->findBy(['postId' => $post->getId(), 'user' => $user]);
+            if(empty($currentReaction))
+                $currentReaction = -1;
+            else
+                $currentReaction = $currentReaction[0]->getReaction();
+            $post->setCurrentReaction($currentReaction);
         }
 
         $photos = $photoRepo->getPostPics($user);
         $photos = array_merge($photos, $photoRepo->findBy(['user' => $user]));
         foreach ($photos as $photo){
             $post = new Post;
+            $post->setId($photo->getId());
             $post->setUser($photo->getUser());
-            $post->setType(true);
+            $post->setType(PostType::Picture);
             $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($photo->getUser()));
             $post->setDate($photo->getDate());
-            $post->setContent($photo->getUrl());
+            $post->setContent('/mysoulmateuploads/images/' . $photo->getUrl());
+            $post->setReactions($reactRepo->findBy(['photoId' => $photo->getId()]));
+            $currentReaction = $reactRepo->findBy(['photoId' => $photo->getId(), 'user' => $user]);
+            if(empty($currentReaction))
+                $currentReaction = -1;
+            else
+                $currentReaction = $currentReaction[0]->getReaction();
+            $post->setCurrentReaction($currentReaction);
             $posts[] = $post;
         }
 

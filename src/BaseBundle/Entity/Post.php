@@ -51,11 +51,19 @@ class Post
     private $photoUrl;
 
     /**
-     * @var boolean
+     * @var int
      */
-    /* true = photo
-        false = text */
     private $type;
+
+    /**
+     * @var array
+     */
+    private $reactions;
+
+    /**
+     * @var int
+     */
+    private $currentReaction;
 
     /**
      * Get id
@@ -132,7 +140,7 @@ class Post
     /**
      * Get user
      *
-     * @return \BaseBundle\Entity\User
+     * @return \User
      */
     public function getUser()
     {
@@ -178,12 +186,73 @@ class Post
     }
 
     /**
-     * Get type
-     *
-     * @return boolean
-     */
+ * Get type
+ *
+ * @return boolean
+ */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return Post
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * Set reactions
+     *
+     * @param array $reactions
+     *
+     * @return Post
+     */
+    public function setReactions($reactions)
+    {
+        $this->reactions = $reactions;
+
+        return $this;
+    }
+
+    /**
+     * Get reactions
+     *
+     * @return array
+     */
+    public function getReactions()
+    {
+        return $this->reactions;
+    }
+
+    /**
+     * Set currentReaction
+     *
+     * @param int $currentReaction
+     *
+     * @return Post
+     */
+    public function setCurrentReaction($currentReaction)
+    {
+        $this->currentReaction = $currentReaction;
+
+        return $this;
+    }
+
+    /**
+     * Get currentReaction
+     *
+     * @return int
+     */
+    public function getCurrentReaction()
+    {
+        return $this->currentReaction;
     }
 }

@@ -74,3 +74,16 @@ function updateModalText(id){
 function showDeleteModal(id) {
     $("#selected_post").data('id',id);
 }
+
+function react(id, type, reaction) {
+    var DATA = {'id':id, 'type':type, 'reaction':reaction};
+    var path = $("#react_path").data('path');
+    $.ajax({
+        type: 'POST',
+        data: DATA,
+        url: path,
+        success: function (data) {
+            console.log(data['title']);
+        }
+    });
+}

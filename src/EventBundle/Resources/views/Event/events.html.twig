@@ -16,13 +16,21 @@
                 <h3>haithem</h3>
                 <img src="{{ asset('member_assets/') }}img/w-title-b.png" alt="">
             </div>
+            <aside class="s_widget search_widget">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search Here">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </span>
+                </div>
+            </aside>
             <div class="row m0">
                     <div class="blog_grid_inner sticky_slider">
                         {% for event in events %}
                         <div class="item">
                             <div class="blog_grid_item">
                                 <div class="blog_grid_img">
-                                    <img src="{{ asset('member_assets/') }}img/blog/stories/stories-1.jpg" alt="">
+                                    <img src="{{ asset('business_assets/images/img_event/') }}{{ event.photoUrl }}" alt="">
                                     <div class="author_name">
                                         <h4>{{ event.title }}</h4>
                                     </div>
@@ -34,7 +42,7 @@
                                         <a href="#">{{ event.startDate | date('y-M-d') }}</a>
                                         <a href="#">Dating</a>
                                     </div>
-                                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using is that it has a more-or-less like readable English. </p>
+                                    <p>{{ event.content }}</p>
                                     <a href="#">Read More <i class="fa fa-angle-double-right"></i></a>
                                 </div>
                             </div>

@@ -80,7 +80,7 @@ class Event
     /**
      * @var \Address
      *
-     * @ORM\ManyToOne(targetEntity="Address")
+     * @ORM\ManyToOne(targetEntity="Address", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="address_id", referencedColumnName="id")
      * })

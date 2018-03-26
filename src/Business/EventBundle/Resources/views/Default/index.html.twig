@@ -7,5 +7,44 @@
 {% endblock %}
 
 {% block body %}
-   <p>test</p>
+
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Event</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Start date</th>
+                    <th>End date</th>
+                    <th>Photo</th>
+                    <th>Max places</th>
+
+
+
+                </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>{{ event.title }}</td>
+                            <td>{{ event.content }}</td>
+                            <td>{{ event.startDate | date('y-M-d') }}</td>
+                            <td>{{ event.endDate | date('y-M-d') }}</td>
+                            <td>{{ event.photoUrl }}</td>
+                            <td>{{ event.maxPlaces }}</td>
+                            <td><a href="{{ path('business_events_delete',{'id':event.id}) }}">Delete</a></td>
+                            <td><a href="{{ path('business_events_edit',{'id':event.id}) }}">Edit</a></td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 {% endblock %}

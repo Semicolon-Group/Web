@@ -30,29 +30,29 @@
                                 <div class="card-stacked">
                                     <div class="card-content" style="max-height: 100%;">
                                         <div class="row" style="height: 100%; max-height: 100%;">
-                                                <div class="card" style="height: 100%;">
-                                                    <div class="card-image" style="min-width: 100%; min-height: 40%; overflow: hidden; ">
-                                                        <img id="place-img" style='min-width: 100%; min-height: 100%;' src="{{ asset('member_assets/img/who-we-right.jpg') }}">
-                                                    </div>
-                                                    <div class="card-content" style="overflow-y: auto; max-height: 60%;">
-                                                        <div class="card-title">
-                                                            <span id="place-name">Card Title</span><br/>
-                                                            <div  style="font-size: medium;">
-                                                                <div class="stars-outer">
-                                                                    <div id="start" class="stars-inner"></div>
-                                                                </div>
+                                            <div class="card" style="height: 100%;">
+                                                <div class="card-image" style="min-width: 100%; min-height: 40%; overflow: hidden; ">
+                                                    <img id="place-img" style='min-width: 100%; min-height: 100%;' src="{{ asset('member_assets/img/who-we-right.jpg') }}">
+                                                </div>
+                                                <div class="card-content" style="overflow-y: auto; max-height: 60%;">
+                                                    <div class="card-title">
+                                                        <span id="place-name">Card Title</span><br/>
+                                                        <div  style="font-size: medium;">
+                                                            <div class="stars-outer">
+                                                                <div id="start" class="stars-inner"></div>
                                                             </div>
                                                         </div>
-                                                        <div id="open"></div>
-                                                        <div id="place-address"></div>
-                                                        <span id="phone-number"></span><br/>
-                                                        <span id="website"></span>
-                                                        <br/>
-                                                        <br/>
-                                                        <b>Reviews:</b><br/>
-                                                        <div id="reviews" style="margin-bottom: 20px;"></div>
                                                     </div>
+                                                    <div id="open"></div>
+                                                    <div id="place-address"></div>
+                                                    <span id="phone-number"></span><br/>
+                                                    <span id="website"></span>
+                                                    <br/>
+                                                    <br/>
+                                                    <b>Reviews:</b><br/>
+                                                    <div id="reviews" style="margin-bottom: 20px;"></div>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -66,6 +66,20 @@
     </div>
 
     <div class="content">
+        <div class="tabs" style="margin-top: 30px;">
+            <div class="row col-md-offset-1 col-md-10" style="text-align: center;">
+                <div class="tab-1 col-md-4 tabs-tab">
+                    <h2 id="cafe" class="active">Cafes</h2>
+                </div>
+                <div class="tab-1 col-md-4 tabs-tab">
+                    <h2 id="restaurant">Restaurants</h2>
+                </div>
+                <div class="tab-1 col-md-4 tabs-tab">
+                    <h2 id="park">Parks</h2>
+                </div>
+            </div>
+            <br/><hr/>
+        </div>
 
         <div id="filter" style="margin-top: 30px;">
             <div class="row">
@@ -106,10 +120,8 @@
                                             <div class="form-group">
                                                 <label for="sort">Sort by:</label><br>
                                                 <select id="sort">
-                                                    <option value="mostRated">Most rated</option>
-                                                    <option value="leastRated">Least rated</option>
-                                                    <option value="closest">Closest</option>
-                                                    <option value="farthest">Farthest</option>
+                                                    <option value="name" selected>Name</option>
+                                                    <option value="rating">Rating</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -121,9 +133,10 @@
                 </div>
             </div>
         </div>
-        <div id="recommandations" style="margin-top: 40px; margin-bottom: 40px;"></div>
-    </div>
+        <div id="recommandations" style="margin-top: 40px; margin-bottom: 40px;">
 
+        </div>
+    </div>
     <div id="nearBYSearch-container"></div>
 {% endblock %}
 {% block scripts %}

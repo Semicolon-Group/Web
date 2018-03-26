@@ -1,11 +1,18 @@
 var slider = document.getElementById("range");
 var output = document.getElementById("output");
+var open = false;
+var type = 'cafe';
+var map;
+var rank = 'name';
+
+
+
 output.innerHTML = slider.value; // Display the default slider value
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
     output.innerHTML = this.value;
-}
+};
 
 $('#range').change(function () {
     initialize();
@@ -17,7 +24,55 @@ $('input:radio[name=show]').change(function () {
     initialize();
 });
 
-var open = false;
+$('#sort').change(function () {
+    rank = $(this).val();
+    initialize();
+});
+
+$('#cafe').click(function () {
+    if(type!='cafe'){
+        resetTabSelection();
+        resetFilter();
+        $(this).toggleClass("active");
+        type = 'cafe';
+        initialize();
+    }
+});
+
+$('#restaurant').click(function () {
+    if(type!='restaurant'){
+        resetTabSelection();
+        resetFilter();
+        $(this).toggleClass("active");
+        type = 'restaurant';
+        initialize();
+    }
+});
+
+$('#park').click(function () {
+    if(type!='park'){
+        resetTabSelection();
+        resetFilter();
+        $(this).toggleClass("active");
+        type = 'park';
+        initialize();
+    }
+});
+
+function resetFilter() {
+    $('#all').prop('checked', true);
+    open = false;
+    $('#search-box').val('');
+    $('#range').val(1000);
+    output.innerHTML = $('#range').val();
+}
+
+function resetTabSelection() {
+    $('#cafe').removeClass('active');
+    $('#restaurant').removeClass('active');
+    $('#park').removeClass('active');
+}
+
 $('input:radio[name="openToggle"]').change(
     function(){
         open = $(this).val();
@@ -38,6 +93,7 @@ function showMap(node) {
 $(initialize());
 
 function initialize() {
+    $('#recommandations').html('<div class="loader-container"><div class="loader"></div></div>');
     var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
     var request;
     if(open === 'true'){
@@ -46,14 +102,14 @@ function initialize() {
             radius: $('#range').val(),
             name: $('#search-box').val(),
             openNow: true,
-            types: ['store']
+            types: [type]
         };
     }else{
         request = {
             location: pyrmont,
             radius: $('#range').val(),
             name: $('#search-box').val(),
-            types: ['store']
+            types: [type]
         };
     }
 
@@ -63,7 +119,27 @@ function initialize() {
 
 function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
+        if(results.length == 0){
+            $('#recommandations').html("<h1 class='pressed'>No places found :(</h1>");
+            return;
+        }
+        console.log(results);
+        if(rank === 'name'){
+            results.sort(function (a,b) {
+                if (a.name < b.name)
+                    return -1;
+                if (a.name > b.name)
+                    return 1;
+                return 0;
+            });
+        }else if(rank === 'rating'){
+            results.sort(function (a, b) {
+                return a.rating - b.rating;
+            });
+        }
+        console.log(results);
         $('#recommandations').html("");
+        results.sort();
         for (var i = 0; i < results.length; i++) {
             var place = results[i];
             $('#recommandations').append("" +
@@ -87,9 +163,22 @@ function callback(results, status) {
                 "</div>");
             getDistance(i);
         }
+    }else{
+        $('#recommandations').html("<h1 class='pressed'>No places found :(</h1>");
     }
 }
 
+function compareByName(a,b) {
+    if (a.name < b.name)
+        return -1;
+    if (a.name > b.name)
+        return 1;
+    return 0;
+}
+
+function compareByRating(a, b) {
+    return a.rating - b.rating;
+}
 
 function getDistance(i) {
     var distanceService = new google.maps.DistanceMatrixService();
@@ -113,9 +202,6 @@ function getDistance(i) {
         }
     );
 }
-
-var map;
-var marker;
 
 function drawMapDirections(originLat, originlng, destinationLat, destinationLng) {
     var defLatLng = new google.maps.LatLng(originLat, originlng);

@@ -1,4 +1,10 @@
+var popupId;
+var timeout;
+var emoPath;
+
 $(function () {
+    emoPath = $("#emoticon_path").data('path');
+
     $("#post_button").click(function () {
         var text = $("#post_space").html();
         if(text === '')
@@ -63,6 +69,15 @@ $(function () {
             url: path
         });
     });
+    $(".reaction-popup").mouseenter(function () {
+        clearTimeout(timeout);
+    });
+    $(".reaction-popup").mouseleave(function () {
+        clearTimeout(timeout);
+        hide(popupId);
+    });
+    $(".emoticon").click(function(){
+    });
 });
 
 function updateModalText(id){
@@ -76,6 +91,12 @@ function showDeleteModal(id) {
 }
 
 function react(id, type, reaction) {
+    clearTimeout(timeout);
+    $(".reaction-popup").hide();
+    $("#" + id + "-react").html(
+        "<img class='button-icon' src='" + emoPath + "/" + reaction + ".png'>\n" +
+        "<p>" + reaction + "</p>"
+    );
     var DATA = {'id':id, 'type':type, 'reaction':reaction};
     var path = $("#react_path").data('path');
     $.ajax({
@@ -83,7 +104,25 @@ function react(id, type, reaction) {
         data: DATA,
         url: path,
         success: function (data) {
-            console.log(data['title']);
+            var title = data['title'];
+            $("#" + id + "-react").html(
+                "<img class='button-icon' src='" + emoPath + "/" + title + ".png'>\n" +
+                    "<p>" + title + "</p>"
+            );
         }
     });
+}
+
+function show(id){
+    clearTimeout(timeout);
+    timeout = window.setTimeout(function(){
+        $("#" + id + "-popup").show();
+        popupId = id;
+    }, 500);
+}
+function hide(id){
+    clearTimeout(timeout);
+    timeout = window.setTimeout(function(){
+        $("#" + id + "-popup").hide();
+    }, 1000);
 }

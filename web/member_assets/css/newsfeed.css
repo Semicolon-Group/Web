@@ -86,14 +86,68 @@
 .reaction-statistics{
 
 }
-.reaction-box{
-    width: 20%;
+.reaction-popup{
+    display: none;
+    position: absolute;
+    right: 10px;
+    bottom: 68px;
+    width: 200px;
     margin: auto;
     padding: 0 0 0 0;
+    background-color: white;
+    border-radius: 20px;
+    text-align: center;
+    -webkit-box-shadow: 0 6px 69px -10px rgba(189,183,189,1);
+    -moz-box-shadow: 0 6px 69px -10px rgba(189,183,189,1);
+    box-shadow: 0 6px 69px -10px rgba(189,183,189,1);
+}
+.reaction-statistics{
+    position: relative;
+    left: 100px;
+    color: lightgray;
+    font-size: 11pt;
+}
+.emo-stat{
+    height: 16px;
+}
+.reaction-box{
+
+}
+.react-action{
+    display: inline;
+    float: right;
 }
 .emoticon{
+    position: relative;
+    bottom: 0;
     width: 20%;
-    margin-right: 1%;
-    margin-left: 1%;
+    padding: 2% 2% 2% 2%;
     cursor: pointer;
+}
+.emoticon:hover{
+    padding: 0 0 0 0;
+}
+.button-icon{
+    width: 20px;
+    height: 20px;
+    margin-bottom: 3px;
+    vertical-align: middle;
+}
+.button{
+    background-color: transparent;
+    border: none;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.button > p{
+    display: inline;
+    font-weight: 500;
+    color: gray;
+}
+.grey{
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+.button:hover{
+    background-color: #F6F6F7;
 }

@@ -10,6 +10,7 @@ namespace NewsFeedBundle\Service;
 
 
 use BaseBundle\Entity\Enumerations\PostType;
+use BaseBundle\Entity\Enumerations\ReactionType;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
 use BaseBundle\Entity\PostReaction;
@@ -21,7 +22,25 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class PostService
 {
+
     public static function getPosts($doctrine, $user){
+        /**
+         * @param array $reactions
+         * @return object
+         */
+        function getStats($reactions){
+            $mapped = array_map(function($a){
+                /** @var PostReaction $a */
+                return ReactionType::getName($a->getReaction());
+            }, $reactions);
+            $count = count($mapped);
+            $mapped = array_unique($mapped);
+            $stat = new \stdClass();
+            $stat->reactions = $mapped;
+            $stat->nbr = $count;
+            return $stat;
+        }
+
         /** @var ManagerRegistry $doctrine */
         /** @var User $user */
         /** @var PhotoRepository $photoRepo */
@@ -40,11 +59,16 @@ class PostService
             $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($post->getUser()));
             $post->setType(PostType::Status);
             $post->setReactions($reactRepo->findBy(['postId' => $post->getId()]));
+            $post->setStats(getStats($post->getReactions()));
             $currentReaction = $reactRepo->findBy(['postId' => $post->getId(), 'user' => $user]);
-            if(empty($currentReaction))
+            if(empty($currentReaction)){
                 $currentReaction = -1;
-            else
+                $post->getStats()->currReacTitle = 'None';
+            }
+            else {
                 $currentReaction = $currentReaction[0]->getReaction();
+                $post->getStats()->currReacTitle = ReactionType::getName($currentReaction);
+            }
             $post->setCurrentReaction($currentReaction);
         }
 
@@ -59,11 +83,16 @@ class PostService
             $post->setDate($photo->getDate());
             $post->setContent('/mysoulmateuploads/images/' . $photo->getUrl());
             $post->setReactions($reactRepo->findBy(['photoId' => $photo->getId()]));
+            $post->setStats(getStats($post->getReactions()));
             $currentReaction = $reactRepo->findBy(['photoId' => $photo->getId(), 'user' => $user]);
-            if(empty($currentReaction))
+            if(empty($currentReaction)){
                 $currentReaction = -1;
-            else
+                $post->getStats()->currReacTitle = 'None';
+            }
+            else {
                 $currentReaction = $currentReaction[0]->getReaction();
+                $post->getStats()->currReacTitle = ReactionType::getName($currentReaction);
+            }
             $post->setCurrentReaction($currentReaction);
             $posts[] = $post;
         }
@@ -76,4 +105,5 @@ class PostService
 
         return $posts;
     }
+
 }

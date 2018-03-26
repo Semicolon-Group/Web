@@ -66,6 +66,11 @@ class Post
     private $currentReaction;
 
     /**
+     * @var \stdClass
+     */
+    private $stats;
+
+    /**
      * Get id
      *
      * @return integer
@@ -254,5 +259,29 @@ class Post
     public function getCurrentReaction()
     {
         return $this->currentReaction;
+    }
+
+    /**
+     * Set stats
+     *
+     * @param \stdClass $stats
+     *
+     * @return Post
+     */
+    public function setStats($stats)
+    {
+        $this->stats = $stats;
+
+        return $this;
+    }
+
+    /**
+     * Get stats
+     *
+     * @return \stdClass
+     */
+    public function getStats()
+    {
+        return $this->stats;
     }
 }

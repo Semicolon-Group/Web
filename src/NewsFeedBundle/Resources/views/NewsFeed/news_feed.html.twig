@@ -30,6 +30,7 @@
     <div id="react_path" data-path = "{{ path('react') }}"></div>
     <div id="edit_icon_path" data-path = "{{ asset("member_assets/img/edit.png") }}"></div>
     <div id="delete_icon_path" data-path = "{{ asset("member_assets/img/close.png") }}"></div>
+    <div id="emoticon_path" data-path = "{{ asset("member_assets/img/Emoticons/") }}"></div>
     <div id="selected_post" data-id=""></div>
 
     <!-- Edit Post Modal -->
@@ -125,22 +126,45 @@
 
                                 <!-- Reactions -->
                                 <div class="reaction-box">
-                                    {% if post.user.id != online.id %}
-                                        <img src="{{ asset('member_assets/img/Emoticons/Smile.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Smile')">
-                                        <img src="{{ asset('member_assets/img/Emoticons/Love.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Love')">
-                                        <img src="{{ asset('member_assets/img/Emoticons/Laugh.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Laugh')">
-                                        <img src="{{ asset('member_assets/img/Emoticons/Scowl.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Scowl')">
-                                    {% endif %}
-
                                     <!-- Statistics -->
                                     <span class="reaction-statistics">
-
+                                        {% for r in post.stats.reactions %}
+                                            <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
+                                        {% endfor %}
+                                        <span id="{{ post.id }}-nbr" data-nbr="{{ post.stats.nbr }}">
+                                            {% if post.stats.nbr != 0 %}
+                                                {% if post.currentReaction != -1 %}
+                                                    You
+                                                    {% if post.stats.nbr > 1 %}
+                                                        and {{ post.stats.nbr - 1 }} others
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ post.stats.nbr }}
+                                                {% endif %}
+                                            {% endif %}
+                                        </span>
                                     </span>
 
                                     <!-- React Action -->
-                                    <span class="react-action">
+                                    <div class="react-action">
                                         <span id="{{ post.id }}-current-reaction"></span>
-                                    </span>
+                                        {% if post.user.id != online.id %}
+                                        <button class="button" id="{{ post.id }}-react" onmouseenter="show({{ post.id }})" onmouseleave="hide({{ post.id }})">
+                                            <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/' ~ post.stats.currReacTitle ~ '.png') }}">
+                                            <p>{{ post.stats.currReacTitle }}</p>
+                                        </button>{% endif %}<button class="button">
+                                            <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/comment.png') }}">
+                                            <p>Comment</p>
+                                        </button>
+                                        <div id="{{ post.id }}-popup" class="reaction-popup">
+                                            {% if post.user.id != online.id %}
+                                                <img src="{{ asset('member_assets/img/Emoticons/Smile.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Smile')">
+                                                <img src="{{ asset('member_assets/img/Emoticons/Love.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Love')">
+                                                <img src="{{ asset('member_assets/img/Emoticons/Laugh.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Laugh')">
+                                                <img src="{{ asset('member_assets/img/Emoticons/Scowl.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Scowl')">
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}

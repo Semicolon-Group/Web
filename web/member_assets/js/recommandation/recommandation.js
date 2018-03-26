@@ -4,8 +4,8 @@ var open = false;
 var type = 'cafe';
 var map;
 var rank = 'name';
-
-
+var currentLat;
+var currentLng;
 
 output.innerHTML = slider.value; // Display the default slider value
 
@@ -13,6 +13,43 @@ output.innerHTML = slider.value; // Display the default slider value
 slider.oninput = function() {
     output.innerHTML = this.value;
 };
+
+$(function () {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        alert("Geolocation is not supported by this browser, your provided address will be used instead");
+        currentLat = -33.8665433;
+        currentLng = 151.1956316;
+        initialize();
+    }
+});
+
+function showPosition(position) {
+    currentLat = position.coords.latitude;
+    currentLng = position.coords.longitude;
+    initialize();
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("Your provided address will be used instead");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location unavailable, your provided address will be used instead");
+            break;
+        case error.TIMEOUT:
+            alert("Location request timed out, your provided address will be used instead");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("An unknown error has occurred, your provided address will be used instead");
+            break;
+    }
+    currentLat = -33.8665433;
+    currentLng = 151.1956316;
+    initialize();
+}
 
 $('#range').change(function () {
     initialize();
@@ -85,16 +122,14 @@ function showMap(node) {
     var placeId = $(node).data('placeId');
     $('#map_canvas').html('');
 
-    drawMapDirections(-33.8665433, 151.1956316, lat, lng);
+    drawMapDirections(currentLat, currentLng, lat, lng);
     fillPlaceDetails(placeId);
     map.setZoom(20);
 }
 
-$(initialize());
-
 function initialize() {
     $('#recommandations').html('<div class="loader-container"><div class="loader"></div></div>');
-    var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
+    var pyrmont = new google.maps.LatLng(currentLat,currentLng);
     var request;
     if(open === 'true'){
         request = {
@@ -123,7 +158,12 @@ function callback(results, status) {
             $('#recommandations').html("<h1 class='pressed'>No places found :(</h1>");
             return;
         }
-        console.log(results);
+        $('#recommandations').html("");
+        results.forEach(function (place) {
+           if(place.rating == null){
+               place.rating = 0;
+           }
+        });
         if(rank === 'name'){
             results.sort(function (a,b) {
                 if (a.name < b.name)
@@ -134,24 +174,32 @@ function callback(results, status) {
             });
         }else if(rank === 'rating'){
             results.sort(function (a, b) {
-                return a.rating - b.rating;
+                return b.rating - a.rating;
             });
         }
-        console.log(results);
-        $('#recommandations').html("");
-        results.sort();
-        for (var i = 0; i < results.length; i++) {
-            var place = results[i];
+
+        for(i=0; i<results.length; i++){
+            place = results[i];
+            photoPath = $('#placeholder-img').html();
+            if(place.photos !== undefined && place.photos.length != 0){
+                photoPath = place.photos[0].getUrl({ 'maxWidth': 800, 'maxHeight': 800 });
+            }
+            var open = "not provided";
+            var color = "black";
+            if(place.opening_hours != null && place.opening_hours.open_now != null){
+                open = place.opening_hours.open_now?"Open":"Closed";
+                color = place.opening_hours.open_now?"green":"red";
+            }
             $('#recommandations').append("" +
                 "<div class=\"row card-container margins\" style=\"width: 100%;\">\n" +
                 "    <div class=\"col-sm-offset-1 col-md-10\">\n" +
-                "       <div class=\"card horizontal clickable\" onclick='showMap(this);' data-toggle=\"modal\" data-target=\"#map\"  data-place-id="+place.place_id+" data-place-lat="+place.geometry.location.lat()+" data-place-lng="+place.geometry.location.lng()+">\n" +
+                "       <div id='place-"+i+"' class=\"card horizontal clickable\" onclick='showMap(this);' data-toggle=\"modal\" data-target=\"#map\"  data-place-id="+place.place_id+" data-place-lat="+place.geometry.location.lat()+" data-place-lng="+place.geometry.location.lng()+">\n" +
                 "           <div class=\"card-image\" style=\"width: 25%; min-width: 120px; overflow: hidden; \">\n" +
-                "               <img style='min-width: 100%; min-height: 100%;' src="+place.photos[0].getUrl({ 'maxWidth': 800, 'maxHeight': 800 })+">\n" +
+                "               <img style='min-width: 100%; min-height: 100%;' src='"+photoPath+"'>\n" +
                 "           </div>\n" +
                 "           <div class=\"card-stacked\">\n" +
                 "               <div class=\"card-content\">\n" +
-                "                   <span class=\"card-title\">"+place.name+"<span style='float: right;'> "+place.rating+"   <span class='glyphicon glyphicon-star'></span> </span><br/><sub style='font-size: medium;'><span>"+place.vicinity+"</span> - <b><span style='color: "+((place.opening_hours.open_now == true)?"green":"red")+";'>"+((place.opening_hours.open_now == true)?"Open":"Closed")+"</span></b></sub></span><br/>\n" +
+                "                   <span class=\"card-title\">"+place.name+"<span style='float: right;'> "+place.rating+"   <span class='glyphicon glyphicon-star'></span> </span><br/><sub style='font-size: medium;'><span>"+place.vicinity+"</span> - <b><span style='color: "+color+";'>"+open+"</span></b></sub></span><br/>\n" +
                 "                   " +
                 "               </div>\n" +
                 "               <div class=\"card-action\">\n" +
@@ -168,23 +216,14 @@ function callback(results, status) {
     }
 }
 
-function compareByName(a,b) {
-    if (a.name < b.name)
-        return -1;
-    if (a.name > b.name)
-        return 1;
-    return 0;
-}
-
-function compareByRating(a, b) {
-    return a.rating - b.rating;
-}
-
 function getDistance(i) {
     var distanceService = new google.maps.DistanceMatrixService();
+    var selector = '#place-'+i;
+    var destLat = $(selector).data('placeLat');
+    var destLng = $(selector).data('placeLat');
     distanceService.getDistanceMatrix({
-            origins: [{lat: 55.93, lng: -3.118}],
-            destinations: [{lat: 50.087, lng: 14.421}],
+            origins: [{lat: currentLat, lng: currentLat}],
+            destinations: [{lat: destLat, lng: destLng}],
             travelMode: google.maps.TravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.METRIC,
             durationInTraffic: true,
@@ -238,17 +277,28 @@ function fillPlaceDetails(placeId) {
     }, function(place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             const starTotal = 5;
-
+            if(place.rating===undefined)place.rating=0;
             const starPercentage = (place.rating / starTotal) * 100;
             const starPercentageRounded = (Math.round(starPercentage / 10) * 10);
+            photoPath = $('#placeholder-img').html();
+            if(place.photos !== undefined && place.photos.length != 0){
+                photoPath = place.photos[0].getUrl({ 'maxWidth': 800, 'maxHeight': 800 });
+            }
+            var open = "not provided";
+            var color = "black";
+            if(place.opening_hours != null && place.opening_hours.open_now != null){
+                open = place.opening_hours.open_now?"Open":"Closed";
+                color = place.opening_hours.open_now?"green":"red";
+            }
+
             $('#start').css('width', starPercentageRounded+"%");
             $('#place-name').html(place.name);
-            $('#place-img').attr('src', place.photos[0].getUrl({ 'maxWidth': 800, 'maxHeight': 800 }));
-            $('#open').html("<b><span style='color: "+((place.opening_hours.open_now == true)?"green":"red")+";'>"+((place.opening_hours.open_now == true)?"Open":"Closed")+"</span></b>");
+            $('#place-img').attr('src', photoPath);
+            $('#open').html("<b><span style='color: "+color+";'>"+open+"</span></b>");
             $('#place-address').html(place.adr_address);
-            if(place.formatted_phone_number != null)
+            if(place.formatted_phone_number !== undefined)
                 $('#phone-number').html("<b>Phone number: </b>"+place.formatted_phone_number);
-            if(place.website != null)
+            if(place.website !== undefined)
                 $('#website').html('<a target="_blank" href="'+place.website+'">WebSite</a>');
             $('#reviews').html('');
             console.log(place.reviews);

@@ -87,7 +87,6 @@ app:
     type: annotation
     prefix: /
 
-# app/config/routing.yml
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
@@ -106,3 +105,27 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+
+business_login:
+    path:  /business/login
+    defaults: { _controller: BusinessFOSSecurityBundle:Security:login }
+
+business_login_check:
+    path:  /business/login_check
+    defaults: { _controller: FOSUserBundle:Security:check }
+
+business_logout:
+    path:  /business/logout
+    defaults: { _controller: FOSUserBundle:Security:logout }
+
+admin_login:
+    path:  /admin/login
+    defaults: { _controller: AdminFOSSecurityBundle:Security:login }
+
+admin_login_check:
+    path:  /admin/login_check
+    defaults: { _controller: FOSUserBundle:Security:check }
+
+admin_logout:
+    path:  /admin/logout
+    defaults: { _controller: FOSUserBundle:Security:logout }

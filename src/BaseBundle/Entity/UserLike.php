@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * UserLike
  *
  * @ORM\Table(name="user_like", indexes={@ORM\Index(name="user_like_receiver", columns={"like_receiver_id"}), @ORM\Index(name="fk_like_sender_id", columns={"like_sender_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BaseBundle\Repository\UserLikeRepository")
  */
 class UserLike
 {

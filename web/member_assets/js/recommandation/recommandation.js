@@ -19,8 +19,8 @@ $(function () {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
     } else {
         alert("Geolocation is not supported by this browser, your provided address will be used instead");
-        currentLat = -33.8665433;
-        currentLng = 151.1956316;
+        currentLat = parseFloat($('#lat').html());
+        currentLng = parseFloat($('#lng').html());
         initialize();
     }
 });
@@ -46,8 +46,8 @@ function showError(error) {
             alert("An unknown error has occurred, your provided address will be used instead");
             break;
     }
-    currentLat = -33.8665433;
-    currentLng = 151.1956316;
+    currentLat = parseFloat($('#lat').html());
+    currentLng = parseFloat($('#lng').html());
     initialize();
 }
 
@@ -128,6 +128,7 @@ function showMap(node) {
 }
 
 function initialize() {
+    console.log(currentLat+' '+currentLng);
     $('#recommandations').html('<div class="loader-container"><div class="loader"></div></div>');
     var pyrmont = new google.maps.LatLng(currentLat,currentLng);
     var request;

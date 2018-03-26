@@ -48,6 +48,11 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+        <style>
+            .pac-container {
+                z-index: 10000 !important;
+            }
+        </style>
     </head>
     <body>
         <div class="login_form_inner zoom-anim-dialog mfp-hide" id="small-dialog">
@@ -504,36 +509,8 @@
         <script src="{{ asset('member_assets/js/video_player.js') }}"></script>
         <script src="{{ asset('member_assets/js/theme.js') }}"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
-        <script>
-            function checkEmailUnicity() {
-                var mail = $('#fos_user_registration_form_email').val();
-                $.ajax({
-                    type: "POST",
-                    url: "{{ path('check_email_unicity') }}",
-                    data: { email : mail},
-                    success: function (data) {
-                        if(!data){
-                            document.getElementById('fos_user_registration_form_email').setCustomValidity("This email address already exists");
-                        }
-                    }
-                });
-            }
-
-            function checkUsernameUnicity() {
-                var uName = $('#fos_user_registration_form_username').val();
-                $.ajax({
-                    type: "POST",
-                    url: "{{ path('check_username_unicity') }}",
-                    data: { username : uName},
-                    success: function (data) {
-                        if(!data){
-                            document.getElementById('fos_user_registration_form_username').setCustomValidity("This username already exists");
-                        }
-                    }
-                });
-            }
-        </script>
-        <script src="{{ asset('member_assets/js/registration.js') }}"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
+        <script type="text/javascript" src="{{ asset('member_assets/js/registration.js') }}"></script>
     </body>
 
 <!-- Mirrored from demo.verodate.com/html/verodate/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 24 Jan 2018 12:29:50 GMT -->

@@ -13,6 +13,10 @@
 {% endblock %}
 
 {% block body %}
+    <div id="address" style="display: none;">
+        <span id="lat">{{ address.latitude }}</span>
+        <span id="lng">{{ address.longitude }}</span>
+    </div>
     <div id="map" class="modal fade centered-modal" role="dialog">
         <div class="modal-dialog" style="width: 70%;">
             <div class="modal-content">

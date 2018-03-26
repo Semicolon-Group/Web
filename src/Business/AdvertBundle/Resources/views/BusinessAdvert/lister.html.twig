@@ -3,6 +3,29 @@
 
 {% block title %}PubliciteBundle:Advert:Lister{% endblock %}
 
+{% block scripts %}
+                            <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
+                            <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
+                            <script >
+                                {% for m in pubs %}
+                                {% for i in [1..10] %}
+                                $(document).ready(function () {
+
+                                    $('#{{ m.id }}')
+                                        .countdown("{{ m.endDate | date('Y/m/d')}}",  function (event) {
+                                            $(this).text(
+                                                event.strftime('%D days %H:%M:%S')
+                                            );
+                                        });
+
+                                });
+                                {% endfor %}
+                                {% endfor %}
+                            </script>
+
+
+{% endblock %}
+
 {% block body %}
 
     <!-- RECENT PURCHASES -->
@@ -16,31 +39,40 @@
                 <thead>
                 <tr>
 
-                    <th>content</th>
-                    <th>reason</th>
+                    <th>Content</th>
+                    <th>Reason</th>
 
-                    <th>photo</th>
-                    <th>price</th>
-                    <th>payed</th>
+                    <th>Photo</th>
+                    <th>Price</th>
+                    <th>Payed</th>
 
-                    <th>state</th>
-                    <th>date</th>
+                    <th>State</th>
+                    <th>Ends in</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for m in pubs %}
+                    {% for i in [1..10] %}
                 <tr>
 
-                    <td>{{ m.content }}</td>
-                    <td>{{ m.reason }}</td>
+                    <td><span class="label label-info"> {{ m.content }}</span></td>
+                    <td><span class="label label-info">{{ m.reason }}</span></td>
                     <td> <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
                                 style="height : 150px ;width:150px" alt=""></td>
-                    <td>{{ m.price }}</td>
-                    <td>{% if m.payed==1 %} Yes {% else %} No {% endif %}</td>
+                    <td ><span class="label label-info">{{ m.price }} EUR</span></td>
+                    <td >{% if m.payed==1 %}<span class="label label-success"> Yes</span> {% else %}<span class="label label-danger"> No</span> {% endif %}</td>
 
                     <td><span class="label label-{% if m.state==1 %}success{% elseif m.state==0 %}warning{% elseif m.state==2 %}danger{% endif %}">{% if m.state==1 %} approved {% elseif m.state==0 %}not processed{% elseif m.state==2 %} denied {% endif %}</span></td>
-                    <td>{{ m.endDate | date}}</td>
+
+
+
+                    <td ><span class="label label-default" id="{{ m.id }}"+i > </span></br>
+                <span id="time" class="label label-default" >
+                        {{ m.endDate | date('Y/m/d') }}
+
+                </span>
+                        </td>
                     <td ><button type="button" class="btn btn-warning" ><i class="fa fa-warning"></i>
                             <a href="{{ path('traiter_business', {'id':m.id}) }}"> Modify </a></button>
 
@@ -50,6 +82,7 @@
                         <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete </button></td>
 
                 </tr>
+                        {% endfor %}
                 {% endfor %}
 
                 </tbody>
@@ -58,11 +91,14 @@
         </div>
         <div class="panel-footer">
             <div class="row">
-                <div class="col-md-6"><span class="panel-note"><i class="fa fa-clock-o"></i> Your recent orders .</span></div>
+                <div class="col-md-6" id="echo"><span class="panel-note"><i class="fa fa-clock-o"></i> Your recent orders .</span></div>
 
             </div>
         </div>
-    </div>
+
+
     <!-- END RECENT PURCHASES -->
 
 {% endblock %}
+
+

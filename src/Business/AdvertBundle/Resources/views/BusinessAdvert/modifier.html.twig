@@ -13,6 +13,24 @@
     <li class="breadcrumb-item">Advert</li>
     <li class="breadcrumb-item active">Create</li>
 {% endblock %}
+{% block scripts %}
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#getting-started")
+                .countdown($('#basebundle_advert_endDate_year').val()+"/"+$('#basebundle_advert_endDate_month').val()+"/"
+                    +$('#basebundle_advert_endDate_day').val() ,  function (event) {
+                    $(this).text(
+                        event.strftime('%D days %H:%M:%S')
+                    );
+                });
+        });
+
+    </script>
+{% endblock %}
 
 {% block body %}
 
@@ -76,6 +94,11 @@
     </script>
     {{ form_start(form,  { 'id': 'formtwig' }) }}<br>
     <table>
+        <tr>
+            <div id="getting-started">
+
+            </div>
+        </tr>
 
         <tr>
             <label class="fancy-radio">
@@ -128,7 +151,7 @@
 
         <tr>
             <td>end date</td>
-            <td>{{ form_widget(form.endDate)}}</td>
+            <td>{{ form_widget(form.endDate ) }}</td>
         </tr>
 
 

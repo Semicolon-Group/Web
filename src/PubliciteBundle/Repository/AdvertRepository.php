@@ -28,8 +28,8 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         $q=$this->getEntityManager();
         $max = $q->createQuery('Select MAX(m.id) FROM BaseBundle:Advert m where   m.position=:pos ')
             ->setParameter('pos','1')->getSingleScalarResult();
-        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand 
-        ORDER BY m.id ASC ')  ->setParameter('rand',rand(0,$max))
+        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand and m.position=:pos
+        ORDER BY m.id ASC ')  ->setParameter('rand',rand(0,$max))->setParameter('pos','1')
             ->setMaxResults(1)
             ->getResult();
     }
@@ -42,7 +42,8 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
     }
     public function findPubsPourAdminDQL()
     {
-        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where  m.endDate>=CURRENT_TIMESTAMP()')
+        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where  m.endDate>=CURRENT_TIMESTAMP() ORDER BY 
+                  m.')
          ;
         return $q->getResult();
     }
@@ -59,6 +60,15 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         $q=$this->getEntityManager()->createQuery('update BaseBundle:Advert m set m.clicks=m.clicks+1 where m.id=:a')
             ->setParameter('a',$id);
         $q->execute();
+
+    }
+    public function GetUserDQL($id)
+    {
+        //select * from user where id = (select advert.business_id from advert where advert.id = 3 )
+
+        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.id=:a  ')
+            ->setParameter('a',$id);
+        return $q->getResult();
 
     }
 

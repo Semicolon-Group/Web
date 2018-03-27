@@ -54,7 +54,7 @@
                         ,
                         $('#basebundle_advert_endDate_month').val()-1
                        ,
-                        $('#basebundle_advert_endDate_day').val());
+                        ($('#basebundle_advert_endDate_day').val()));
                     var d = new Date();
                     var s = (pub.getTime()-d.getTime());
                     var diff = Math.ceil(s / (1000 * 3600 * 24));

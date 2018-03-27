@@ -2,13 +2,18 @@
 
 {% block title %}Profile | {{ user.firstname | capitalize }}{% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block banner %}
     <section class="banner_area profile_banner">
+        <img class="photo" data-toggle="modal" data-target="#photo-display" src="{{ asset('member_assets//img/banner/banner-bg-3.jpg') }}" style="width: 100%; height: 100%;" >
         <div class="profiles_inners">
             <div class="container">
                 <div class="profile_content">
-                    <div class="user_img">
-                        <img class="img-circle" src="{{ asset('member_assets/img/members/single_members.png') }}" alt="">
+                    <div class="user_img" data-toggle="modal" data-target="#photo-display">
+                        <img class="img-circle photo" src="{{ asset('member_assets/img/members/single_members.png') }}" alt="">
                     </div>
                     <div class="user_name">
                         <h3>{{ user.firstname | capitalize }} {{ user.lastname | capitalize }}</h3>
@@ -36,17 +41,7 @@
                         </ul>
                     </div>
                     <div class="right_side_content">
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Block</a></li>
-                                    <li><a href="#">Report</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <button type="submit" value="LogIn" class="btn form-control login_btn">Like <img src="img/user.png" alt=""></button>
-                        <button type="submit" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
+                        <button type="submit" value="LogIn" class="btn form-control login_btn">Edit</button>
                     </div>
                 </div>
             </div>
@@ -54,6 +49,86 @@
     </section>
 {% endblock %}
 {% block body %}
+    <div id="answer-form" class="modal fade centered-modal" role="dialog">
+        <div class="modal-dialog" style="width: 70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Directions</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row card-container" style="width: 100%;">
+                        <div class="col-md-12">
+                            <div class="card horizontal" style=" height: 70vh;">
+                                <div class="" style="width: 60%;">
+                                    <div id="map_canvas"></div>
+                                </div>
+                                <div class="card-stacked">
+                                    <div class="card-content" style="max-height: 100%;">
+                                        <div class="row" style="height: 100%; max-height: 100%;">
+                                            <div class="card" style="height: 100%;">
+                                                <div class="card-image" style="min-width: 100%; min-height: 40%; overflow: hidden; ">
+                                                    <img id="place-img" style='min-width: 100%; min-height: 100%;' src="{{ asset('member_assets/img/who-we-right.jpg') }}">
+                                                </div>
+                                                <div class="card-content" style="overflow-y: auto; max-height: 60%;">
+                                                    <div class="card-title">
+                                                        <span id="place-name">Card Title</span><br/>
+                                                        <div  style="font-size: medium;">
+                                                            <div class="stars-outer">
+                                                                <div id="start" class="stars-inner"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="open"></div>
+                                                    <div id="place-address"></div>
+                                                    <span id="phone-number"></span><br/>
+                                                    <span id="website"></span>
+                                                    <br/>
+                                                    <br/>
+                                                    <b>Reviews:</b><br/>
+                                                    <div id="reviews" style="margin-bottom: 20px;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="photo-display" class="modal fade centered-modal" role="dialog">
+        <div class="modal-dialog" style="width: 70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Photo</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row card-container" style="width: 100%;">
+                        <div class="col-md-12">
+                            <div class="card horizontal" style=" height: 70vh;">
+                                <div class="card-stacked">
+                                    <div class="card-content" style="width: 100%;">
+                                        <img src="" id="img-canvas"/>
+                                    </div>
+                                    <div class="card-action" >
+                                        <button style="float: right; margin-left: 20px;" type="button" class="btn btn-default btn-md">Set as profile picture</button>
+                                        <button style="float: right;" type="button" class="btn btn-default btn-md">Set as cover picture</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <section class="blog_grid_area">
         <div class="container">
             <div class="row">
@@ -64,7 +139,7 @@
                             <li role="presentation"><a href="#likes" aria-controls="likes" role="tab" data-toggle="tab">Likes</a></li>
                             <li role="presentation"><a href="#answers" aria-controls="answers" role="tab" data-toggle="tab">Answers</a></li>
                         </ul>
-                        <div class="tab-content">
+                        <div class="tab-content" style="height: 400px; overflow-y: auto;">
                             <div role="tabpanel" class="tab-pane active fade in" id="profile">
                                 <div class="profile_list">
                                     <ul>
@@ -137,96 +212,71 @@
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="likes">
                                 <div class="profile_list">
-                                    <ul>
-                                        <li><a href="#">Gender</a></li>
-                                        <li><a href="#">Age</a></li>
-                                        <li><a href="#">Country</a></li>
-                                        <li><a href="#">City</a></li>
-                                        <li><a href="#">Birthday</a></li>
-                                        <li><a href="#">Relationship</a></li>
-                                        <li><a href="#">Looking for a</a></li>
-                                        <li><a href="#">Work as</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Female</a></li>
-                                        <li><a href="#">26 years old</a></li>
-                                        <li><a href="#">France</a></li>
-                                        <li><a href="#">Paris</a></li>
-                                        <li><a href="#">16 December 1990</a></li>
-                                        <li><a href="#">Single</a></li>
-                                        <li><a href="#">Man</a></li>
-                                        <li><a href="#">Designer</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Education</a></li>
-                                        <li><a href="#">Know</a></li>
-                                        <li><a href="#">Interests</a></li>
-                                        <li><a href="#">Smoking</a></li>
-                                        <li><a href="#">Eye Color</a></li>
-                                        <li><a href="#">Marital Status</a></li>
-                                        <li><a href="#">Looking for a</a></li>
-                                        <li><a href="#">Work as</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Graduate Degree</a></li>
-                                        <li><a href="#">French, Russian</a></li>
-                                        <li><a href="#">Billiards</a></li>
-                                        <li><a href="#">No</a></li>
-                                        <li><a href="#">Brown</a></li>
-                                        <li><a href="#">Single</a></li>
-                                        <li><a href="#">Man</a></li>
-                                        <li><a href="#">Designer </a></li>
-                                    </ul>
+                                    {% for like in likes %}
+                                        <div class="row card-container margins" style="width: 100%;">
+                                            <div class="col-md-12">
+                                                <div id='place-' class="card horizontal clickable profile" data-path="{{ path('other_profile', {'id': like.likeReceiver.id}) }}">
+                                                    <div class="card-image" style="width: 25%; min-width: 120px; overflow: hidden; ">
+                                                        <img style='min-width: 100%; min-height: 100%;' src=''>
+                                                    </div>
+                                                    <div class="card-stacked">
+                                                        <div class="card-content">
+                                                            <span class="card-title">{{ like.likeReceiver.firstname }} {{ like.likeReceiver.lastname }}<br/>
+                                                            <sub style='font-size: medium;'><span>Since {{ like.date|date }}</span></sub></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="answers">
                                 <div class="profile_list">
-                                    <ul>
-                                        <li><a href="#">Gender</a></li>
-                                        <li><a href="#">Age</a></li>
-                                        <li><a href="#">Country</a></li>
-                                        <li><a href="#">City</a></li>
-                                        <li><a href="#">Birthday</a></li>
-                                        <li><a href="#">Relationship</a></li>
-                                        <li><a href="#">Looking for a</a></li>
-                                        <li><a href="#">Work as</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Female</a></li>
-                                        <li><a href="#">26 years old</a></li>
-                                        <li><a href="#">France</a></li>
-                                        <li><a href="#">Paris</a></li>
-                                        <li><a href="#">16 December 1990</a></li>
-                                        <li><a href="#">Single</a></li>
-                                        <li><a href="#">Man</a></li>
-                                        <li><a href="#">Designer</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Education</a></li>
-                                        <li><a href="#">Know</a></li>
-                                        <li><a href="#">Interests</a></li>
-                                        <li><a href="#">Smoking</a></li>
-                                        <li><a href="#">Eye Color</a></li>
-                                        <li><a href="#">Marital Status</a></li>
-                                        <li><a href="#">Looking for a</a></li>
-                                        <li><a href="#">Work as</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Graduate Degree</a></li>
-                                        <li><a href="#">French, Russian</a></li>
-                                        <li><a href="#">Billiards</a></li>
-                                        <li><a href="#">No</a></li>
-                                        <li><a href="#">Brown</a></li>
-                                        <li><a href="#">Single</a></li>
-                                        <li><a href="#">Man</a></li>
-                                        <li><a href="#">Designer </a></li>
-                                    </ul>
+                                    {% for answer in answers %}
+                                        <div class="row card-container margins" style="width: 100%;">
+                                            <div class="col-md-12">
+                                                <div class="card horizontal">
+                                                    <div class="card-stacked">
+                                                        <div class="card-content">
+                                                            <span class="card-title">{{ answer.question.question }} - <span style="font-size: medium;">{% for key, value in topics %}{% if value == answer.question.topic %}{{ key }}{% endif %}{% endfor %}</span></span>
+                                                            <p style="margin-left: 5%;">
+                                                                <b>Answer: </b>{{ answer.selectedChoice.choice }}<br/>
+                                                                <b>Accepted answers: </b>
+                                                                {% for choice in answer.choice %}
+                                                                    {{ choice.choice }}
+                                                                {% endfor %}
+                                                            </p>
+                                                        </div>
+                                                        <div class="card-action">
+                                                            <span>Since {{ answer.date|date }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="row card-container margins" style="width: 100%;">
+                                        <div class="col-md-12">
+                                            <div id='answer-add' class="card horizontal clickable" data-toggle="modal" data-target="#answer-form">
+                                                <div class="card-stacked">
+                                                    <div class="card-content">
+                                                        <h1 style="text-align: center" class="hoverable"><span class="glyphicon glyphicon-plus-sign"></span></h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="members_about_box">
-                            <h4>About me</h4>
-                            <p>{{ user.about }}</p>
+                        <div class="members_about_box" style="margin-top: 40px; height: 200px; overflow-y: auto;">
+                            <h4>About me</h4><h5 style="float: right;" id="about-edit"><span class="glyphicon glyphicon-edit icons" aria-hidden="true"></span></h5>
+                            <br/><textarea style="height: 70%; display: none;" id="about-input" placeholder="About..." class="form-control"></textarea>
+                            <p id="about" style="margin-left: 3%; text-align: justify; text-indent: 8%;">{{ user.about }}</p>
+                            <div id="no-about-container" style="width: 100%; height: 70%; display: {% if user.about != '' %}none{% else %}block{% endif %};">
+                                <h5 style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%);"><a id="no-about">Write something</a></h5>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,15 +288,15 @@
                                 <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
                             </div>
                             <ul>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-1.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-2.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-3.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-4.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-5.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-6.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-7.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-8.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-9.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-1.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-2.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-3.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-4.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-5.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-6.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-7.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-8.jpg') }}" alt=""></a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#photo-display"><img class="photo" src="{{ asset('member_assets/img/photo/photo-9.jpg') }}" alt=""></a></li>
                             </ul>
                         </aside>
                     </div>
@@ -254,4 +304,33 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function updateAbout() {
+            var aboutVal = $('#about-input').val();
+            $.ajax({
+                type: "POST",
+                url: "{{ path('update_about') }}",
+                data: { about : aboutVal},
+                success: function (data) {
+                    $('#about-input').hide();
+                    $('#about').html($('#about-input').val());
+                    $('#about').show();
+                    if($('#about').html() == ''){
+                        $("#no-about-container").show();
+                    }
+                },
+                error: function (data) {
+                    $('#about-input').hide();
+                    $('#about').show();
+                    if($('#about').html() == ''){
+                        $("#no-about-container").show();
+                    }
+                }
+            });
+        }
+    </script>
+    <script src="{{ asset('member_assets/js/member/profile.js') }}"></script>
 {% endblock %}

@@ -3,6 +3,7 @@
 {% block title %}Recommandations{% endblock %}
 {% block stylesheets %}
     <link href="{{ asset('member_assets/css/recommandation/recommandation.css') }}" rel="stylesheet">
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block banner_title %}Recommandations{% endblock %}
@@ -147,5 +148,34 @@
 {% block scripts %}
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIdDidnYa6DrY7gbh4cocnriVYei7EaaQ&sensor=false"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
+    <script>
+        function checkEmailUnicity() {
+            var mail = $('#fos_user_registration_form_email').val();
+            $.ajax({
+                type: "POST",
+                url: "{{ path('check_email_unicity') }}",
+                data: { email : mail},
+                success: function (data) {
+                    if(!data){
+                        document.getElementById('fos_user_registration_form_email').setCustomValidity("This email address already exists");
+                    }
+                }
+            });
+        }
+
+        function checkUsernameUnicity() {
+            var uName = $('#fos_user_registration_form_username').val();
+            $.ajax({
+                type: "POST",
+                url: "{{ path('check_username_unicity') }}",
+                data: { username : uName},
+                success: function (data) {
+                    if(!data){
+                        document.getElementById('fos_user_registration_form_username').setCustomValidity("This username already exists");
+                    }
+                }
+            });
+        }
+    </script>
     <script src="{{ asset('member_assets/js/recommandation/recommandation.js') }}"></script>
 {% endblock %}

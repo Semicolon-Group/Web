@@ -212,34 +212,6 @@ function updateMaxAge() {
     }
 }
 
-function checkEmailUnicity() {
-    var mail = $('#fos_user_registration_form_email').val();
-    $.ajax({
-        type: "POST",
-        url: "{{ path('check_email_unicity') }}",
-        data: { email : mail},
-        success: function (data) {
-            if(!data){
-                document.getElementById('fos_user_registration_form_email').setCustomValidity("This email address already exists");
-            }
-        }
-    });
-}
-
-function checkUsernameUnicity() {
-    var uName = $('#fos_user_registration_form_username').val();
-    $.ajax({
-        type: "POST",
-        url: "{{ path('check_username_unicity') }}",
-        data: { username : uName},
-        success: function (data) {
-            if(!data){
-                document.getElementById('fos_user_registration_form_username').setCustomValidity("This username already exists");
-            }
-        }
-    });
-}
-
 $('#locate').click(function () {
     locate();
 });

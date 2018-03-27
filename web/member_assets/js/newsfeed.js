@@ -35,9 +35,17 @@ $(function () {
                     "<p>Now</p><br>" +
                     "<p  id = '" + id + "'>" + text + "</p>" +
                     "</div>" +
+                    "<hr>" +
+                    "<div class='reaction-box'>" +
+                    "<div class='react-action'>" +
+                    "<button class='button'>" +
+                    "<img class='button-icon' src='" + emoPath + "/comment.png'>" +
+                    "<p>Comment</p>" +
+                    "</button>" +
+                    "</div>" +
+                    "</div>" +
                     "</div>";
-                var current_html = $("#feed").html();
-                $("#feed").html(post_html + current_html);
+                $("#feed").prepend(post_html);
                 $("#post_space").empty();
             }
         });
@@ -76,8 +84,6 @@ $(function () {
         clearTimeout(timeout);
         hide(popupId);
     });
-    $(".emoticon").click(function(){
-    });
 });
 
 function updateModalText(id){
@@ -93,10 +99,18 @@ function showDeleteModal(id) {
 function react(id, type, reaction) {
     clearTimeout(timeout);
     $(".reaction-popup").hide();
-    $("#" + id + "-react").html(
-        "<img class='button-icon' src='" + emoPath + "/" + reaction + ".png'>\n" +
-        "<p>" + reaction + "</p>"
-    );
+    var button = $("#" + id + "-react");
+    var old = button.html();
+    if(reaction == 'None'){
+        button.html(
+            "<p>React</p>"
+        );
+    }else{
+        button.html(
+            "<img class='button-icon' src='" + emoPath + "/" + reaction + ".png'>\n" +
+            "<p>" + reaction + "</p>"
+        );
+    }
     var DATA = {'id':id, 'type':type, 'reaction':reaction};
     var path = $("#react_path").data('path');
     $.ajax({
@@ -105,10 +119,19 @@ function react(id, type, reaction) {
         url: path,
         success: function (data) {
             var title = data['title'];
-            $("#" + id + "-react").html(
-                "<img class='button-icon' src='" + emoPath + "/" + title + ".png'>\n" +
+            if(title == 'None'){
+                button.html(
+                    "<p>React</p>"
+                );
+            }else{
+                button.html(
+                    "<img class='button-icon' src='" + emoPath + "/" + title + ".png'>\n" +
                     "<p>" + title + "</p>"
-            );
+                );
+            }
+        },
+        error: function () {
+            button.html(old);
         }
     });
 }

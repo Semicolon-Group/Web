@@ -94,14 +94,20 @@ class NewsFeedController extends Controller
     public function deletePostAction(Request $request){
         if($request->isXmlHttpRequest()){
             /** @var PostReactionRepository $reactRepo */
+            /** @var Post $post */
 
             $id = $request->get('id');
             $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+
+            /* delete reactions of this post */
+            $reactRepo = $this->getDoctrine()->getRepository(PostReaction::class);
+            $reactRepo->deleteReactionByPost($id);
+
+            /* delete post */
             $em = $this->getDoctrine()->getManager();
             $em->remove($post);
             $em->flush();
-            $reactRepo = $this->getDoctrine()->getRepository(PostReaction::class);
-            $reactRepo->deleteReactionBy($id);
+
             return new JsonResponse();
         }
     }
@@ -120,7 +126,7 @@ class NewsFeedController extends Controller
             $id = $request->get('id');
             $type = $request->get('type');
             $reactionType = $request->get('reaction');
-            $reactionType = ReactionType::getEnumAsArray()[$reactionType];
+            $reactionType = isset(ReactionType::getEnumAsArray()[$reactionType]) ? ReactionType::getEnumAsArray()[$reactionType] : -1;
             $postId = 0;
             $photoId = 0;
             if($type == PostType::Status)
@@ -128,7 +134,7 @@ class NewsFeedController extends Controller
             else if($type == PostType::Picture)
                 $photoId = $id;
 
-            /* Check if reaction exists already. */
+            /* Check if reaction exists */
             $exists = $this->getDoctrine()->getRepository(PostReaction::class)->findBy([
                 'postId' => $postId,
                 'user' => $user
@@ -142,8 +148,8 @@ class NewsFeedController extends Controller
             if(!empty($exists)){
                 $reaction = $exists[0];
 
-                /* If same reaction */
-                if($reaction->getReaction() == $reactionType){
+                /* If same reaction or reaction was none */
+                if($reaction->getReaction() == $reactionType || $reactionType == -1){
                     $this->deleteReaction($reaction);
                     $data = [
                         'title' => 'None'
@@ -158,7 +164,13 @@ class NewsFeedController extends Controller
                     ];
                 }
             }
-            /* If reaction doesn't exist */
+            /* If reaction exists and new one was none */
+            else if($reactionType == -1){
+                $data = [
+                    'title' => 'None'
+                ];
+            }
+            /* If reaction doesn't exist and new one wasn't none */
             else{
                 $data = [
                     'title' => ReactionType::getName($reactionType)

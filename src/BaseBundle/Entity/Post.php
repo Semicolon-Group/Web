@@ -179,7 +179,7 @@ class Post
     /**
      * Set type
      *
-     * @param boolean $type
+     * @param int $type
      *
      * @return Post
      */
@@ -193,7 +193,7 @@ class Post
     /**
  * Get type
  *
- * @return boolean
+ * @return int
  */
     public function getType()
     {

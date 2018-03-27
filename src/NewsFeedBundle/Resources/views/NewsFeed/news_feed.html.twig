@@ -104,8 +104,8 @@
                                 <!-- Edit/Delete Buttons -->
                                 {% if post.type == StatusType and post.user.id == online.id %}
                                     <div class="update_box">
-                                        <button class="update_btn" data-toggle="modal" data-target="#edit_post_modal"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}" onclick="updateModalText({{ post.id }})"></button>
-                                        <button class="update_btn" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
+                                        <button class="update_btn button" data-toggle="modal" data-target="#edit_post_modal"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}" onclick="updateModalText({{ post.id }})"></button>
+                                        <button class="update_btn button" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
                                     </div>
                                 {% endif %}
 
@@ -149,21 +149,25 @@
                                     <div class="react-action">
                                         <span id="{{ post.id }}-current-reaction"></span>
                                         {% if post.user.id != online.id %}
-                                        <button class="button" id="{{ post.id }}-react" onmouseenter="show({{ post.id }})" onmouseleave="hide({{ post.id }})">
-                                            <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/' ~ post.stats.currReacTitle ~ '.png') }}">
-                                            <p>{{ post.stats.currReacTitle }}</p>
+                                        <button class="button" id="{{ post.id }}-react" onmouseenter="show({{ post.id }})" onmouseleave="hide({{ post.id }})" onclick="react({{ post.id }}, {{ post.type}}, 'None')">
+                                            {% if post.currentReaction == -1 %}
+                                                <p>React</p>
+                                            {% else %}
+                                                <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/' ~ post.stats.currReacTitle ~ '.png') }}">
+                                                <p>{{ post.stats.currReacTitle }}</p>
+                                            {% endif %}
                                         </button>{% endif %}<button class="button">
                                             <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/comment.png') }}">
                                             <p>Comment</p>
                                         </button>
-                                        <div id="{{ post.id }}-popup" class="reaction-popup">
-                                            {% if post.user.id != online.id %}
+                                        {% if post.user.id != online.id %}
+                                            <div id="{{ post.id }}-popup" class="reaction-popup">
                                                 <img src="{{ asset('member_assets/img/Emoticons/Smile.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Smile')">
                                                 <img src="{{ asset('member_assets/img/Emoticons/Love.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Love')">
                                                 <img src="{{ asset('member_assets/img/Emoticons/Laugh.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Laugh')">
                                                 <img src="{{ asset('member_assets/img/Emoticons/Scowl.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Scowl')">
-                                            {% endif %}
-                                        </div>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

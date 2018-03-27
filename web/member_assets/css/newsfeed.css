@@ -131,13 +131,13 @@
     width: 20px;
     height: 20px;
     margin-bottom: 3px;
-    vertical-align: middle;
 }
 .button{
     background-color: transparent;
     border: none;
     padding-right: 10px;
     padding-left: 10px;
+    outline: none;
 }
 .button > p{
     display: inline;
@@ -150,4 +150,7 @@
 }
 .button:hover{
     background-color: #F6F6F7;
+}
+.button:active{
+    background-color: #eaeaef;
 }

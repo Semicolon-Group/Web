@@ -1,32 +1,72 @@
 {% extends "member_base.html.twig" %}
 
 {% block scripts %}
+    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ff').click( function f(){
 
+            $.ajax({
+
+                url: "{{path('refrech')}}",
+
+                type: "POST",
+                cache: false,
+                async:false,
+                success: function(data){
+
+                    $('#divCircuit').html(data);
+
+
+                }
+
+            });
+
+        });
+        {% for m in sides %}
+        {% for i in [1..10] %}
+        $('#{{ m.id }}').click(function (){
+
+            $.ajax({
+                url: "{{path('increment')}}",
+                type: "POST",
+                cache: false,
+                data: {
+                    "id" : $('#{{ m.id }}').attr('id')
+                },
+
+            });
+        });
+        {% endfor %}
+        {% endfor %}
+
+
+
+    });
+
+</script>
 
 
 {% endblock %}
 
+
 {% block title %}News Feed{% endblock %}
 
        {% block banner %}
-
+           <div id="divCircuit">
            {% for m in bigs %}
-               <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
-               <script type="text/javascript" >
-
-
-               </script>
-
-
-               <section class="banner_area" style="background: url({% block banner_img %} {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %}) no-repeat scroll center center; background-size: cover;">
+               <section class="banner_area" style="background: url({% block banner_img %}
+                   {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %})
+                       no-repeat scroll center center; background-size: cover;">
                <div class="container">
                    <div class="banner_content">
                        <h3 title="{{ m.content }}"><img class="left_img" src="{{ asset('member_assets/') }}img/banner/t-left-img.png" alt="">{{ m.content }}<img class="right_img" src="{{ asset('member_assets/') }}img/banner/t-right-img.png" alt=""></h3>
-                       <a href="">{{ m.reason }}</a>
+                       <a href="" id="{{ m.id }}">{{ m.reason }}</a>
+                       <button id="ff" name="btnZone"> AAA </button>
                    </div>
                </div>
            </section>
-
+            </div>
 
     {% endfor %}
 {% endblock %}
@@ -34,16 +74,14 @@
 
     <section class="blog_grid_area">
         <div class="container">
-
-
-                <div class="col-md-3">
+            <div class="col-md-3">
                     <div class="right_sidebar_area">
 
                         <aside class="s_widget recent_post_widget">
                             <div class="s_title">
                                 <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
                             </div>
-       {% for m in sides %}
+                            {% for m in sides %}
                             <div class="media">
                                 <div class="media-left">
                                     <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
@@ -52,7 +90,7 @@
 
                             </div>
 
-       {% endfor %}
+                            {% endfor %}
                         </aside>
 
                     </div>
@@ -61,9 +99,55 @@
 
     </section>
 <br>
-    <br>
+    <br><br><br><br><br>   <br><br><br><br><br>
+    <br><br><br><br><br>
+    <br><br><br><br><br>
 
     <br>
+<section class="blog_grid_area">
+
+    <div class="container">
+        {% for m in sides %}
+            {% for i in [1..10]  %}
+            {% if m.videoUrl == null  %}
+        <div class="row">
+
+
+            <div class="blog_grid_inner">
+    <div class="col-md-3 col-sm-6">
+        <div class="blog_grid_item">
+            <div class="blog_grid_img">
+                <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
+                <div class="blog_share_area">
+                    <a  ><i class="mdi mdi-comment-multiple-outline"></i>{{ m.content }}</a>
+                    <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true"></i>{{ m.clicks }}</a>
+                    <a ><i class="fa fa-share-alt" aria-hidden="true"></i>{{ m.reason }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+            </div>
+
+        </div>
+        {% else %}
+            <iframe width="280" height="250"
+                    src="{{ m.videoUrl }}">
+            </iframe>
+            {% endif %}
+            <br>
+                {% endfor %}
+        {% endfor %}
+    </div>
+</section>
+<br>
+
+
+
+
+    <br>
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+
     <br><br><br><br><br>
 
 
@@ -88,5 +172,6 @@
         </div>
     </section>
     <!--================End Blog slider Area =================-->
+
 
 {% endblock %}

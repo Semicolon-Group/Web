@@ -17,9 +17,9 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         where m.state=:state 
         and m.position=:pos ')->setParameter('state','1')->setParameter('pos' , '2')->getSingleScalarResult();
 
-        return $q->createQuery('select m from BaseBundle:Advert m where  m.id<=:rand 
+        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand 
         ORDER BY m.id ASC ')  ->setParameter('rand',rand(0,$max))
-            ->setMaxResults($max)
+            ->setMaxResults(15)
             ->getResult();
 
     }
@@ -52,6 +52,14 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         $q=$this->getEntityManager()->createQuery('update BaseBundle:Advert m set m.payed=1 where m.id=:a')
             ->setParameter('a',$id);
         $q->execute();
+    }
+
+    public function IncrementClickDQL($id)
+    {
+        $q=$this->getEntityManager()->createQuery('update BaseBundle:Advert m set m.clicks=m.clicks+1 where m.id=:a')
+            ->setParameter('a',$id);
+        $q->execute();
+
     }
 
 }

@@ -19,12 +19,21 @@
     <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
     <script type="text/javascript" >
         $(document).ready(function () {
-            $('#basebundle_advert_price').attr('readonly',"true");
+            var date = new Date();
+            $('#basebundle_advert_endDate_year').val(date.getFullYear());
+            $('#basebundle_advert_endDate_month').val(date.getMonth()+1);
+            $('#basebundle_advert_endDate_day').val(date.getDate());
+
+
+            $('#table').css('border-spacing', '30px' )
+            $('#table').css('padding', '30px' )
+
+
             $('#valider').addClass("btn btn-success","fa fa-check-circle");
             $('#basebundle_advert_endDate_year').addClass("form-control")
             $('#basebundle_advert_endDate_month').addClass("form-control")
             $('#basebundle_advert_endDate_day').addClass("form-control");
-
+            $('#durée').addClass("form-control");
             $('#basebundle_advert_content').addClass("form-control")
                 $('#basebundle_advert_photoUrl').addClass("form-control")
                 $('#basebundle_advert_videoUrl').addClass("form-control")
@@ -32,54 +41,94 @@
             $('#basebundle_advert_price').addClass("form-control")
 
             $('#valider').click(function(e){
-                if ( $('#25').val()=='' && $('#20').val()=='' && $('#15').val()=='')
-                {$(function(){ alert("Choose type") ;  $('#basebundle_advert_price').val("25"); } );
+                if ( $('#25').val()==null && $('#20').val()==null && $('#15').val()==null)
+                {$(function(){ alert("Choose type") ;  } );
                 e.preventDefault();}
             });
 
-
-            var s = 0 ;
-            $('#1').click(function () {
-
-                $('#photo').show();
-                $('#video').hide();
-
-
-
-            });
-            $('#2').click(function () {
-                $('#photo').hide();
-                $('#video').show();
-            });
             $('#25').click(function () {
-                $('#basebundle_advert_price').val("25");
-                $('#basebundle_advert_position').val(1);
+
+                {
+                    var pub = new Date(
+                        $('#basebundle_advert_endDate_year').val()
+                        ,
+                        $('#basebundle_advert_endDate_month').val()-1
+                       ,
+                        $('#basebundle_advert_endDate_day').val());
+                    var d = new Date();
+                    var s = (pub.getTime()-d.getTime());
+                    var diff = Math.ceil(s / (1000 * 3600 * 24));
+                    var prixtotal = (diff * 10) ;
+                    if (diff>0)
+                    {
+                    $('#basebundle_advert_price').val(prixtotal);
+                        $('#prixtotal').html( pub + d + diff );
+                        $('#durée').val(diff+" Jours");
+                    }
+                    else return null;
+
+                }
 
             });
             $('#20').click(function () {
 
-                $('#basebundle_advert_price').val("20");
-                $('#basebundle_advert_position').val(2);
-            });
+                {
+                    var pub = new Date(
+                        $('#basebundle_advert_endDate_year').val()
+                        ,
+                        $('#basebundle_advert_endDate_month').val()-1
+                        ,
+                        $('#basebundle_advert_endDate_day').val());
+                    var d = new Date();
+                    var s = (pub.getTime()-d.getTime());
+                    var diff = Math.ceil(s / (1000 * 3600 * 24));
+                    var prixtotal = (diff * 7) ;
+                    if (diff>0)
+                    {
+                        $('#basebundle_advert_price').val(prixtotal);
+                        $('#prixtotal').html( pub + d + diff );
+                        $('#durée').val(diff+" Jours");
+                    }
+                    else return null;
 
+                }
+
+            });
             $('#15').click(function () {
-                $('#basebundle_advert_price').val("15");
-                $('#basebundle_advert_position').val(3);
-            });
-            function CalculPrix() {
 
-            }
+                {
+                    var pub = new Date(
+                        $('#basebundle_advert_endDate_year').val()
+                        ,
+                        $('#basebundle_advert_endDate_month').val()-1
+                        ,
+                        $('#basebundle_advert_endDate_day').val());
+                    var d = new Date();
+                    var s = (pub.getTime()-d.getTime());
+                    var diff = Math.ceil(s / (1000 * 3600 * 24));
+                    var prixtotal = (diff * 4) ;
+                    if (diff>0)
+                    {
+                        $('#basebundle_advert_price').val(prixtotal);
+                        $('#prixtotal').html( pub + d + diff );
+                        $('#durée').val(diff+" Jours");
+                    }
+                    else return null;
+
+                }
+
+            });
 
 
 
         });
 </script>
     {{ form_start(form,  { 'id': 'formtwig' }) }}<br>
-    <table>
+    <table id="table">
 
         <tr>
             <label class="fancy-radio">
-                <td> Formule Top banner 25dt: </td>
+                <td> Formule Top banner 10dt/j: </td>
                 <td>
                     <input value="Male" name="gender" class="fancy-radio" type="radio" id="25">
                 </td>
@@ -88,7 +137,7 @@
         <tr>
 
             <label class="fancy-radio">
-                <td> Formule Side banner 20dt : </td>
+                <td> Formule Side banner 7dt/j : </td>
                 <td>
                     <input value="Male" name="gender" class="fancy-radio" type="radio" id="20">
                 </td>
@@ -97,7 +146,7 @@
         <tr>
 
             <label class="fancy-radio">
-                <td> Formule Slider 15dt : </td>
+                <td> Formule Slider 4dt/j : </td>
                 <td>
                     <input value="Male" name="gender" class="fancy-radio" type="radio" id="15">
                 </td>
@@ -114,10 +163,10 @@
         <tr id="photo" >
             <td>Photo Url : </td>
             <td>{{ form_widget(form.photoUrl) }}</td>
-        </tr>
 
 
-        <td>Video Url : </td>
+
+            <td>Video Url : </td>
         <td>{{ form_widget(form.videoUrl)}}</td>
         </tr>
 
@@ -141,12 +190,17 @@
             <td>{{ form_widget(form.clicks) }}</td>
         </tr>
         <tr>
+            <td> durée</td> <td> <input type="text" id="durée" placeholder="0 Jours" disabled="true" ></td>
+        </tr>
+        <tr>
             <td>prix :</td>
             <td>{{ form_widget(form.price)  }}</td>
         </tr>
-        <tr>
-            <td>position:</td>
-            <td>{{ form_widget(form.position)  }}</td>
+
+
+        <tr >
+            <div id="prixtotal"></div>
+
         </tr>
         <tr>
             <td></td>

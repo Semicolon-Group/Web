@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use PubliciteBundle\Repository\AdvertRepository;
+use Symfony\Component\HttpFoundation\Response;
 
 require 'C:\xampp\htdocs\mysoulmate\vendor\autoload.php';
 class BusinessAdvertController extends Controller
@@ -179,11 +180,11 @@ class BusinessAdvertController extends Controller
         );
         $price = $advert->getPrice();
         $list = new ItemList();
-        $item = (new Item())->setName(''.$advert->getContent())->setPrice($price)->setCurrency("USD")
+        $item = (new Item())->setName(''.$advert->getContent())->setPrice($price)->setCurrency("EUR")
             ->setQuantity('1');
         $list->addItem($item);
         $details= (new Details())->setSubtotal($price);
-        $amout = (new Amount())->setTotal($price)->setCurrency('USD')->setDetails($details);
+        $amout = (new Amount())->setTotal($price)->setCurrency('EUR')->setDetails($details);
         $transaction = (new Transaction())->setItemList($list)->setDescription('Buying advert space '.$advert->getContent())
         ->setAmount($amout)->setCustom(''.$advert->getId());
 
@@ -203,6 +204,18 @@ class BusinessAdvertController extends Controller
 
         }catch (PayPalConnectionException $ex) { var_dump(json_decode($ex->getData()));}
         return $this->redirect(''.$payment->getApprovalLink());
+    }
+    /**
+     * @Route("/Increment" , name="increment")
+     */
+
+    public function IncrementAction(Request $request )
+    {
+        $id = $request->request->get('id');
+        $advert = new Advert();
+        $repo = $this->getDoctrine()->getRepository(Advert::class);
+        $advert = $repo->IncrementClickDQL($id);
+        return new Response("nice done kid");
     }
 
 }

@@ -56,37 +56,79 @@
             });
 
 
-            var s = 0 ;
-            $('#1').click(function () {
-
-                $('#photo').show();
-                $('#video').hide();
-
-
-
-            });
-            $('#2').click(function () {
-                $('#photo').hide();
-                $('#video').show();
-            });
             $('#25').click(function () {
-                $('#basebundle_advert_price').val("25");
-                $('#basebundle_advert_position').val(1);
+
+                {
+                    var pub = new Date(
+                        $('#basebundle_advert_endDate_year').val()
+                        ,
+                        $('#basebundle_advert_endDate_month').val()-1
+                        ,
+                        $('#basebundle_advert_endDate_day').val());
+                    var d = new Date();
+                    var s = (pub.getTime()-d.getTime());
+                    var diff = Math.ceil(s / (1000 * 3600 * 24));
+                    var prixtotal = (diff * 10) ;
+                    if (diff>0)
+                    {
+                        $('#basebundle_advert_price').val(prixtotal);
+                        $('#prixtotal').html( pub + d + diff );
+                        $('#durée').val(diff+" Jours");
+                    }
+                    else return null;
+
+                }
 
             });
             $('#20').click(function () {
 
-                $('#basebundle_advert_price').val("20");
-                $('#basebundle_advert_position').val(2);
-            });
+                {
+                    var pub = new Date(
+                        $('#basebundle_advert_endDate_year').val()
+                        ,
+                        $('#basebundle_advert_endDate_month').val()-1
+                        ,
+                        $('#basebundle_advert_endDate_day').val());
+                    var d = new Date();
+                    var s = (pub.getTime()-d.getTime());
+                    var diff = Math.ceil(s / (1000 * 3600 * 24));
+                    var prixtotal = (diff * 7) ;
+                    if (diff>0)
+                    {
+                        $('#basebundle_advert_price').val(prixtotal);
+                        $('#prixtotal').html( pub + d + diff );
+                        $('#durée').val(diff+" Jours");
+                    }
+                    else return null;
 
+                }
+
+            });
             $('#15').click(function () {
-                $('#basebundle_advert_price').val("15");
-                $('#basebundle_advert_position').val(3);
-            });
-            function CalculPrix() {
 
-            }
+                {
+                    var pub = new Date(
+                        $('#basebundle_advert_endDate_year').val()
+                        ,
+                        $('#basebundle_advert_endDate_month').val()-1
+                        ,
+                        $('#basebundle_advert_endDate_day').val());
+                    var d = new Date();
+                    var s = (pub.getTime()-d.getTime());
+                    var diff = Math.ceil(s / (1000 * 3600 * 24));
+                    var prixtotal = (diff * 4) ;
+                    if (diff>0)
+                    {
+                        $('#basebundle_advert_price').val(prixtotal);
+                        $('#prixtotal').html( pub + d + diff );
+                        $('#durée').val(diff+" Jours");
+                    }
+                    else return null;
+
+                }
+
+            });
+
 
 
 

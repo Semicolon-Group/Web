@@ -28,5 +28,50 @@ $('#answer-add').click(function () {
 });
 
 $('.photo').click(function () {
-    $('#img-canvas').attr('src', $(this).attr('src'));
+    initPhotoModal(this);
+});
+
+function initPhotoModal(node) {
+    $('#img-canvas').attr('src', $(node).attr('src'));
+    var id = $(node).data('id');
+    document.getElementById('img-canvas').dataset.id = id;
+}
+
+$('#basebundle_photo_imageFile_file').change(function () {
+    $("#photo-form").submit();
+});
+
+$("#photo-form").submit(function(event) {
+    event.preventDefault();
+
+    var data = new FormData();
+    data.append('basebundle_photo[imageFile][file]', document.getElementById('basebundle_photo_imageFile_file').files[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: $(this).attr( 'action' ),
+        data: data,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        cache: false,
+
+        success: function(response) {
+            updatePhotoView();
+        },
+        error: function (response, desc, err){
+            if (response.responseJSON && response.responseJSON.message) {
+                alert(response.responseJSON.message);
+            }
+            else{
+                alert(desc);
+            }
+        }
+    });
+});
+
+$(function () {
+    alert("befor");
+   $('#basebundle_photo_imageFile_file').attr('accept', '.png, .jpg, .jpeg');
+    alert("after");
 });

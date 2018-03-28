@@ -9,6 +9,7 @@
 namespace NewsFeedBundle\Service;
 
 
+use BaseBundle\Entity\Comment;
 use BaseBundle\Entity\Enumerations\PostType;
 use BaseBundle\Entity\Enumerations\ReactionType;
 use BaseBundle\Entity\Photo;
@@ -41,6 +42,30 @@ class PostService
             return $stat;
         }
 
+        /**
+         * @param Post $post
+         * @param ManagerRegistry $doctrine
+         * @return array
+         */
+        function getComments($post, $doctrine){
+            $postId = $post->getId();
+            $photoId = 0;
+            if ($post->getType() == PostType::Picture){
+                $postId = 0;
+                $photoId = $post->getId();
+            }
+            $comments = $doctrine->getRepository(Comment::class)->findBy([
+                'postId' => $postId,
+                'photoId' => $photoId
+            ]);
+            /** @var PhotoRepository $photoRepo */
+            $photoRepo = $doctrine->getRepository(Photo::class);
+            foreach ($comments as $comment){
+                $comment->setProfilePhoto($photoRepo->getProfilePhotoUrl($comment->getSender()));
+            }
+            return $comments;
+        }
+
         /** @var ManagerRegistry $doctrine */
         /** @var User $user */
         /** @var PhotoRepository $photoRepo */
@@ -70,6 +95,7 @@ class PostService
                 $post->getStats()->currReacTitle = ReactionType::getName($currentReaction);
             }
             $post->setCurrentReaction($currentReaction);
+            $post->setComments(getComments($post, $doctrine));
         }
 
         $photos = $photoRepo->getPostPics($user);
@@ -94,6 +120,7 @@ class PostService
                 $post->getStats()->currReacTitle = ReactionType::getName($currentReaction);
             }
             $post->setCurrentReaction($currentReaction);
+            $post->setComments(getComments($post, $doctrine));
             $posts[] = $post;
         }
 

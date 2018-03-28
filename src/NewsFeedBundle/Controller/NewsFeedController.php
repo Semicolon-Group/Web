@@ -2,11 +2,13 @@
 
 namespace NewsFeedBundle\Controller;
 
+use BaseBundle\Entity\Comment;
 use BaseBundle\Entity\Enumerations\PostType;
 use BaseBundle\Entity\Enumerations\ReactionType;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
 use BaseBundle\Entity\PostReaction;
+use BaseBundle\Repository\CommentRepository;
 use BaseBundle\Repository\PostReactionRepository;
 use BaseBundle\Repository\PhotoRepository;
 use NewsFeedBundle\Service\PostService;
@@ -59,7 +61,10 @@ class NewsFeedController extends Controller
             $em->flush();
 
             $serializer = new Serializer([new ObjectNormalizer()]);
-            $data = $serializer->normalize(['id' => $post->getId()]);
+            $data = $serializer->normalize([
+                'id' => $post->getId(),
+                'type' => PostType::Status
+            ]);
 
             return new JsonResponse($data);
         }
@@ -94,6 +99,7 @@ class NewsFeedController extends Controller
     public function deletePostAction(Request $request){
         if($request->isXmlHttpRequest()){
             /** @var PostReactionRepository $reactRepo */
+            /** @var CommentRepository $commentRepo */
             /** @var Post $post */
 
             $id = $request->get('id');
@@ -101,7 +107,11 @@ class NewsFeedController extends Controller
 
             /* delete reactions of this post */
             $reactRepo = $this->getDoctrine()->getRepository(PostReaction::class);
-            $reactRepo->deleteReactionByPost($id);
+            $reactRepo->deleteByPost($id);
+
+            /* delete comments of this post */
+            $commentRepo = $this->getDoctrine()->getRepository(Comment::class);
+            $commentRepo->deleteByPost($id);
 
             /* delete post */
             $em = $this->getDoctrine()->getManager();
@@ -201,5 +211,85 @@ class NewsFeedController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($reaction);
         $em->flush();
+    }
+
+    /**
+     * @Route("add_comment", name = "add_comment")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addCommentAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            /* Retrieve data */
+            $postId = $request->get('postId');
+            $photoId = $request->get('photoId');
+            $content = $request->get('content');
+            $user = $this->container->get("security.token_storage")->getToken()->getUser();
+
+            /* Create comment */
+            $comment = new Comment();
+            $comment->setSender($user);
+            $comment->setReceiver($user);
+            $comment->setPhotoId($photoId);
+            $comment->setPostId($postId);
+            $comment->setContent($content);
+            $comment->setDate(new \DateTime());
+
+            /* Persist comment */
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+
+            /* Retrive new comment id */
+            $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(
+                [],
+                [
+                    'id' => 'DESC'
+            ]);
+            $data = ['id' => $comment->getId()];
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $data = $serializer->normalize($data);
+
+            return new JsonResponse($data);
+        }
+    }
+
+    /**
+     * @Route("delete_comment", name = "delete_comment")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteCommentAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $id = $request->get('id');
+            $comment = $this->getDoctrine()->getRepository(Comment::class)->find($id);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($comment);
+            $em->flush();
+
+            return new JsonResponse();
+        }
+    }
+
+    /**
+     * @Route("edit_comment", name = "edit_comment")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editCommentAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $text = $request->get('text');
+            $id = $request->get('id');
+
+            $comment = $this->getDoctrine()->getRepository(Comment::class)->find($id);
+            $comment->setContent($text);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+
+            return new JsonResponse();
+        }
     }
 }

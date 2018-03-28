@@ -71,6 +71,11 @@ class Post
     private $stats;
 
     /**
+     * @var array
+     */
+    private $comments;
+
+    /**
      * Get id
      *
      * @return integer
@@ -283,5 +288,29 @@ class Post
     public function getStats()
     {
         return $this->stats;
+    }
+
+    /**
+     * Set comments
+     *
+     * @param array $comments
+     *
+     * @return Post
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return array
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class PostReactionRepository extends EntityRepository
 {
-    public function deleteReactionByPost($id){
+    public function deleteByPost($id){
         return $this->getEntityManager()->createQuery(
             "DELETE FROM BaseBundle:PostReaction r WHERE r.postId = :id"
         )
@@ -14,7 +14,7 @@ class PostReactionRepository extends EntityRepository
             ->execute();
     }
 
-    public function deleteReactionByPhoto($id){
+    public function deleteByPhoto($id){
         return $this->getEntityManager()->createQuery(
             "DELETE FROM BaseBundle:PostReaction r WHERE r.photoId = :id"
         )

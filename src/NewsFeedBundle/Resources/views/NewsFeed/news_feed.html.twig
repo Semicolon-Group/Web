@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
     <link href="{{ asset("member_assets/css/newsfeed.css") }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
 {% endblock %}
 
 {% block scripts %}
@@ -26,12 +27,18 @@
     <!-- Data elements -->
     <div id="create_post_path" data-path = "{{ path('create_post') }}"></div>
     <div id="edit_post_path" data-path = "{{ path('edit_post') }}"></div>
+    <div id="edit_comment_path" data-path = "{{ path('edit_comment') }}"></div>
     <div id="delete_post_path" data-path = "{{ path('delete_post') }}"></div>
+    <div id="delete_comment_path" data-path = "{{ path('delete_comment') }}"></div>
     <div id="react_path" data-path = "{{ path('react') }}"></div>
+    <div id="add_comment_path" data-path = "{{ path('add_comment') }}"></div>
     <div id="edit_icon_path" data-path = "{{ asset("member_assets/img/edit.png") }}"></div>
     <div id="delete_icon_path" data-path = "{{ asset("member_assets/img/close.png") }}"></div>
     <div id="emoticon_path" data-path = "{{ asset("member_assets/img/Emoticons/") }}"></div>
     <div id="selected_post" data-id=""></div>
+    <div id="online_id" data-id="{{ online.id }}"></div>
+    <div id="status_type" data-type="{{ StatusType }}"></div>
+    <div id="picture_type" data-type="{{ PictureType }}"></div>
 
     <!-- Edit Post Modal -->
     <div class="modal fade" id="edit_post_modal" tabindex="-1" role="dialog" aria-labelledby="edit_post_modal" aria-hidden="true">
@@ -82,7 +89,7 @@
                 </div>
 
                 <!-- NewsFeed -->
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="community_activity">
 
                         <!-- Writing Space -->
@@ -104,8 +111,8 @@
                                 <!-- Edit/Delete Buttons -->
                                 {% if post.type == StatusType and post.user.id == online.id %}
                                     <div class="update_box">
-                                        <button class="update_btn button" data-toggle="modal" data-target="#edit_post_modal"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}" onclick="updateModalText({{ post.id }})"></button>
-                                        <button class="update_btn button" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
+                                        <button class="button" data-toggle="modal" data-target="#edit_post_modal" onclick="updateModalText({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}"></button>
+                                        <button class="button" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
                                     </div>
                                 {% endif %}
 
@@ -117,7 +124,7 @@
                                     <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
                                     <p>{{ post.date | date('d-m-Y') }}</p><br>
                                     {% if post.type == StatusType %}
-                                        <p id="{{ post.id }}">{{ post.content }}</p>
+                                        <p id="{{ post.id }}">{{ post.content | raw }}</p>
                                     {% elseif post.type == PictureType %}
                                         <img class="pic_post" src="{{ post.content }}">
                                     {% endif %}
@@ -156,7 +163,7 @@
                                                 <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/' ~ post.stats.currReacTitle ~ '.png') }}">
                                                 <p>{{ post.stats.currReacTitle }}</p>
                                             {% endif %}
-                                        </button>{% endif %}<button class="button">
+                                        </button>{% endif %}<button class="button" onclick="toggleComments({{ post.id }})">
                                             <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/comment.png') }}">
                                             <p>Comment</p>
                                         </button>
@@ -172,13 +179,35 @@
                                 </div>
 
                                 <!-- Comment Box -->
-                                <div class="comment-box">
+                                <div class="comment-box" id="{{ post.id }}-comment-box">
+                                    <div id="{{ post.id }}-comments">
+                                        {% for comment in post.comments %}
+                                            <!-- Comment section -->
+                                            <div class="comment-sub-box">
+                                                <div class="comment-profile-pic">
+                                                    <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                </div>
+                                                <div class="comment-body comment">
+                                                    <p id="{{ comment.id }}-comment-content">{{ comment.content | raw }}</p>
+                                                </div>
+
+                                                <!-- Update/Delete comment -->
+                                                {% if comment.sender.id == online.id %}
+                                                    <div class="update-comment-box">
+                                                        <span class="button far fa-edit" onclick="updateModalText({{ comment.id }})" data-toggle="modal" data-target="#edit_post_modal"></span><span class="button far fa-trash-alt" onclick="showDeleteModal({{ comment.id }})" data-toggle="modal" data-target="#delete_post_modal"></span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- Writing comment section -->
                                     <div class="writing-comment">
                                         <div class="comment-profile-pic">
                                             <img class="comment_pic" src="{{ photo }}" alt="">
                                         </div>
-                                        <div class="comment-body">
-                                            <div contenteditable="true" id="comment_space" class="comment-space" data-text="Leave a comment..."></div>
+                                        <div class="comment-body comment comment-border comment-space">
+                                            <div contenteditable="true" id="{{ post.id }}-comment-space" class="comment-space" data-text="Leave a comment..." onkeypress="addComment(event, {{ post.id }}, {{ post.type }})"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -189,7 +218,7 @@
                 </div>
 
                 <!-- Adverts -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="right_sidebar_area">
                         <!-- *****Default template content*****
                         <aside class="s_widget search_widget">

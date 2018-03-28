@@ -53,10 +53,10 @@
                           <ul class="dropdown-menu notifications">
                               {% block notifications %}
                                   {% for m in notifs %}
-                                  <li><a href="#" class="notification-item"><span class="dot bg-warning"></span> New Add : {{ m.content }} </a></li>
+                                  <li><a href="{{ path('traiter_admin', {'id':m.id}) }}" class="notification-item"><span class="dot bg-warning"></span> New Add : {{ m.content }} </a></li>
                                     {% endfor %}
                               {% endblock %}
-                              <li><a href="#" class="more">See all notifications</a></li>
+
                           </ul>
                       </li>
                       <li class="dropdown">

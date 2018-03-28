@@ -58,14 +58,13 @@ class BusinessAdvertController extends Controller
             ->
             add('position',ChoiceType::class,[
                 'choices' => [
-                    'No'=>'0',
-                    'TOP' => '1',
-                    'Side' => '2',
-                    'Bottom'=>'3'
+
+                    'Top Banner 10dt/j' => '1',
+                    'Side Banner 7dt/j' => '2',
+                    'Bottom Banner 4dt/j '=>'3'
                 ],
                 'attr' => array(
-                    'readonly' => true,
-                    'hidden'=>true
+
                 )])
             ->
             add('photoUrl',FileType::class, ['required' => true , 'data_class' => null])->
@@ -134,15 +133,30 @@ class BusinessAdvertController extends Controller
         $form=$this->createForm(AdvertType::class,$advert)->
         add('position',ChoiceType::class,[
             'choices' => [
-                'No'=>'0',
                 'TOP' => '1',
                 'Side' => '2',
                 'Bottom'=>'3'
             ],'attr' => array(
-
                     'hidden'=>true
+
                 )]
-            ) ->
+            ) ->add('state', ChoiceType::class,[
+            'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ] ,'attr' => array(
+                'hidden'=>true
+
+            )
+        ])->
+        add('videoUrl',TextType::class , ['attr' => array(
+            'readonly'=>true
+
+
+    )])
+            ->add('payed',ChoiceType::class,[
+                'choices' => ['Payed' => '1', 'Not payed' => '0']
+             , 'attr' => array(
+                    'hidden'=>true
+
+                )])->
 
             add('Valider',SubmitType::class);
 

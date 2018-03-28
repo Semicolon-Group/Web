@@ -64,7 +64,7 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
     }
     public function findNotifsAdmin()
     {
-        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.state=:a ')
+        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.state=:a and  m.endDate>=CURRENT_TIMESTAMP() ')
             ->setParameter('a','0');
         return $q->getResult();
 

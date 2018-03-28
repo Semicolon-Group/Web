@@ -37,7 +37,7 @@ class AdvertController extends Controller
     public function TraiterAction(Request $request , $id)
     {
 
-
+        $var2 =$this->getDoctrine()->getRepository(Advert::class)->findNotifsAdmin();
         $advert = new Advert();
         $repo = $this->getDoctrine()->getRepository(Advert::class);
         $advert=$repo->find($id);
@@ -77,7 +77,7 @@ class AdvertController extends Controller
 
         }
         return $this->render('AdminBusinessBundle:Advert:modifier.html.twig', array(
-            'form'=>$form->createView(),'ad'=>$advert
+            'form'=>$form->createView(),'ad'=>$advert,'notifs'=>$var2,
         ));
     }
     /**

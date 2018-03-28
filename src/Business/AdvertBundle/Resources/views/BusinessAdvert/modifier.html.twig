@@ -39,21 +39,18 @@
         $(document).ready(function () {
             $('#basebundle_advert_price').attr('readonly',"true");
             $('#valider').addClass("btn btn-success","fa fa-check-circle");
-            $('#basebundle_advert_endDate_year').addClass("form-control")
-            $('#basebundle_advert_endDate_month').addClass("form-control")
+            $('#basebundle_advert_endDate_year').addClass("form-control");
+            $('#basebundle_advert_endDate_month').addClass("form-control");
             $('#basebundle_advert_endDate_day').addClass("form-control");
 
-            $('#basebundle_advert_content').addClass("form-control")
-            $('#basebundle_advert_photoUrl').addClass("form-control")
-            $('#basebundle_advert_videoUrl').addClass("form-control")
-            $('#basebundle_advert_reason').addClass("form-control")
-            $('#basebundle_advert_price').addClass("form-control")
+            $('#basebundle_advert_content').addClass("form-control");
+            $('#basebundle_advert_photoUrl').addClass("form-control");
+            $('#basebundle_advert_videoUrl').addClass("form-control");
 
-            $('#valider').click(function(e){
-                if ( $('#25').val()=='' && $('#20').val()=='' && $('#15').val()=='')
-                {$(function(){ alert("Choose type") ;  $('#basebundle_advert_price').val("25"); } );
-                    e.preventDefault();}
-            });
+            $('#basebundle_advert_reason').addClass("form-control");
+            $('#basebundle_advert_price').addClass("form-control");
+
+
 
 
             $('#25').click(function () {
@@ -142,34 +139,6 @@
             </div>
         </tr>
 
-        <tr>
-            <label class="fancy-radio">
-                <td> Formule Top banner 25dt: </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="25">
-                </td>
-            </label>
-        </tr>
-        <tr>
-
-            <label class="fancy-radio">
-                <td> Formule Side banner 20dt : </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="20">
-                </td>
-            </label>
-        </tr>
-        <tr>
-
-            <label class="fancy-radio">
-                <td> Formule Slider 15dt : </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="15">
-                </td>
-            </label>
-        </tr>
-
-
 
         <tr>
             <td>Content : </td>
@@ -179,6 +148,10 @@
         <tr id="photo" >
             <td>Photo : </td>
             <td> <img src="{{ asset('member_assets/images/') }}{{ (ad.photoUrl)  }} " style="width: 300px; height: 200px;"></td>
+        </tr>
+        <tr readonly="true">
+            <td>Video :</td>
+            <td> {{ form_widget(form.videoUrl) }}</td>
         </tr>
 
 
@@ -194,22 +167,15 @@
         </tr>
 
 
-        <tr>
-
-            <td id="date">{{ form_widget(form.state) }}</td>
-        </tr>
-        <tr>
-
-            <td>{{ form_widget(form.clicks) }}</td>
-        </tr>
+        <div hidden="true">{{ form_widget(form.state) }}
+            {{ form_widget(form.payed) }}
+            {{ form_widget(form.position) }}
+           </div>
         <tr>
             <td>prix :</td>
             <td>{{ form_widget(form.price)  }}</td>
         </tr>
-        <tr>
-            <td>position:</td>
-            <td>{{ form_widget(form.position)  }}</td>
-        </tr>
+
         <tr>
             <td></td>
             <td class="demo-button">{{ form_widget(form.Valider ,  { 'id': 'valider' })  }}</td>

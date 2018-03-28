@@ -16,145 +16,69 @@
 
 {% block body %}
 
-    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
-    <script type="text/javascript" >
-        $(document).ready(function () {
-            var date = new Date();
-            $('#basebundle_advert_endDate_year').val(date.getFullYear());
-            $('#basebundle_advert_endDate_month').val(date.getMonth()+1);
-            $('#basebundle_advert_endDate_day').val(date.getDate());
+<script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+<script type="text/javascript" >
+$(document).ready(function () {
+    var date = new Date();
+    $('#basebundle_advert_endDate_year').val(date.getFullYear());
+    $('#basebundle_advert_endDate_month').val(date.getMonth()+1);
+    $('#basebundle_advert_endDate_day').val(date.getDate());
 
 
-            $('#table').css('border-spacing', '30px' )
-            $('#table').css('padding', '30px' )
+    $('#table').css('border-spacing', '30px' )
+    $('#table').css('padding', '30px' )
 
 
-            $('#valider').addClass("btn btn-success","fa fa-check-circle");
-            $('#basebundle_advert_endDate_year').addClass("form-control")
-            $('#basebundle_advert_endDate_month').addClass("form-control")
-            $('#basebundle_advert_endDate_day').addClass("form-control");
-            $('#durée').addClass("form-control");
-            $('#basebundle_advert_content').addClass("form-control")
-                $('#basebundle_advert_photoUrl').addClass("form-control")
-                $('#basebundle_advert_videoUrl').addClass("form-control")
-            $('#basebundle_advert_reason').addClass("form-control")
-            $('#basebundle_advert_price').addClass("form-control")
+    $('#valider').addClass("btn btn-success","fa fa-check-circle");
+    $('#calcul-prix').addClass("btn btn-warning","fa fa-check-circle");
+    $('#basebundle_advert_endDate_year').addClass("form-control")
+    $('#basebundle_advert_endDate_month').addClass("form-control")
+    $('#basebundle_advert_endDate_day').addClass("form-control");
+    $('#basebundle_advert_position').addClass("form-control");
+    $('#durée').addClass("form-control");
+    $('#basebundle_advert_content').addClass("form-control")
+    $('#basebundle_advert_photoUrl').addClass("form-control")
+    $('#basebundle_advert_videoUrl').addClass("form-control")
+    $('#basebundle_advert_reason').addClass("form-control")
+    $('#basebundle_advert_price').addClass("form-control")
 
-            $('#valider').click(function(e){
-                if ( $('#25').val()==null && $('#20').val()==null && $('#15').val()==null)
-                {$(function(){ alert("Choose type") ;  } );
-                e.preventDefault();}
-            });
 
-            $('#25').click(function () {
 
-                {
-                    var pub = new Date(
-                        $('#basebundle_advert_endDate_year').val()
-                        ,
-                        $('#basebundle_advert_endDate_month').val()-1
-                       ,
-                        ($('#basebundle_advert_endDate_day').val()));
-                    var d = new Date();
-                    var s = (pub.getTime()-d.getTime());
-                    var diff = Math.ceil(s / (1000 * 3600 * 24));
-                    var prixtotal = (diff * 10) ;
-                    if (diff>0)
-                    {
-                    $('#basebundle_advert_price').val(prixtotal);
-                        $('#prixtotal').html( pub + d + diff );
-                        $('#durée').val(diff+" Jours");
-                    }
-                    else return null;
+    $('#calcul-prix').click(function () {
+        var conceptName = $('#basebundle_advert_position').find(":selected").text();
 
-                }
+        var prix;
+        if (prix == '') prix = 0
+        else if (conceptName == 'Bottom Banner 4dt/j ' ) prix = 4
+        else if (conceptName == 'Top Banner 10dt/j' ) prix = 10
+        else if (conceptName == 'Side Banner 7dt/j' ) prix = 7 ;
 
-            });
-            $('#20').click(function () {
 
-                {
-                    var pub = new Date(
-                        $('#basebundle_advert_endDate_year').val()
-                        ,
-                        $('#basebundle_advert_endDate_month').val()-1
-                        ,
-                        $('#basebundle_advert_endDate_day').val());
-                    var d = new Date();
-                    var s = (pub.getTime()-d.getTime());
-                    var diff = Math.ceil(s / (1000 * 3600 * 24));
-                    var prixtotal = (diff * 7) ;
-                    if (diff>0)
-                    {
-                        $('#basebundle_advert_price').val(prixtotal);
-                        $('#prixtotal').html( pub + d + diff );
-                        $('#durée').val(diff+" Jours");
-                    }
-                    else return null;
 
-                }
+        var pub = new Date(
+                $('#basebundle_advert_endDate_year').val()
+                ,
+                $('#basebundle_advert_endDate_month').val()-1
+                ,
+                $('#basebundle_advert_endDate_day').val());
+            var d = new Date();
+            var s = (pub.getTime()-d.getTime());
+            var diff = Math.ceil(s / (1000 * 3600 * 24));
+            var prixtotal = (diff * prix) ;
+            if (diff>0)
+            {
+                $('#basebundle_advert_price').val(prixtotal);
 
-            });
-            $('#15').click(function () {
-
-                {
-                    var pub = new Date(
-                        $('#basebundle_advert_endDate_year').val()
-                        ,
-                        $('#basebundle_advert_endDate_month').val()-1
-                        ,
-                        $('#basebundle_advert_endDate_day').val());
-                    var d = new Date();
-                    var s = (pub.getTime()-d.getTime());
-                    var diff = Math.ceil(s / (1000 * 3600 * 24));
-                    var prixtotal = (diff * 4) ;
-                    if (diff>0)
-                    {
-                        $('#basebundle_advert_price').val(prixtotal);
-                        $('#prixtotal').html( pub + d + diff );
-                        $('#durée').val(diff+" Jours");
-                    }
-                    else return null;
-
-                }
-
-            });
-
+                $('#durée').val(diff+" Jours");
+            }
+            else return null;
+    });
 
 
         });
 </script>
     {{ form_start(form,  { 'id': 'formtwig' }) }}<br>
     <table id="table">
-
-        <tr>
-            <label class="fancy-radio">
-                <td> Formule Top banner 10dt/j: </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="25">
-                </td>
-            </label>
-        </tr>
-        <tr>
-
-            <label class="fancy-radio">
-                <td> Formule Side banner 7dt/j : </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="20">
-                </td>
-            </label>
-        </tr>
-        <tr>
-
-            <label class="fancy-radio">
-                <td> Formule Slider 4dt/j : </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="15">
-                </td>
-            </label>
-        </tr>
-
-
-
         <tr>
             <td>Content : </td>
             <td>{{ form_widget(form.content) }}</td>
@@ -186,8 +110,8 @@
             <td id="date">{{ form_widget(form.state) }}</td>
         </tr>
         <tr>
-
-            <td>{{ form_widget(form.clicks) }}</td>
+            <td> Position </td>
+            <td>{{ form_widget(form.position ) }}</td>
         </tr>
         <tr>
             <td> durée</td> <td> <input type="text" id="durée" placeholder="0 Jours" disabled="true" ></td>
@@ -203,8 +127,9 @@
 
         </tr>
         <tr>
-            <td></td>
-            <td class="demo-button">{{ form_widget(form.Valider ,  { 'id': 'valider' })  }}</td>
+
+            <td class="demo-button">  </td>
+            <td class="demo-button"> <input type="button" value="Calculer prix" id="calcul-prix"> {{ form_widget(form.Valider ,  { 'id': 'valider' })  }}</td>
         </tr>
 
 

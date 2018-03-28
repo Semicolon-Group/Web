@@ -30,13 +30,12 @@ class AdvertType extends AbstractType
         add('state',HiddenType::class,['data' => 0])->
         add('endDate' , DateType::class, ['required' => true])->
 
+
         add('clicks',HiddenType::class,['data' => 0])->
         add('price' ,TextType::class ,
             array('attr' => array(
-        'readonly' => true,
-                'required' => true
-
-    )))->
+                'readonly' => true,
+                'required' => true)))->
         add('payed',HiddenType::class,['data' => 0]);
 
     }/**

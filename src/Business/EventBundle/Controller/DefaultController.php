@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use BaseBundle\Entity\Event;
 use BaseBundle\Form\EventType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
 class DefaultController extends Controller
@@ -39,12 +40,16 @@ class DefaultController extends Controller
     public function createAction(Request $request){
         $event = new Event();
         /*$event->setUser($this->getUser());*/
-
+        $form= $this->createForm(EventType::class,$event)
+            /*->add('photoUrl',FileType::class, ['required' => true , 'data_class' => null])*/
+            ->add('Valider',SubmitType::class);
         $form = $this->createForm('BaseBundle\Form\EventType', $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $user = $this->container
+                ->get('security.token_storage')
+                ->getToken()->getUser();
             $em = $this->getDoctrine()->getManager();
             $file = $event->getPhotoUrl();
             $fileName = md5(uniqid()).'.'.$file->guessExtension();

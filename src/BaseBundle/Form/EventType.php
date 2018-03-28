@@ -31,8 +31,8 @@ class EventType extends AbstractType
             ->add('endDate')
             ->add('address', AddressType::class, array(
                 'label' => false
-            ))
-        ->add('ajouter', SubmitType::class);
+            ));
+        /*->add('ajouter', SubmitType::class);*/
     }/**
      * {@inheritdoc}
      */

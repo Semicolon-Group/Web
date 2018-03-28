@@ -4,6 +4,8 @@ namespace BaseBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,8 +19,8 @@ class AddressType extends AbstractType
         $builder
             ->add('country')
             ->add('city')
-            ->add('longitude')
-            ->add('latitude');
+            ->add('longitude',HiddenType)
+            ->add('latitude',HiddenType);
     }/**
      * {@inheritdoc}
      */

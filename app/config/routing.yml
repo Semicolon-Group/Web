@@ -1,3 +1,8 @@
+admin_question:
+    resource: "@AdminQuestionBundle/Controller/"
+    type:     annotation
+    prefix:   /admin/questions
+
 admin_chart:
     resource: "@AdminChartBundle/Controller/"
     type:     annotation

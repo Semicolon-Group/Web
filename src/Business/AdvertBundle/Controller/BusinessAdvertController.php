@@ -39,9 +39,9 @@ class BusinessAdvertController extends Controller
      * @Route("/Afficher")
      */
     public function AfficherAction()
-    {
+    {   $var =$this->getDoctrine()->getRepository(Advert::class)->findSidePubDQL();
         $var2 =$this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
-        $var =$this->getDoctrine()->getRepository(Advert::class)->findSidePubDQL();
+
         return $this->render('BusinessAdvertBundle:BusinessAdvert:afficher.html.twig', array(
             'sides'=>$var,
             'bigs'=>$var2
@@ -275,7 +275,7 @@ class BusinessAdvertController extends Controller
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
-                ->setFrom('mysoulmatepi@gmail.com')
+                ->setFrom('MySoulmate')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
                     "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
@@ -288,7 +288,7 @@ class BusinessAdvertController extends Controller
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
-                ->setFrom('mysoulmatepi@gmail.com')
+                ->setFrom('MySoulmate')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
                     "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 

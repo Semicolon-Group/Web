@@ -3,6 +3,7 @@
 namespace BaseBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Advert
@@ -30,7 +31,8 @@ class Advert
 
     /**
      * @var string
-     *
+     **@Assert\NotBlank(message="Please, upload an image.")
+     * @Assert\Image()
      * @ORM\Column(name="photo_url", type="text", length=65535, nullable=true)
      */
     private $photoUrl;

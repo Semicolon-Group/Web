@@ -25,8 +25,7 @@ class AdvertType extends AbstractType
 
         $builder->add('content',TextType::class, ['required' => true])->
            // add('file',FileType::class)->
-        add('photoUrl',TextType::class, ['required' => true])->
-        add('videoUrl',TextType::class, ['required' => true])->
+
         add('reason',TextType::class, ['required' => true])->
         add('state',HiddenType::class,['data' => 0])->
         add('endDate' , DateType::class, ['required' => true])->

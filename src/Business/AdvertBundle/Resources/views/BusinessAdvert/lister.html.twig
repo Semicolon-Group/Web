@@ -3,33 +3,31 @@
 
 {% block title %}PubliciteBundle:Advert:Lister{% endblock %}
 
-{% block scripts %}
-                            <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
-                            <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
-                            <script >
-                                {% for m in pubs %}
-                                {% for i in [1..10] %}
-                                $(document).ready(function () {
-
-                                    $('#{{ m.id }}')
-                                        .countdown("{{ m.endDate | date('Y/m/d')}}",  function (event) {
-                                            $(this).text(
-                                                event.strftime('%D days %H:%M:%S')
-                                            );
-                                        });
-
-                                });
-                                {% endfor %}
-                                {% endfor %}
-                            </script>
-
-
-{% endblock %}
 
 {% block body %}
+    {% block navbar %}
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+
+
+                <form class="navbar-form navbar-left">
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control" placeholder="Search dashboard..." id="search-text">
+                        <span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
+                    </div>
+                </form>
+                <div id="navbar-menu">
+                    <ul class="nav navbar-nav navbar-right">
+
+
+                    </ul>
+                </div>
+
+        </nav>
+    {% endblock %}
 
     <!-- RECENT PURCHASES -->
-    <div class="panel">
+    <div class="panel" id="rslt">
         <div class="panel-heading">
             <h3 class="panel-title">Recent Purchases</h3>
 
@@ -100,5 +98,56 @@
     <!-- END RECENT PURCHASES -->
 
 {% endblock %}
+{% block scripts %}
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
+    <script >
+
+
+        $(document).ready(function () {
+            {% for m in pubs %}
+            $('#{{ m.id }}')
+                .countdown("{{ m.endDate | date('Y/m/d')}}",  function (event) {
+                    $(this).text(
+                        event.strftime('%D days %H:%M:%S')
+                    );
+                });
+            {% endfor %}
+
+            $('#search-text').keyup( function(){
+                var txt = $(this).val();
+
+                if (txt != '')
+                {
+                    $.ajax({
+
+                        url: "{{path('find')}}",
+
+                        type: "POST",
+                        cache: false,
+                        async:false,
+                        data :{search:txt},
+                        dataType : "text" ,
+                        success: function(data){
+
+                            $('#rslt').html(data);
+
+
+                        }
+
+                    });
+                }
+
+            });
+
+
+        });
+
+
+    </script>
+
+
+{% endblock %}
+
 
 

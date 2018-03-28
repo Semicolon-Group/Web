@@ -20,9 +20,13 @@ class AdvertController extends Controller
      */
     public function ListerAction()
     {
+        $var1 =$this->getDoctrine()->getRepository(Advert::class)->findNotifsAdmin();
         $var2 =$this->getDoctrine()->getRepository(Advert::class)->findPubsPourAdminDQL();
+
         return $this->render('AdminBusinessBundle:Advert:lister.html.twig', array(
             'pubs'=>$var2,
+            'notifs'=>$var1,
+
         ));
     }
 

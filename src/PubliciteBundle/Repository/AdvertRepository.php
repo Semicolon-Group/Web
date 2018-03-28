@@ -43,7 +43,7 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
     public function findPubsPourAdminDQL()
     {
         $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where  m.endDate>=CURRENT_TIMESTAMP() ORDER BY 
-                  m.')
+                  m.state , m.payed DESC ')
          ;
         return $q->getResult();
     }
@@ -62,14 +62,19 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         $q->execute();
 
     }
-    public function GetUserDQL($id)
+    public function findNotifsAdmin()
     {
-        //select * from user where id = (select advert.business_id from advert where advert.id = 3 )
-
-        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.id=:a  ')
-            ->setParameter('a',$id);
+        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.state=:a ')
+            ->setParameter('a','0');
         return $q->getResult();
 
     }
+    public function findAjaxDQL($user,$id)
+    {
+        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.business=:a and m.content =:id ')
+            ->setParameter('a',$user)->setParameter('id','%'.$id.'%');
+        return $q->getResult();
+    }
+
 
 }

@@ -22,9 +22,14 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use PubliciteBundle\Repository\AdvertRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Swift_Message;
 
 require 'C:\xampp\htdocs\mysoulmate\vendor\autoload.php';
 class BusinessAdvertController extends Controller
@@ -62,6 +67,8 @@ class BusinessAdvertController extends Controller
                     'hidden'=>true
                 )])
             ->
+            add('photoUrl',FileType::class, ['required' => true , 'data_class' => null])->
+            add('videoUrl',TextType::class)->
             add('Valider',SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted())
@@ -70,7 +77,13 @@ class BusinessAdvertController extends Controller
                 ->get('security.token_storage')
                 ->getToken()->getUser();
             $em=$this->getDoctrine()->getManager();
-
+            /**
+             * @var UploadedFile $file
+             */
+            $file = $advert->getPhotoUrl();
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move($this->getParameter('image_directory'),$fileName);
+            $advert->setPhotoUrl($fileName);
             $advert->setBusiness($user);
             $em->persist($advert);
             $em->flush();
@@ -118,6 +131,7 @@ class BusinessAdvertController extends Controller
             )
             ->
             add('Valider',SubmitType::class);
+
         $form->handleRequest($request);
         if ($form->isSubmitted())
         {
@@ -126,7 +140,7 @@ class BusinessAdvertController extends Controller
             return $this->redirectToRoute("business_adverts_list");
         }
         return $this->render('BusinessAdvertBundle:BusinessAdvert:modifier.html.twig', array(
-            'form'=>$form->createView()
+            'form'=>$form->createView(), 'ad'=>$advert
         ));
     }
     /**
@@ -215,7 +229,67 @@ class BusinessAdvertController extends Controller
         $advert = new Advert();
         $repo = $this->getDoctrine()->getRepository(Advert::class);
         $advert = $repo->IncrementClickDQL($id);
+        $var1 =$this->getDoctrine()->getRepository(Advert::class)->find($id);
+        if ($var1->getClicks() == 50 ) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    le seuil de 50 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        } else if ($var1->getClicks() == 100 ) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    le seuil de 100 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        }
         return new Response("nice done kid");
     }
+
+    /**
+     * @Route("/find" , name="find")
+     */
+    public function find(Request $request)
+    {
+        $user = $this->container
+            ->get('security.token_storage')
+            ->getToken()->getUser()->getId();
+
+
+
+
+        if($request->isXmlHttpRequest()){
+
+            $var = $this->getDoctrine()->getRepository(Advert::class)->findAjaxDQL($user,$request->get('txt'));
+
+
+
+            $serializer=new Serializer(array(new ObjectNormalizer()));
+            $data=$serializer->normalize($var);
+
+
+
+
+
+        }
+        return $this->render('BusinessAdvertBundle:BusinessAdvert:lister.html.twig', array(
+            'pubs'=>$var
+        ));
+    }
+
 
 }

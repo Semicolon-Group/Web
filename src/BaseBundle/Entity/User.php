@@ -986,4 +986,30 @@ class User extends BaseUser
         $age = $this->birthDate->diff($curDate)->y;
         return $age;
     }
+
+    /**
+     * @var \BaseBundle\Entity\Photo
+     */
+    private $profilePhoto;
+
+    /**
+     * Set profilePhoto
+     *
+     * @param \BaseBundle\Entity\Photo $photo
+     *
+     * @return void
+     */
+    public function setProfilePhoto($photo){
+        $this->profilePhoto = $photo;
+    }
+
+    /**
+     * Get profilePhoto
+     *
+     * @return \BaseBundle\Entity\Photo
+     */
+    public function getProfilePhoto(){
+        return $this->profilePhoto;
+    }
+
 }

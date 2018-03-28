@@ -55,7 +55,7 @@
                         </ul>
                     </div>
                     <div class="right_side_content">
-                        <button type="submit" value="LogIn" class="btn form-control login_btn">Edit</button>
+                        <a class="btn form-control login_btn" href="{{ path('member_profile_edit') }}"><span style="vertical-align:middle;">Edit</span></a>
                     </div>
                 </div>
             </div>
@@ -64,48 +64,54 @@
 {% endblock %}
 
 {% block body %}
-    <div id="answer-form" class="modal fade centered-modal" role="dialog">
+    <div id="answer-form" class="modal fade centered-modal" role="dialog" style="margin-top: 10vh;">
         <div class="modal-dialog" style="width: 70%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Directions</h4>
+                    <h4 class="modal-title">New Answer</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row card-container" style="width: 100%;">
                         <div class="col-md-12">
-                            <div class="card horizontal" style=" height: 70vh;">
-                                <div class="" style="width: 60%;">
-                                    <div id="map_canvas"></div>
-                                </div>
+                            <div class="card horizontal" style="height: 60vh;">
                                 <div class="card-stacked">
-                                    <div class="card-content" style="max-height: 100%;">
-                                        <div class="row" style="height: 100%; max-height: 100%;">
-                                            <div class="card" style="height: 100%;">
-                                                <div class="card-image" style="min-width: 100%; min-height: 40%; overflow: hidden; ">
-                                                    <img id="place-img" style='min-width: 100%; min-height: 100%;' src="{{ asset('member_assets/img/who-we-right.jpg') }}">
+                                    <form id="new_answer_form">
+                                        <div class="card-content" style="max-height: 100%;">
+                                            <div class="row" style="height: 100%; max-height: 100%;">
+                                                <h4 style="text-align: center; width: 100%;" id="topic">Topic</h4><br/>
+                                                <h1 style="text-align: center; width: 100%;" id="question" data-id="0">Type Question</h1><br/><br/>
+                                                <div class="form-group" style="width: 60%; margin-left: 5%;">
+                                                    <label for="importances" style="display: inline-block;">Importance:</label>
+                                                    <select class="form-control" id="importances" style="display: inline-block; margin-left: 5%;" required>
+                                                        <option value="null" disabled selected>Select an importance for this answer</option>
+                                                        <option>Choice 1</option>
+                                                        <option>Choice 1</option>
+                                                    </select>
                                                 </div>
-                                                <div class="card-content" style="overflow-y: auto; max-height: 60%;">
-                                                    <div class="card-title">
-                                                        <span id="place-name">Card Title</span><br/>
-                                                        <div  style="font-size: medium;">
-                                                            <div class="stars-outer">
-                                                                <div id="start" class="stars-inner"></div>
-                                                            </div>
+                                                <div class="form-group" style="width: 60%; margin-left: 5%;">
+                                                    <label for="choices" style="display: inline-block;">Choices:</label>
+                                                    <select class="form-control" id="choices" style="display: inline-block; margin-left: 5%;" required>
+                                                        <option value="null" disabled selected>Select an answer</option>
+                                                        <option>Choice 1</option>
+                                                        <option>Choice 1</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" style="width: 60%; margin-left: 5%;">
+                                                    <label for="choices" style="display: inline-block;">Acceptable answers:</label><span id="choice_error" style=" margin-left: 30px; color: darkred;">At least one acceptable answer must be selected</span>
+                                                    <div>
+                                                        <div class="form-group" id="acceptableChoices">
+                                                            <input style="margin-left: 5%;" type="checkbox" class="form-check-input" id="c1"/><label for="c1">Choice1</label>
+                                                            <input style="margin-left: 5%;" type="checkbox" class="form-check-input" id="c2"/><label for="c2">Choice1</label>
                                                         </div>
                                                     </div>
-                                                    <div id="open"></div>
-                                                    <div id="place-address"></div>
-                                                    <span id="phone-number"></span><br/>
-                                                    <span id="website"></span>
-                                                    <br/>
-                                                    <br/>
-                                                    <b>Reviews:</b><br/>
-                                                    <div id="reviews" style="margin-bottom: 20px;"></div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="card-action">
+                                            <button id="answer-add-btn" type="submit" style="float: right;" class="btn btn-default">Add</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -130,7 +136,7 @@
                                     <div class="card-content" style="width: 100%; max-height: 90%;">
                                         <img data-id="0" style="max-width: 100%; max-height: 100%;" src="" id="img-canvas"/>
                                     </div>
-                                    <div class="card-action" >
+                                    <div class="card-action" id="photo-display-action">
                                         <button id="set-profile" style="float: right; margin-left: 20px;" type="button" class="btn btn-default btn-md">Set as profile photo</button>
                                         <button id="set_cover" style="float: right; margin-left: 20px;" type="button" class="btn btn-default btn-md">Set as cover photo</button>
                                         <button id="delete-btn" style="float: right;" type="button" class="btn btn-default btn-md">Delete photo</button>
@@ -227,13 +233,19 @@
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="likes">
-                                <div class="profile_list">
+                                <div class="likes_list">
                                     {% for like in likes %}
                                         <div class="row card-container margins" style="width: 100%;">
                                             <div class="col-md-12">
                                                 <div id='place-' class="card horizontal clickable profile" data-path="{{ path('other_profile', {'id': like.likeReceiver.id}) }}">
                                                     <div class="card-image" style="width: 25%; min-width: 120px; overflow: hidden; ">
-                                                        <img style='min-width: 100%; min-height: 100%;' src=''>
+                                                        <img style='min-width: 100%; min-height: 100%;' src='
+                                                            {% if like.likeReceiver.profilePhoto is null %}
+                                                                {{ asset('member_assets/img/member.jpg') }}
+                                                            {% else %}
+                                                                {{ asset(vich_uploader_asset(like.likeReceiver.profilePhoto, 'imageFile',  'BaseBundle\\Entity\\Photo')) }}
+                                                            {% endif %}
+                                                        '>
                                                     </div>
                                                     <div class="card-stacked">
                                                         <div class="card-content">
@@ -248,33 +260,36 @@
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="answers">
-                                <div class="profile_list">
-                                    {% for answer in answers %}
-                                        <div class="row card-container margins" style="width: 100%;">
-                                            <div class="col-md-12">
-                                                <div class="card horizontal">
-                                                    <div class="card-stacked">
-                                                        <div class="card-content">
-                                                            <span class="card-title">{{ answer.question.question }} - <span style="font-size: medium;">{% for key, value in topics %}{% if value == answer.question.topic %}{{ key }}{% endif %}{% endfor %}</span></span>
-                                                            <p style="margin-left: 5%;">
-                                                                <b>Answer: </b>{{ answer.selectedChoice.choice }}<br/>
-                                                                <b>Accepted answers: </b>
-                                                                {% for choice in answer.choice %}
-                                                                    {{ choice.choice }}
-                                                                {% endfor %}
-                                                            </p>
-                                                        </div>
-                                                        <div class="card-action">
-                                                            <span>Since {{ answer.date|date }}</span>
+                                <div class="answers_list">
+                                    <div id="answers-display">
+                                        {% for answer in answers %}
+                                            <div class="row card-container margins" style="width: 100%;">
+                                                <div class="col-md-12">
+                                                    <div class="card horizontal">
+                                                        <div class="card-stacked">
+                                                            <div class="card-content">
+                                                                <span class="card-title">{{ answer.question.question }} - <span style="font-size: medium;">{% for key, value in topics %}{% if value == answer.question.topic %}{{ key }}{% endif %}{% endfor %}</span></span>
+                                                                <p style="margin-left: 5%;">
+                                                                    <b>Importance: </b>{% for key, value in importances %}{% if value == answer.importance %}{{ key }}{% endif %}{% endfor %}<br/>
+                                                                    <b>Answer: </b>{{ answer.selectedChoice.choice }}<br/>
+                                                                    <b>Accepted answers: </b>
+                                                                    {% for choice in answer.choice %}
+                                                                        {{ choice.choice }}
+                                                                    {% endfor %}
+                                                                </p>
+                                                            </div>
+                                                            <div class="card-action">
+                                                                <span><b>Since: </b>{{ answer.date|date('F j, Y g:i A') }}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    </div>
                                     <div class="row card-container margins" style="width: 100%;">
                                         <div class="col-md-12">
-                                            <div id='answer-add' class="card horizontal clickable" data-toggle="modal" data-target="#answer-form">
+                                            <div id='answer-add' class="card horizontal clickable">
                                                 <div class="card-stacked">
                                                     <div class="card-content">
                                                         <h1 style="text-align: center" class="hoverable"><span class="glyphicon glyphicon-plus-sign"></span></h1>
@@ -321,6 +336,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="{{ asset('member_assets/vendors/bootstrap-datepicker/js/moment-with-locales.js') }}"></script>
     <script>
         function updateAbout() {
             var aboutVal = $('#about-input').val();
@@ -434,6 +450,114 @@
                         var path = "{{ asset('uploads/images/') }}"+data.image;
                         $(profileImg).attr('src', path)
                     }
+                }
+            });
+        }
+
+        function generateAnswer() {
+            $.ajax({
+                type: "POST",
+                url: "{{ path('generate_answer') }}",
+                success: function (data) {
+                    console.log(data);
+                    if(data.question != undefined){
+                        var topic = "{% for key, value in topics %}{% if value == "+data.question.topic+" %}{{ key }}{% endif %}{% endfor %}";
+                        var importances = JSON.parse('{{ importances|json_encode|raw }}');
+                        console.log(importances);
+                        $('#topic').html(topic);
+                        $('#question').html(data.question.question);
+                        document.getElementById('question').dataset.id = data.question.id;
+                        $('#choices').html("<option value=\"null\" disabled selected>Select an answer</option>");
+                        $('#acceptableChoices').html('');
+                        $.each(data.choices, function (k, el) {
+                            $('#choices').append("<option value='"+el.id+"'>"+el.choice+"</option>");
+                            $('#acceptableChoices').append("<input style='margin-left: 5%;' type='checkbox' class='form-check-input accepted_choices' id='"+el.id+"'/><label for='"+el.id+"'>"+el.choice+"</label>");
+                        });
+                        $('#importances').html('<option value="null" disabled selected>Select an importance for this answer</option>');
+                        $.each(importances, function (k, el) {
+                            $('#importances').append('<option value="'+el+'">'+k+'</option>');
+                        });
+                        $('#choice_error').html('');
+                        $("#answer-form").modal('show');
+                    }else{
+                        $("#answer-form").modal('hide');
+                        alert("No more question to answer");
+                    }
+                }
+            });
+        }
+
+        $('#new_answer_form').submit(function (event) {
+            event.preventDefault();
+            if($('.accepted_choices:checked').length === 0){
+                $('#choice_error').html('At least one acceptable answer must be selected');
+                return;
+            }else{
+                $('#choice_error').html('');
+                $("#answer-form").modal('hide');
+                addAnswer();
+                updateAnswerView();
+            }
+        });
+
+        function addAnswer() {
+            var acceptedChoicesIds = $.map($('.accepted_choices:checked'), function (val, i) {
+                return $(val).attr('id');
+            });
+            var importanceId = $('#importances').val();
+            var selectedChoiceId = $('#choices').val();
+            var questionId = document.getElementById('question').dataset.id;
+            var toSend = {question_id: questionId, accepted_choices_ids: acceptedChoicesIds, importance_id: importanceId, selected_choice_id: selectedChoiceId};
+            console.log(toSend);
+            $.ajax({
+                type: "POST",
+                url: "{{ path('add_answer') }}",
+                data: { answer : toSend},
+                success: function (data) {
+                    generateAnswer();
+                    updateAnswerView();
+                }
+            });
+        }
+
+        function updateAnswerView() {
+            $.ajax({
+                type: "POST",
+                url: "{{ path('get_answers') }}",
+                success: function (data) {
+                    $('#answers-display').html('');
+                    $.each(data, function (k, el) {
+                        var topic = "{% for key, value in topics %}{% if value == "+el.question.topic+" %}{{ key }}{% endif %}{% endfor %}";
+                        var importance = "{% for key, value in importances %}{% if value == "+el.importance+" %}{{ key }}{% endif %}{% endfor %}";
+                        var acceptedChoices = el.choice;
+                        var acceptedString = '';
+                        $.each(acceptedChoices, function (k, el) {
+                            acceptedString+= ' '+el.choice;
+                        });
+                        var dateObj = new Date(el.date.timestamp*1000);
+                        dateObj.setTime( dateObj.getTime() + new Date().getTimezoneOffset()*60*1000 );
+                        $('#answers-display').append("" +
+                           "<div class=\"row card-container margins\" style=\"width: 100%;\">\n" +
+                           "    <div class=\"col-md-12\">\n" +
+                           "        <div class=\"card horizontal\">\n" +
+                           "            <div class=\"card-stacked\">\n" +
+                           "                <div class=\"card-content\">\n" +
+                           "                    <span class=\"card-title\">"+el.question.question+" - <span style=\"font-size: medium;\">"+topic+"</span></span>\n" +
+                           "                    <p style=\"margin-left: 5%;\">\n" +
+                           "                        <b>Importance: </b>"+importance+"<br/>\n" +
+                           "                        <b>Answer: </b>"+el.selectedChoice.choice+"<br/>\n" +
+                           "                        <b>Accepted answers: </b>"+acceptedString+
+                           "                    </p>\n" +
+                           "                </div>\n" +
+                           "                <div class=\"card-action\">\n" +
+                           "                    <span><b>Since: </b>"+moment(dateObj.toString()).format('LLL')+"</span>\n" +
+                           "                </div>\n" +
+                           "            </div>\n" +
+                           "        </div>\n" +
+                           "    </div>\n" +
+                           "</div>" +
+                           "");
+                    });
                 }
             });
         }

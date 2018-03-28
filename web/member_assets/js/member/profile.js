@@ -24,7 +24,7 @@ $('.profile').click(function () {
 });
 
 $('#answer-add').click(function () {
-    alert('He');
+    generateAnswer();
 });
 
 $('.photo').click(function () {
@@ -32,6 +32,11 @@ $('.photo').click(function () {
 });
 
 function initPhotoModal(node) {
+    if($(node).attr('id') == 'cover' || $(node).attr('id') == 'profile'){
+        $('#photo-display-action').hide();
+    }else{
+        $('#photo-display-action').show();
+    }
     $('#img-canvas').attr('src', $(node).attr('src'));
     var id = $(node).data('id');
     document.getElementById('img-canvas').dataset.id = id;
@@ -71,7 +76,5 @@ $("#photo-form").submit(function(event) {
 });
 
 $(function () {
-    alert("befor");
    $('#basebundle_photo_imageFile_file').attr('accept', '.png, .jpg, .jpeg');
-    alert("after");
 });

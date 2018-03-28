@@ -3,13 +3,18 @@
 namespace MemberBundle\Controller;
 
 use BaseBundle\Entity\Answer;
+use BaseBundle\Entity\Choice;
+use BaseBundle\Entity\Enumerations\Importance;
 use BaseBundle\Entity\Enumerations\Topic;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\PreferedRelation;
 use BaseBundle\Entity\PreferedStatus;
+use BaseBundle\Entity\Question;
 use BaseBundle\Entity\User;
 use BaseBundle\Entity\UserLike;
+use BaseBundle\Form\AnswerType;
 use BaseBundle\Form\PhotoType;
+use BaseBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,6 +36,14 @@ class MemberController extends Controller
         $user->setPreferedRelations($this->getDoctrine()->getRepository(PreferedRelation::class)->findBy(array('user' => $user)));
         $user->setPreferedStatuses($this->getDoctrine()->getRepository(PreferedStatus::class)->findBy(array('user' => $user)));
         $likes = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeSender' => $user));
+        foreach ($likes as $like){
+            $pp = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user' => $like->getLikeReceiver(), 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Profile));
+            if(sizeof($pp) != 0)
+                $like->getLikeReceiver()->setProfilePhoto($pp[0]);
+            else
+                $like->getLikeReceiver()->setProfilePhoto(null);
+        }
+
         $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user'=>$user));
         $photos = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Regular));
         $coverList = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Cover));
@@ -45,6 +58,7 @@ class MemberController extends Controller
             'likes' => $likes,
             'answers' => $answers,
             'topics' => Topic::getEnumAsArray(),
+            'importances' => Importance::getEnumAsArray(),
             'photos' => $photos,
             'cover' => sizeof($coverList)==0?null:$coverList[0],
             'profile' => sizeof($profileList)==0?null:$profileList[0],
@@ -235,6 +249,104 @@ class MemberController extends Controller
                 $data = $serializer->normalize($profileList[0]);
                 return new JsonResponse($data);
             }
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @Route("/answer/generate", name="generate_answer")
+     */
+    public function generateAnswerAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(2);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user' => $user));
+            $answeredQuestions = array_map(function ($an){
+                return $an->getQuestion();
+            }, $answers);
+            $questions = $this->getDoctrine()->getRepository(Question::class)->findAll();
+
+            if(sizeof($answeredQuestions) != sizeof($questions)){
+                foreach ($answeredQuestions as $aq){
+                    for($i=0; $i<sizeof($questions); $i++){
+                        if($questions[$i]->getId() == $aq->getId()){
+                            unset($questions[$i]);
+                            break;
+                        }
+                    }
+                }
+
+
+                $questions = array_values($questions);
+                $questionIndex = rand ( 0 , sizeof($questions)-1 );
+                $question = $questions[$questionIndex];
+                $choices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
+                $toSend = array('question' => $question, 'choices' => $choices);
+                $data = $serializer->normalize($toSend);
+
+            }else{
+                $data = null;
+            }
+            return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @Route("/answers", name="get_answers");
+     */
+    public function getAnswersAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(2);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user'=>$user));
+            if(sizeof($answers)==0){
+                return null;
+            }else{
+                $data = $serializer->normalize($answers);
+                return new JsonResponse($data);
+            }
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+
+
+    /**
+     * @Route("/answers/add", name="add_answer");
+     */
+    public function addAnswerAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $dom = $request->get('answer');
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+            $answer = new Answer();
+            $answer->setUser($user);
+            $answer->setQuestion($this->getDoctrine()->getRepository(Question::class)->find($dom['question_id']));
+            $answer->setSelectedChoice($this->getDoctrine()->getRepository(Choice::class)->find($dom['selected_choice_id']));
+            $answer->setImportance($dom['importance_id']);
+            $answer->setDate(new \DateTime());
+
+            $acceptableChoices = $dom['accepted_choices_ids'];
+            foreach ($acceptableChoices as $c){
+                $answer->addChoice($this->getDoctrine()->getRepository(Choice::class)->find($c));
+            }
+
+            $this->getDoctrine()->getManager()->persist($answer);
+            $this->getDoctrine()->getManager()->flush();
+            return new Response(Response::HTTP_OK);
         }
         return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
     }

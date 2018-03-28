@@ -111,7 +111,7 @@
     height: 16px;
 }
 .reaction-box{
-
+    height: 42.1px;
 }
 .react-action{
     display: inline;
@@ -153,4 +153,42 @@
 }
 .button:active{
     background-color: #eaeaef;
+}
+/* End Reactions
+============================================================================================ */
+/*************************************************/
+
+/* Start Comments */
+.comment-box{
+    margin-top: 10px;
+    padding: 10px 0 5px 0;
+    background-color: #f2f3f5;
+    text-align: center;
+}
+.writing-comment{
+    margin-bottom: 5px;
+}
+.comment_pic{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.comment-space{
+    width: 100%;
+    padding: 5px 10px 5px 15px;
+    display: inline-block;
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid lightgray;
+    font-size: 10pt;
+    text-align: left;
+}
+.comment-profile-pic{
+    width: 20%;
+    display: inline;
+}
+.comment-body{
+    width: 60%;
+    display: inline-block;
 }

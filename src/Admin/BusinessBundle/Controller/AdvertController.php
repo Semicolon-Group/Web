@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use BaseBundle\Entity\Advert;
 use BaseBundle\Form\AdvertType;
 use Swift_Message;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -43,7 +44,9 @@ class AdvertController extends Controller
          $x = $advert->getState() ;
         $form=$this->createForm(AdvertType::class,$advert)->add('state', ChoiceType::class,[
             'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
-        ])->add('payed',ChoiceType::class,[
+        ])->
+        add('videoUrl',TextType::class)
+            ->add('payed',ChoiceType::class,[
             'choices' => ['Payed' => '1', 'Not payed' => '0']
         ])->add('Valider',SubmitType::class);;
         $form->handleRequest($request);
@@ -74,7 +77,7 @@ class AdvertController extends Controller
 
         }
         return $this->render('AdminBusinessBundle:Advert:modifier.html.twig', array(
-            'form'=>$form->createView()
+            'form'=>$form->createView(),'ad'=>$advert
         ));
     }
     /**

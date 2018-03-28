@@ -77,7 +77,7 @@
                      {% if m.payed==0 and m.state == 1 %}   <button type="button" class="btn btn-success"  id="#paypal-button">
                             <a href="{{ path('payer_business', {'id':m.id}) }}" > <img src="{{ asset('member_assets/images/Paypal.png') }}">Paypal</a></button>
                         {% else %}<a></a>{% endif %}
-                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete </button></td>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> <a href="{{ path('supprimer_business', {'id':m.id}) }}">Delete</a>  </button></td>
 
                 </tr>
                         {% endfor %}

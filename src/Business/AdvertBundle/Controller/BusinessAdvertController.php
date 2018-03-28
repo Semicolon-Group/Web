@@ -19,6 +19,7 @@ use PubliciteBundle\Entity\Advert2;
 use PayPal\Api\Transaction;
 use BaseBundle\Entity\Advert;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -108,6 +109,19 @@ class BusinessAdvertController extends Controller
             'pubs'=>$var
         ));
     }
+    /**
+     * @Route("/Supprimer/{id}" , name="supprimer_business")
+     */
+    public function SupprimerAction($id)
+    {
+        $em= $this->getDoctrine()->getManager();
+        $advert=$em->getRepository(Advert::class)->find($id);
+
+        $em->remove($advert);
+        $em->flush();
+        return $this->redirectToRoute("business_adverts_list");
+
+    }
 
     /**
      * @Route("/Modifier/{id}",name="traiter_business")
@@ -128,8 +142,8 @@ class BusinessAdvertController extends Controller
 
                     'hidden'=>true
                 )]
-            )
-            ->
+            ) ->
+
             add('Valider',SubmitType::class);
 
         $form->handleRequest($request);
@@ -252,6 +266,33 @@ class BusinessAdvertController extends Controller
                 ->setBody(
                     "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
                     le seuil de 100 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        }else if ($var1->getClicks() == 150 ) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    le seuil de 150 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        }
+        else if ($var1->getClicks() == 200 ) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    le seuil de 250 clicks ! ",
 
                     'text/html'
                 );

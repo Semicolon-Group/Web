@@ -72,4 +72,59 @@ class DefaultController extends Controller
         }
         return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * @Route("/add", name="admin_add_question")
+     */
+    public function addQuestionAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $dom = $request->get('question');
+            $question = new Question();
+            $question->setQuestion($dom['question']);
+            $question->setTopic($dom['topic']);
+            $this->getDoctrine()->getManager()->persist($question);
+            $this->getDoctrine()->getManager()->flush();
+
+            $choices = $dom['choices'];
+            foreach ($choices as $choiceString){
+                $choice = new Choice();
+                $choice->setQuestion($question);
+                $choice->setChoice($choiceString);
+                $this->getDoctrine()->getManager()->persist($choice);
+                $this->getDoctrine()->getManager()->flush();
+            }
+            return new Response(Response::HTTP_OK);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @Route("/update", name="admin_update_question")
+     */
+    public function updateQuestionAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $dom = $request->get('question');
+            $question = $this->getDoctrine()->getRepository(Question::class)->find($dom['question']['id']);
+            $question->setQuestion($dom['question']['question']);
+            $question->setTopic($dom['topic']);
+            $this->getDoctrine()->getManager()->persist($question);
+            $this->getDoctrine()->getManager()->flush();
+
+            $toRemoveChoices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
+            foreach ($toRemoveChoices as $toRemoveChoice){
+                $this->getDoctrine()->getManager()->remove($toRemoveChoice);
+            }
+
+            $choices = $dom['choices'];
+            foreach ($choices as $choiceString){
+                $choice = new Choice();
+                $choice->setChoice($choiceString);
+                $choice->setQuestion($question);
+                $this->getDoctrine()->getManager()->persist($choice);
+                $this->getDoctrine()->getManager()->flush();
+            }
+            return new Response(Response::HTTP_OK);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 }

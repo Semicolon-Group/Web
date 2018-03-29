@@ -11,6 +11,7 @@ use BaseBundle\Entity\PreferedRelation;
 use BaseBundle\Entity\PreferedStatus;
 use BaseBundle\Entity\Question;
 use BaseBundle\Entity\User;
+use BaseBundle\Entity\UserBlock;
 use BaseBundle\Entity\UserLike;
 use BaseBundle\Form\AnswerType;
 use BaseBundle\Form\PhotoType;
@@ -138,10 +139,96 @@ class MemberController extends Controller
      * @Route("/other/{id}", name="other_profile")
      */
     public function otherProfileAction($id){
+        $connectedUser = $this->container->get('security.token_storage')->getToken()->getUser();
+
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $user->setPreferedRelations($this->getDoctrine()->getRepository(PreferedRelation::class)->findBy(array('user' => $user)));
+        $user->setPreferedStatuses($this->getDoctrine()->getRepository(PreferedStatus::class)->findBy(array('user' => $user)));
+
+        $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user'=>$user));
+        $photos = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Regular));
+        $coverList = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Cover));
+        $profileList = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Profile));
+        $likesList = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeReceiver' => $user, 'likeSender' => $connectedUser));
+
+        if(sizeof($likesList)!=0){
+            $like = $likesList[0];
+        }else{
+            $like = null;
+        }
+
         return $this->render("@Member/Member/otherProfile.html.twig", array(
-            'user' => $user
+            'user' => $user,
+            'answers' => $answers,
+            'topics' => Topic::getEnumAsArray(),
+            'importances' => Importance::getEnumAsArray(),
+            'photos' => $photos,
+            'cover' => sizeof($coverList)==0?null:$coverList[0],
+            'profile' => sizeof($profileList)==0?null:$profileList[0],
+            'like' => $like
         ));
+    }
+
+    /**
+     * @Route("/like", name="like_profile")
+     */
+    public function likeProfileAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $usertoLike = $this->getDoctrine()->getRepository(User::class)->find($request->get('id'));
+            $like = new UserLike();
+            $like->setLikeSender($user);
+            $like->setLikeReceiver($usertoLike);
+            $like->setDate(new \DateTime());
+            $this->getDoctrine()->getManager()->persist($like);
+            $this->getDoctrine()->getManager()->flush();
+            return new Response(Response::HTTP_OK);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @Route("/dislike", name="dislike_profile")
+     */
+    public function dislikeProfileAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $usertoDislike = $this->getDoctrine()->getRepository(User::class)->find($request->get('id'));
+            $like = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeSender' => $user, 'likeReceiver' => $usertoDislike))[0];
+            $this->getDoctrine()->getManager()->remove($like);
+            $this->getDoctrine()->getManager()->flush();
+            return new Response(Response::HTTP_OK);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @Route("/block/{id}", name="block_profile")
+     */
+    public function blockProfileAction($id){
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $usertoBlock = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+        $likeList = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeReceiver' => $usertoBlock, 'likeSender' => $user));
+        if(sizeof($likeList) != 0){
+            $this->getDoctrine()->getManager()->remove($likeList[0]);
+            $this->getDoctrine()->getManager()->flush();
+        }
+
+        $likeList = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeReceiver' => $user, 'likeSender' => $usertoBlock));
+        if(sizeof($likeList) != 0){
+            $this->getDoctrine()->getManager()->remove($likeList[0]);
+            $this->getDoctrine()->getManager()->flush();
+        }
+
+        $block = new UserBlock();
+        $block->setDate(new \DateTime());
+        $block->setBlockReceiver($usertoBlock);
+        $block->setBlockSender($user);
+        $this->getDoctrine()->getManager()->persist($block);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('member_profile');
     }
 
     /**
@@ -347,6 +434,53 @@ class MemberController extends Controller
             $this->getDoctrine()->getManager()->persist($answer);
             $this->getDoctrine()->getManager()->flush();
             return new Response(Response::HTTP_OK);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @Route("/answers/check", name="check_answer");
+     */
+    public function checkAnswerAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $question = $this->getDoctrine()->getRepository(Question::class)->find($request->get('questionId'));
+            $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('question' => $question, 'user' => $user));
+            if(sizeof($answers)!=0){
+                $resp = "true";
+            }else{
+                $resp = "false";
+            }
+            return new Response($resp);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @Route("/answers/getQuestion", name="get_question");
+     */
+    public function getQuestionAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(1);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+
+            $question = $this->getDoctrine()->getRepository(Question::class)->find($request->get('questionId'));
+            $choices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
+            foreach ($choices as $choice){
+                $question->addChoice($choice);
+            }
+            $topics = Topic::getEnumAsArray();
+            $importances = Importance::getEnumAsArray();
+
+            $toSend = ['question' => $question, 'topics' => $topics, 'importances' => $importances];
+
+            $data = $serializer->normalize($toSend);
+            return new JsonResponse($data);
         }
         return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
     }

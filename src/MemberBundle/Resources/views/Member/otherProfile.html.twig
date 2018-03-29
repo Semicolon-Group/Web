@@ -2,13 +2,32 @@
 
 {% block title %}Profile | {{ user.firstname | capitalize }}{% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block banner %}
     <section class="banner_area profile_banner">
+        <div style="height: 421px; overflow-y: hidden;">
+            <img id="cover" class="photo" src="
+            {% if cover is null %}
+                {{ asset('member_assets/img/banner/banner-bg-2.jpg') }}
+            {% else %}
+                {{ asset(vich_uploader_asset(cover, 'imageFile')) }}
+            {% endif %}
+        " style="width: 100%;" />
+        </div>
         <div class="profiles_inners">
             <div class="container">
                 <div class="profile_content">
                     <div class="user_img">
-                        <img class="img-circle" src="{{ asset('member_assets/img/members/single_members.png') }}" alt="">
+                        <img style="height: 270px; width: 270px;" id="profile" class="img-circle photo" src="
+                            {% if profile is null %}
+                                {{ asset('member_assets/img/member.jpg') }}
+                            {% else %}
+                                {{ asset(vich_uploader_asset(profile, 'imageFile')) }}
+                            {% endif %}
+                        " alt="">
                     </div>
                     <div class="user_name">
                         <h3>{{ user.firstname | capitalize }} {{ user.lastname | capitalize }}</h3>
@@ -40,13 +59,19 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Block</a></li>
-                                    <li><a href="#">Report</a></li>
+                                    <li><a id="block">Block</a></li>
+                                    <li><a id="report">Report</a></li>
                                 </ul>
                             </li>
                         </ul>
-                        <button type="submit" value="LogIn" class="btn form-control login_btn">Like <img src="img/user.png" alt=""></button>
-                        <button type="submit" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
+                        <span id="dis-like-display">
+                            {% if like is null %}
+                                <button type="button" id="like" value="LogIn" class="btn form-control login_btn">Like </button>
+                            {% else %}
+                                <button type="button" id="dislike" value="LogIn" class="btn form-control login_btn">Dislike</button>
+                            {% endif %}
+                        </span>
+                        <button type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
                     </div>
                 </div>
             </div>
@@ -54,18 +79,100 @@
     </section>
 {% endblock %}
 {% block body %}
+    <div id="answer-form" class="modal fade centered-modal" role="dialog" style="margin-top: 10vh;">
+        <div class="modal-dialog" style="width: 70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">New Answer</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row card-container" style="width: 100%;">
+                        <div class="col-md-12">
+                            <div class="card horizontal" style="height: 60vh;">
+                                <div class="card-stacked">
+                                    <form id="new_answer_form">
+                                        <div class="card-content" style="max-height: 100%;">
+                                            <div class="row" style="height: 100%; max-height: 100%;">
+                                                <h4 style="text-align: center; width: 100%;" id="topic">Topic</h4><br/>
+                                                <h1 style="text-align: center; width: 100%;" id="question" data-id="0">Type Question</h1><br/><br/>
+                                                <div class="form-group" style="width: 60%; margin-left: 5%;">
+                                                    <label for="importances" style="display: inline-block;">Importance:</label>
+                                                    <select class="form-control" id="importances" style="display: inline-block; margin-left: 5%;" required>
+                                                        <option value="null" disabled selected>Select an importance for this answer</option>
+                                                        <option>Choice 1</option>
+                                                        <option>Choice 1</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" style="width: 60%; margin-left: 5%;">
+                                                    <label for="choices" style="display: inline-block;">Choices:</label>
+                                                    <select class="form-control" id="choices" style="display: inline-block; margin-left: 5%;" required>
+                                                        <option value="null" disabled selected>Select an answer</option>
+                                                        <option>Choice 1</option>
+                                                        <option>Choice 1</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" style="width: 60%; margin-left: 5%;">
+                                                    <label for="choices" style="display: inline-block;">Acceptable answers:</label><span id="choice_error" style=" margin-left: 30px; color: darkred;" class="hide">At least one acceptable answer must be selected</span>
+                                                    <div>
+                                                        <div class="form-group" id="acceptableChoices">
+                                                            <input style="margin-left: 5%;" type="checkbox" class="form-check-input" id="c1"/><label for="c1">Choice1</label>
+                                                            <input style="margin-left: 5%;" type="checkbox" class="form-check-input" id="c2"/><label for="c2">Choice1</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-action">
+                                            <button id="answer-add-btn" type="submit" style="float: right;" class="btn btn-default">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="photo-display" class="modal fade centered-modal" role="dialog">
+        <div class="modal-dialog" style="width: 70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Photo</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row card-container" style="width: 100%;">
+                        <div class="col-md-12">
+                            <div class="card horizontal" style=" height: 70vh;">
+                                <div class="card-stacked" style="height: 100%">
+                                    <div class="card-content" style="width: 100%; max-height: 100%; height: 100%;">
+                                        <img data-id="0" style="max-width: 100%; max-height: 100%;" src="" id="img-canvas"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <span id="user-id" class="hide">{{ user.id }}</span>
     <section class="blog_grid_area">
         <div class="container">
             <div class="row">
                 <div class="col-md-9">
                     <div class="members_profile_inners">
                         <ul class="nav nav-tabs profile_menu" role="tablist">
-                            <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-                            <li role="presentation"><a href="#likes" aria-controls="likes" role="tab" data-toggle="tab">Likes</a></li>
+                            <li role="presentation" class="active"><a href="#profile-cnt" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
                             <li role="presentation"><a href="#answers" aria-controls="answers" role="tab" data-toggle="tab">Answers</a></li>
                         </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active fade in" id="profile">
+                        <div class="tab-content" style="height: 400px; overflow-y: auto;">
+                            <div role="tabpanel" class="tab-pane active fade in" id="profile-cnt">
                                 <div class="profile_list">
                                     <ul>
                                         <li><b>Gender</b></li>
@@ -135,55 +242,29 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane fade" id="likes">
-                                <div class="profile_list">
-                                    <di>
-
-                                    </di>
-                                </div>
-                            </div>
                             <div role="tabpanel" class="tab-pane fade" id="answers">
-                                <div class="profile_list">
-                                    <ul>
-                                        <li><a href="#">Gender</a></li>
-                                        <li><a href="#">Age</a></li>
-                                        <li><a href="#">Country</a></li>
-                                        <li><a href="#">City</a></li>
-                                        <li><a href="#">Birthday</a></li>
-                                        <li><a href="#">Relationship</a></li>
-                                        <li><a href="#">Looking for a</a></li>
-                                        <li><a href="#">Work as</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Female</a></li>
-                                        <li><a href="#">26 years old</a></li>
-                                        <li><a href="#">France</a></li>
-                                        <li><a href="#">Paris</a></li>
-                                        <li><a href="#">16 December 1990</a></li>
-                                        <li><a href="#">Single</a></li>
-                                        <li><a href="#">Man</a></li>
-                                        <li><a href="#">Designer</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Education</a></li>
-                                        <li><a href="#">Know</a></li>
-                                        <li><a href="#">Interests</a></li>
-                                        <li><a href="#">Smoking</a></li>
-                                        <li><a href="#">Eye Color</a></li>
-                                        <li><a href="#">Marital Status</a></li>
-                                        <li><a href="#">Looking for a</a></li>
-                                        <li><a href="#">Work as</a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><a href="#">Graduate Degree</a></li>
-                                        <li><a href="#">French, Russian</a></li>
-                                        <li><a href="#">Billiards</a></li>
-                                        <li><a href="#">No</a></li>
-                                        <li><a href="#">Brown</a></li>
-                                        <li><a href="#">Single</a></li>
-                                        <li><a href="#">Man</a></li>
-                                        <li><a href="#">Designer </a></li>
-                                    </ul>
+                                <div class="answers_list">
+                                    <div id="answers-display">
+                                        {% for answer in answers %}
+                                            <div class="row card-container margins" style="width: 100%;">
+                                                <div class="col-md-12">
+                                                    <div class="card horizontal clickable answer-card" data-id="{{ answer.question.id }}">
+                                                        <div class="card-stacked">
+                                                            <div class="card-content">
+                                                                <span class="card-title">{{ answer.question.question }} - <span style="font-size: medium;">{% for key, value in topics %}{% if value == answer.question.topic %}{{ key }}{% endif %}{% endfor %}</span></span>
+                                                                <p style="margin-left: 5%;">
+                                                                    <b>Importance: </b>{% for key, value in importances %}{% if value == answer.importance %}{{ key }}{% endif %}{% endfor %}<br/>
+                                                                </p>
+                                                            </div>
+                                                            <div class="card-action">
+                                                                <span><b>Since: </b>{{ answer.date|date('F j, Y g:i A') }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -201,15 +282,9 @@
                                 <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
                             </div>
                             <ul>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-1.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-2.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-3.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-4.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-5.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-6.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-7.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-8.jpg') }}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('member_assets/img/photo/photo-9.jpg') }}" alt=""></a></li>
+                                {% for photo in photos %}
+                                    <li><a href="#" ><img data-id="{{ photo.id }}" class="photo" src="{{ asset(vich_uploader_asset(photo, 'imageFile')) }}" alt=""></a></li>
+                                {% endfor %}
                             </ul>
                         </aside>
                     </div>
@@ -220,4 +295,204 @@
 {% endblock %}
 
 {% block scripts %}
+    <script>
+        var topics;
+        var importances;
+
+        $('.answer-card').click(function () {
+            var id = $(this).data('id');
+            $.ajax({
+                type: "POST",
+                url: "{{ path('check_answer') }}",
+                data: { questionId : id},
+                success: function (data) {
+                    if(data == 'true'){
+                        alert('You have already answered this question.');
+                    }else{
+                        if(confirm('Do you want to answer this question?')){
+                            prepareAnswerAdd(id);
+                        }
+                    }
+                },
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        });
+
+        function prepareAnswerAdd(questionId) {
+            $.ajax({
+                type: "POST",
+                url: "{{ path('get_question') }}",
+                data: { questionId : questionId},
+                success: function (data) {
+                    topics = data.topics;
+                    importances = data.importances;
+
+                    document.getElementById('question').dataset.id = data.question.id;
+                    $('#question').html(data.question.question);
+                    var t;
+                    $.each(data.topics, function (k, el) {
+                        if(el == data.question.topic){
+                            t = {id: el, topic: k};
+                            return false;
+                        }
+                    });
+                    $('#topic').html(t.topic);
+
+                    $('#importances').html('<option value="null" disabled selected>Select an importance for this answer</option>');
+                    $.each(data.importances, function (k, el) {
+                        $('#importances').append('<option value="'+el+'">'+k+'</option>');
+                    });
+
+                    $('#choices').html('<option value="null" disabled selected>Select an answer</option>');
+                    $('#acceptableChoices').html('');
+                    $.each(data.question.choices, function (k, el) {
+                        $('#choices').append('<option value="'+el.id+'">'+el.choice+'</option>');
+                        $('#acceptableChoices').append('<input data-id="'+el.id+'" style="margin-left: 5%;" type="checkbox" class="form-check-input accepted_choices" id="c-'+el.id+'"/><label for="c-'+el.id+'">'+el.choice+'</label>');
+                    });
+
+                    $('#answer-form').modal('show');
+                    console.log(data);
+                },
+                error: function (data) {
+                    alert('error');
+                }
+            });
+        }
+
+        $('#new_answer_form').submit(function (event) {
+            event.preventDefault();
+            if($('.accepted_choices:checked').length === 0){
+                $('#choice_error').removeClass('hide');
+                return;
+            }else{
+                $('#choice_error').addClass('hide');
+                $("#answer-form").modal('hide');
+                addAnswer();
+            }
+        });
+
+        function addAnswer() {
+            var acceptedChoicesIds = $.map($('.accepted_choices:checked'), function (val, i) {
+                return $(val).get(0).dataset.id;
+            });
+            var importanceId = $('#importances').val();
+            var selectedChoiceId = $('#choices').val();
+            var questionId = document.getElementById('question').dataset.id;
+            var toSend = {question_id: questionId, accepted_choices_ids: acceptedChoicesIds, importance_id: importanceId, selected_choice_id: selectedChoiceId};
+            console.log(toSend);
+            $.ajax({
+                type: "POST",
+                url: "{{ path('add_answer') }}",
+                data: { answer : toSend},
+                success: function (data) {
+                    generateAnswer();
+                }
+            });
+        }
+
+        function generateAnswer() {
+            $.ajax({
+                type: "POST",
+                url: "{{ path('generate_answer') }}",
+                success: function (data) {
+                    console.log(data);
+                    if(data.question != undefined){
+                        var topic;
+                        $.each(data.topics, function (k, el) {
+                            if(el == data.question.topic){
+                                topic = k;
+                                return false;
+                            }
+                        });
+                        $('#topic').html(topic);
+                        $('#question').html(data.question.question);
+                        document.getElementById('question').dataset.id = data.question.id;
+                        $('#choices').html("<option value=\"null\" disabled selected>Select an answer</option>");
+                        $('#acceptableChoices').html('');
+                        $.each(data.choices, function (k, el) {
+                            $('#choices').append("<option value='"+el.id+"'>"+el.choice+"</option>");
+                            $('#acceptableChoices').append("<input style='margin-left: 5%;' type='checkbox' class='form-check-input accepted_choices' id='"+el.id+"'/><label for='"+el.id+"'>"+el.choice+"</label>");
+                        });
+                        $('#importances').html('<option value="null" disabled selected>Select an importance for this answer</option>');
+                        $.each(importances, function (k, el) {
+                            $('#importances').append('<option value="'+el+'">'+k+'</option>');
+                        });
+                        $('#choice_error').html('');
+                        $("#answer-form").modal('show');
+                    }else{
+                        $("#answer-form").modal('hide');
+                        alert("No more question to answer");
+                    }
+                }
+            });
+        }
+
+        $('#block').click(function () {
+            if(confirm("Do you want to block this member?")){
+                var userId = $('#user-id').html();
+                var url = "{{ path('block_profile', {'id': '0'}) }}";
+                url = url.replace('0', userId);
+                window.location = url;
+            }
+        });
+
+        $('#report').click(function () {
+            alert('report');
+        });
+
+        $('#like').click(function () {
+            like(this);
+        });
+
+        function like(node) {
+            $(node).hide();
+            var userId = $('#user-id').html();
+            $.ajax({
+                type: "POST",
+                url: "{{ path('like_profile') }}",
+                data: { id : userId},
+                success: function (data) {
+                    $('#dis-like-display').html('<button onclick="dislike(this);" type="button" id="dislike" value="LogIn" class="btn form-control login_btn">Dislike</button>');
+                },
+                error: function (data) {
+                    $(node).show();
+                }
+            });
+        }
+
+        $('#dislike').click(function () {
+            dislike(this)
+        });
+
+        function dislike(node) {
+            $(node).hide();
+            var userId = $('#user-id').html();
+            $.ajax({
+                type: "POST",
+                url: "{{ path('dislike_profile') }}",
+                data: { id : userId},
+                success: function (data) {
+                    $('#dis-like-display').html('<button onclick="like(this)" type="button" id="like" value="LogIn" class="btn form-control login_btn">Like </button>');
+                },
+                error: function (data) {
+                    $(node).show();
+                }
+            });
+        }
+
+        $('#chat').click(function () {
+            alert('chat');
+        });
+
+        $('.photo').click(function () {
+            initPhotoModal(this);
+        });
+
+        function initPhotoModal(node) {
+            $('#img-canvas').attr('src', $(node).attr('src'));
+            $('#photo-display').modal('show');
+        }
+    </script>
 {% endblock %}

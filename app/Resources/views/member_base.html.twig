@@ -63,7 +63,7 @@
                            <span class="icon-bar"></span>
                            <span class="icon-bar"></span>
                        </button>
-                       <a class="navbar-brand" href=""><img src="{{ asset('member_assets/img/logo.png') }}" alt=""></a>
+                       <a class="navbar-brand" href="{{ path('news_feed') }}"><img src="{{ asset('member_assets/img/logo.png') }}" alt=""></a>
                    </div>
 
                    <!-- Collect the nav links, forms, and other content for toggling -->
@@ -72,8 +72,8 @@
                            <li class="{% if app.request.attributes.get('_route') == 'news_feed' %}active{% endif %}">
                                <a href="{{ path('news_feed') }}">Home</a>
                            </li>
-                           <li class="{% if app.request.attributes.get('_route') == 'matches' %}active{% endif %}">
-                               <a href="{{ path('matches') }}">Match</a>
+                           <li class="{% if app.request.attributes.get('_route') == 'match' %}active{% endif %}">
+                               <a href="{{ path('match') }}">Match</a>
                            </li>
                            <li class="{% if app.request.attributes.get('_route') == 'events' %}active{% endif %}">
                                <a href="{{ path('events') }}">Events</a>

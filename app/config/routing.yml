@@ -57,7 +57,7 @@ event:
 match:
     resource: "@MatchBundle/Controller/MatchController.php"
     type:     annotation
-    prefix:   /member/matches
+    prefix:   /member/match
 
 news_feed:
     resource: "@NewsFeedBundle/Controller/NewsFeedController.php"

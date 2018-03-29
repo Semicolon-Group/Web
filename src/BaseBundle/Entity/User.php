@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Date;
  * User
  *
  * @ORM\Table(name="user", indexes={@ORM\Index(name="address_id", columns={"address_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BaseBundle\Repository\UserRepository")
  */
 class User extends BaseUser
 {

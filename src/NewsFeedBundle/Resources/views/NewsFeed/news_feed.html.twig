@@ -99,7 +99,8 @@
                             </div>
                             <div class="media-body">
                                 <div contenteditable="true" id="post_space" class="writing_post" data-text="Share your thoughts..."></div>
-                                <button id="post_button">Post</button>
+                                <hr>
+                                <button id="post_button" class="btn btn-default">Post</button>
                             </div>
                         </div>
 
@@ -138,18 +139,25 @@
                                         {% for r in post.stats.reactions %}
                                             <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
                                         {% endfor %}
-                                        <span id="{{ post.id }}-nbr" data-nbr="{{ post.stats.nbr }}">
-                                            {% if post.stats.nbr != 0 %}
+                                        <span id="{{ post.id }}-nbr-reaction" data-nbr="{{ post.stats.nbrReaction }}">
+                                            {% if post.stats.nbrReaction != 0 %}
                                                 {% if post.currentReaction != -1 %}
                                                     You
-                                                    {% if post.stats.nbr > 1 %}
-                                                        and {{ post.stats.nbr - 1 }} others
+                                                    {% if post.stats.nbrReaction > 1 %}
+                                                        and {{ post.stats.nbrReaction - 1 }} others
                                                     {% endif %}
                                                 {% else %}
-                                                    {{ post.stats.nbr }}
+                                                    {{ post.stats.nbrReaction }}
                                                 {% endif %}
                                             {% endif %}
                                         </span>
+                                        {% if post.stats.nbrComment != 0 %}
+                                            &nbsp;
+                                            <img src="{{ asset('member_assets/img/Emoticons/comment.png') }}" class="emo-stat">
+                                            <span id="{{ post.id }}-nbr-comment" data-nbr="{{ post.stats.nbrComment }}">
+                                                {{ post.stats.nbrComment }}
+                                            </span>
+                                        {% endif %}
                                     </span>
 
                                     <!-- React Action -->

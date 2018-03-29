@@ -36,6 +36,7 @@ class AppKernel extends Kernel
             new Admin\FOSSecurityBundle\AdminFOSSecurityBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
             new Admin\QuestionBundle\AdminQuestionBundle(),
+            new Ob\HighchartsBundle\ObHighchartsBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

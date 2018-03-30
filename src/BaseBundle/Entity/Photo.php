@@ -10,7 +10,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * Photo
  *
  * @ORM\Table(name="photo", indexes={@ORM\Index(name="user_id", columns={"user_id"})})
- * @ORM\Entity
+
+ * @ORM\Entity(repositoryClass="BaseBundle\Repository\PhotoRepository")
  * @Vich\Uploadable
  */
 class Photo

@@ -34,6 +34,7 @@ class AppKernel extends Kernel
             new Admin\ChartBundle\AdminChartBundle(),
             new Business\FOSSecurityBundle\BusinessFOSSecurityBundle(),
             new Admin\FOSSecurityBundle\AdminFOSSecurityBundle(),
+            new blackknight467\StarRatingBundle\StarRatingBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

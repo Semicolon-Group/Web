@@ -14,6 +14,26 @@ class MemberChartsController extends Controller
      * @Route("/member", name="admin_member_charts")
      */
     public function getMemberChartsAction(){
+
+        $obj = $this->getGenderPieChart();
+
+        return $this->render('@AdminChart/MemberCharts/member_charts.html.twig',
+            array(
+                'member_number' => $this->getMemberNumberChart(),
+                'member_gender' => $obj['chart'],
+                'total_number' => $obj['total_number']
+            ));
+    }
+
+    private function containsMonth($counts, $month){
+        foreach ($counts as $count){
+            if($count['creation_month'] == $month)
+                return $count;
+        }
+        return null;
+    }
+
+    private function getMemberNumberChart(){
         $months = array(
             0 => 'January',
             1 => 'February',
@@ -48,22 +68,10 @@ class MemberChartsController extends Controller
         $ob->yAxis->title(array('text' => "Member number"));
         $ob->xAxis->categories($months);
         $ob->series($series);
-        return $this->render('@AdminChart/MemberCharts/member_charts.html.twig',
-            array(
-                'member_number' => $ob,
-                'member_gender' => $this->genderPieChart()
-            ));
+        return $ob;
     }
 
-    private function containsMonth($counts, $month){
-        foreach ($counts as $count){
-            if($count['creation_month'] == $month)
-                return $count;
-        }
-        return null;
-    }
-
-    private function genderPieChart(){
+    private function getGenderPieChart(){
         $ob = new Highchart();
         $ob->chart->renderTo('piechart');
         $ob->title->text('Gender Percentage');
@@ -86,8 +94,10 @@ class MemberChartsController extends Controller
             array_push($data,$res);
         }
         // var_dump($data);
-            $ob->series(array(array('type' => 'pie','name' => 'Gender share', 'data' => $data)));
-            return $ob;
-        }
+        $ob->series(array(array('type' => 'pie','name' => 'Gender share', 'data' => $data)));
+        return ['chart' => $ob, 'total_number' => $totalMembers];
+    }
+
+
 
 }

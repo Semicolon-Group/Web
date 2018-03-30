@@ -45,7 +45,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Choices:</label><br/>
-                                                    <input data-id="" required style="display: inline-block; width: 50%;" type="text" class="form-control choice" placeholder="Choice" id="ch-0"/><span id="add-0" style="margin-left: 10px; font-size: large;" class="lnr lnr-plus-circle hoverable choice-add"></span>
+                                                    <input data-id="" required style="display: inline-block; width: 50%;" type="text" class="form-control choice" placeholder="Choice" id="ch-0"/><br/><br/>
+                                                    <input data-id="" required style="display: inline-block; width: 50%;" type="text" class="form-control choice" placeholder="Choice" id="ch-1"/><span id="add-1" style="margin-left: 10px; font-size: large;" class="lnr lnr-plus-circle hoverable choice-add"></span>
                                                     <div id="choices"></div>
                                                 </div>
                                             </div>
@@ -106,7 +107,7 @@
 {% endblock %}
 {% block scripts %}
     <script>
-        var index = 1;
+        var index = 2;
         $('.choice-add').click(function () {
             addChoicesInputs();
         });
@@ -120,33 +121,49 @@
             }
         });
 
+        $('.choice').focus(function () {
+            storeData(this);
+        });
+
+        $('.choice').blur(function () {
+            removeChoiceInput(this);
+        });
+
         function addChoicesInputs() {
+            if($('#ch-0').val() && $('#ch-1').val())
             if($('#ch-'+(index-1)).val()){
                 $('#add-'+(index-1)).addClass("hide");
                 index++;
-                if(index==2){
+                if(index==3){
                     $('#choices').append("" +
-                        "<div><br/><input data-id='' onblur='removeChoiceInput(this)' style='display: inline-block; width: 50%;' type='text' class='form-control choice' placeholder='Choice' id='ch-"+(index-1)+"'/><span onclick='addChoicesInputs();' id='add-"+(index-1)+"' style='margin-left: 10px; font-size: large;' class='lnr lnr-plus-circle hoverable choice-add'></span>" +
+                        "<div><br/><input data-id='' onfocus='storeData(this);' onblur='removeChoiceInput(this)' style='display: inline-block; width: 50%;' type='text' class='form-control choice' placeholder='Choice' id='ch-"+(index-1)+"'/><span onclick='addChoicesInputs();' id='add-"+(index-1)+"' style='margin-left: 10px; font-size: large;' class='lnr lnr-plus-circle hoverable choice-add'></span>" +
                         "<br/><br/><div>");
                 }else if(index<5){
                     $('#choices').append("" +
-                        "<div><input data-id='' onblur='removeChoiceInput(this)' style='display: inline-block; width: 50%;' type='text' class='form-control choice' placeholder='Choice' id='ch-"+(index-1)+"'/><span onclick='addChoicesInputs();' id='add-"+(index-1)+"' style='margin-left: 10px; font-size: large;' class='lnr lnr-plus-circle hoverable choice-add'></span>" +
+                        "<div><input data-id='' onfocus='storeData(this);' onblur='removeChoiceInput(this)' style='display: inline-block; width: 50%;' type='text' class='form-control choice' placeholder='Choice' id='ch-"+(index-1)+"'/><span onclick='addChoicesInputs();' id='add-"+(index-1)+"' style='margin-left: 10px; font-size: large;' class='lnr lnr-plus-circle hoverable choice-add'></span>" +
                         "<br/><br/></div>");
                 }else{
                     $('#choices').append("" +
-                        "<div><input data-id='' onblur='removeChoiceInput(this)' style='display: inline-block; width: 50%;' type='text' class='form-control choice' placeholder='Choice' id='ch-"+(index-1)+"'/>" +
+                        "<div><input data-id='' onfocus='storeData(this);' onblur='removeChoiceInput(this)' style='display: inline-block; width: 50%;' type='text' class='form-control choice' placeholder='Choice' id='ch-"+(index-1)+"'/>" +
                         "</div>");
                 }
                 $('#ch-'+(index-1)).focus();
             }
         }
 
+        var focusedData;
+        function storeData(node) {
+            focusedData = $(node).val();
+        }
+
         function removeChoiceInput(node) {
-            if(!$(node).val()){
+            if((!$(node).val()) && ($(node).attr('id').split("-")[1] == (index-1)) && ($(node).attr('id').split("-")[1] > 1)){
                 $(node).parent().remove();
                 index--;
                 $('#add-'+(index-1)).removeClass('hide');
                 $('#ch-'+(index-1)).focus();
+            }else if($(node).val().length === 0 && ((index-1) > 1) && ((index-1)>$(node).attr('id').split("-")[1])){
+                $(node).val(focusedData);
             }
         }
 
@@ -162,12 +179,13 @@
 
         function resetQuestionForm() {
             $('#question').val('');
-            for(i=1; i<index; i++){
+            for(i=2; i<index; i++){
                 $('#ch-'+i).parent().remove();
             }
             $('#ch-0').val('');
-            $('#add-0').removeClass('hide');
-            index=1;
+            $('#ch-1').val('');
+            $('#add-1').removeClass('hide');
+            index=2;
             $('#question-form-modal').modal('show');
         }
 
@@ -206,7 +224,9 @@
             });
             $('#ch-0').val(choices[0]['choice']);
             document.getElementById('ch-0').dataset.id = choices[0]['id'];
-            for(i=1; i<choices.length; i++){
+            $('#ch-1').val(choices[1]['choice']);
+            document.getElementById('ch-1').dataset.id = choices[1]['id'];
+            for(i=2; i<choices.length; i++){
                 addChoicesInputs();
                 $('#ch-'+i).val(choices[i]['choice']);
                 document.getElementById('ch-'+i).dataset.id = choices[i]['id'];

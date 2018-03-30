@@ -10,6 +10,11 @@
 
 {% block stylesheets %}
     <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+    <style>
+        .pac-container {
+            z-index: 10000 !important;
+        }
+    </style>
 {% endblock %}
 {% block body %}
     <div id="photo-display" class="modal fade centered-modal" role="dialog">
@@ -61,7 +66,8 @@
                                                         <label style="display: inline-block;">Address:</label>
                                                         <div>
                                                             <input id="city" class="form-control" style="display: inline-block; width: 30%;" placeholder="City" required/>
-                                                            <input id="country" class="form-control" style="display: inline-block; width: 25%; margin-left: 10%;" placeholder="Country" required/>
+                                                            <input id="country" class="form-control" style="display: inline-block; width: 25%; margin-left: 10%;" placeholder="Country" required readonly/>
+                                                            <button type="button" class="btn btn-default btn-sm" style="display: inline-block; width: 15%; margin-left: 5%;" id="locate"><span class="glyphicon glyphicon-screenshot"></span> Locate me</button>
                                                             <input id="lat" class="hide"/>
                                                             <input id="lng" class="hide"/>
                                                         </div>
@@ -110,10 +116,10 @@
                     <div class="members_profile_inners">
                         <ul class="nav nav-tabs profile_menu" role="tablist" style="text-align: center; border: none; border-bottom: 1px solid #ddd;">
                             <li role="presentation" class="active col-md-6">
-                                <a href="#activity" aria-controls="activity" role="tab" data-toggle="tab"><h1>Activity</h1></a>
+                                <a href="#activity" aria-controls="activity" role="tab" data-toggle="tab"><h1>Others experiences</h1></a>
                             </li>
                             <li role="presentation" class="col-md-6">
-                                <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><h1>Profile</h1></a>
+                                <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><h1>My experiences</h1></a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -211,12 +217,102 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
     <script>
         $(function () {
             $('#datetimepicker1').datetimepicker({
                 format: 'LLL'
             });
+            activateAutoComplete();
         });
+
+        $('#city').on('input', function () {
+            $('#country').val('');
+        });
+
+        $('#city').blur(function () {
+            if($('#city').val() != '' && $('#country').val() == ''){
+                document.getElementById("city").setCustomValidity("Please provide a valid address or let us get your location!");
+            }else{
+                document.getElementById("city").setCustomValidity("");
+            }
+        });
+
+        function activateAutoComplete() {
+            var input = document.getElementById('city');
+            var options = {
+                types: ['(cities)'],
+                componentRestrictions: {country: 'tn'}
+            };
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                $('#lat').val(place.geometry.location.lat());
+                $('#lng').val(place.geometry.location.lng());
+                var results = place.formatted_address.split(',');
+                var country = results[results.length-1].trim();
+                var city = place.formatted_address.replace(', '+country, '');
+                $('#city').val(city);
+                $('#country').val(country);
+                $('#city').blur();
+            });
+        }
+
+        $('#locate').click(function () {
+            locate();
+        });
+
+        function locate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser, please provide your address");
+            }
+        }
+
+        function showPosition(position) {
+            $('#lat').val(position.coords.latitude);
+            $('#lng').val(position.coords.longitude);
+            document.getElementById("city").setCustomValidity("");
+            geocodeLatLng(position.coords.latitude, position.coords.longitude);
+        }
+
+        function geocodeLatLng(lt, lg) {
+            var geocoder = new google.maps.Geocoder;
+            var latlng = {lat: lt, lng: lg};
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        component = results[0].formatted_address.split(',');
+                        var country = component[component.length-1].trim();
+                        $('#country').val(country);
+                        $('#city').val(results[0].formatted_address.replace(', '+country,''));
+                    } else {
+                        window.alert('No results found');
+                    }
+                } else {
+                    window.alert('Geocoder failed due to: ' + status);
+                }
+            });
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Please provide your address");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location unavailable, , please provide your address");
+                    break;
+                case error.TIMEOUT:
+                    alert("Location request timed out, please provide your address");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error has occurred, please provide your address");
+                    break;
+            }
+        }
 
         $('#experience-add').click(function () {
             prepareForAdd();
@@ -285,9 +381,6 @@
             var lat = $('#lat').val();
             var lng = $('#lng').val();
             var date = $('#datetimepicker1').data('date');
-
-            lat = '1223';
-            lng = '521485';
 
             $.ajax({
                 type: "POST",

@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,12 +24,12 @@ class EventType extends AbstractType
             ->add('title')
             ->add('photoUrl',FileType::class, array('data_class' => null))
             ->add('maxPlaces')
-            ->add('startDate',DateTimeType::class, array(
+            ->add('startDate',DateTimeType::class, ['required' => true], array(
             'data' => new \DateTime(),
             'attr' => array('style' => 'display: yes;'),
             'label' => false
         ))
-            ->add('endDate')
+            ->add('endDate',DateType::class, ['required' => true])
             ->add('address', AddressType::class, array(
                 'label' => false
             ));

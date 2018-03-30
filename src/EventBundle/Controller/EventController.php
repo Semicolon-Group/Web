@@ -14,11 +14,15 @@ class EventController extends Controller
      * @Route("/", name="events")
      */
 
-    public function eventsAction()
+    public function eventsAction(Request $request)
     {
         $em=$this->getDoctrine();
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $event=$em->getRepository(Event::class)->findAll();
+        if($request->isMethod('POST')){
+            $title=$request->get('title');
+            $event=$em->getRepository("BaseBundle:Event")->findEventByName($title);
+        }
         $data = [];
         foreach ($event as $e){
             $exists = false;
@@ -31,6 +35,7 @@ class EventController extends Controller
         }
         return $this->render('EventBundle:Event:events.html.twig', array('events'=>$data));
     }
+
 
     /**
      * @Route("/participate", name="participate_event")

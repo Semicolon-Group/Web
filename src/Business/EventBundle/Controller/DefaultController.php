@@ -19,7 +19,10 @@ class DefaultController extends Controller
     {
         $em=$this->getDoctrine();
         $event=$em->getRepository(Event::class)->findAll();
-        return $this->render('BusinessEventBundle:Default:index.html.twig', array('events'=>$event));
+        return $this->render('BusinessEventBundle:Default:index.html.twig', array(
+            'events'=>$event,
+            'user'=>$this->getUser(),
+        ));
     }
 
     /**

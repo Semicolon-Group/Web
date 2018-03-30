@@ -6,18 +6,77 @@
     <li class="breadcrumb-item active">Create</li>
 {% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('business_assets/css/bootstrap-datetimepicker.css') }}">
+{% endblock %}
+
 
 
 {% block body %}
+{% block scripts %}
 
-    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+    <script src="{{ asset('business_assets/js/jquery-2.1.4.min.js') }} "></script>
+
+
     <script type="text/javascript" >
 
+        $(document).ready(function (e) {
+            e.preventDefault();
+            var date = new Date();
+            $('#basebundle_Event_startDate_year').val(date.getFullYear());
+            $('#basebundle_Event_startDate_month').val(date.getMonth()+1);
+            $('#basebundle_Event_startDate_day').val(date.getDate());
+
+            $('#basebundle_Event_endDate_year').val(date.getFullYear());
+            $('#basebundle_Event_endDate_month').val(date.getMonth()+1);
+            $('#basebundle_Event_endDate_day').val(date.getDate());
+
+            $('#valider').addClass("btn btn-success","fa fa-check-circle");
+
+            $('#basebundle_Event_startDate_year').addClass("form-control")
+            $('#basebundle_Event_startDate_month').addClass("form-control")
+            $('#basebundle_Event_startDate_day').addClass("form-control");
+
+            $('#basebundle_Event_endDate_year').addClass("form-control")
+            $('#basebundle_Event_endDate_month').addClass("form-control")
+            $('#basebundle_Event_endDate_day').addClass("form-control");
+
+            $('#basebundle_Event_content').addClass("form-control")
+            $('#basebundle_Event_title').addClass("form-control")
+            $('#basebundle_Event_maxPlaces').addClass("form-control")
+            $('#basebundle_Event_photoUrl').addClass("form-control")
+
+            $('#test').click(function () {
+
+                var start = new Date(
+                    $('#basebundle_Event_startDate_year').val()
+                    ,
+                    $('#basebundle_Event_startDate_month').val()-1
+                    ,
+                    $('#basebundle_Event_startDate_day').val());
+                var end = new Date(
+                    $('#basebundle_Event_endDate_year').val()
+                    ,
+                    $('#basebundle_Event_endDate_month').val()-1
+                    ,
+                    $('#basebundle_Event_endDate_day').val());
+
+                var s = (end.getTime()-start.getTime());
+                var diff = Math.floor(s / (365.25 * 24 * 60 * 60 * 1000));
+                if(diff<0){
+                    document.alert("!!!!!");
+                    alert("mmmmm");
+                }
+
+                else return null;
+            });
+        });
     </script>
+
+{% endblock %}
 
         <h1>Ajouter Event</h1>
          {{ form_start(form) }}
-
     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
         <div class="form-group">
             <label  style="color: #0a0a0a" class="control-label" for="first-name">Name event </label><br>
@@ -27,7 +86,7 @@
 
     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
         <div class="form-group">
-            <label  style="color: #0a0a0a" class="control-label" for="first-name">Description </label><br>
+            <label  style="color: #0a0a0a" class="control-label" for="first-name">content </label><br>
             {{ form_widget(form.content, {'attr':{'class':'form-control'}}) }}
         </div>
     </div>
@@ -46,6 +105,7 @@
     </div>
 
 
+
     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
         <div class="form-group">
             <label  style="color: #0a0a0a" class="control-label" for="first-name" id="start">Start Date </label><br>
@@ -61,6 +121,7 @@
         </div>
     </div>
 
+
     <div class="alert alert-warning alert-dismissible" role="alert" hidden="true" id="warning" >
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <i class="fa fa-warning"></i> Warning, Please fill all the fields
@@ -68,7 +129,7 @@
 
     <div class="demo-button">
         <div class="demo-button">
-            <input type="submit" value="Add" id="test">
+            <input type="submit" value="Add" id="test" class="test"/>
         </div>
     </div>
 

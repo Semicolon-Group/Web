@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Experience
  *
  * @ORM\Table(name="experience", indexes={@ORM\Index(name="address_id", columns={"address_id"}), @ORM\Index(name="user_id", columns={"user_id"})})
- * @ORM\Entity
+ * @ORM\Entity("BaseBundle\Repository\ExperienceRepository")
  */
 class Experience
 {
@@ -52,7 +52,7 @@ class Experience
     /**
      * @var \Address
      *
-     * @ORM\ManyToOne(targetEntity="Address")
+     * @ORM\ManyToOne(targetEntity="Address", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="address_id", referencedColumnName="id")
      * })

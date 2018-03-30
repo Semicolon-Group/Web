@@ -28,3 +28,30 @@ $('.participate').click(function(e){
         }
     })
 })
+$(document).ready(function () {
+
+
+    $('#test').click(function () {
+
+        var start = new Date(
+            $('#basebundle_event_startDate_date_year').val()
+            ,
+            $('#basebundle_event_startDate_date_month').val()-1
+            ,
+            $('#basebundle_event_startDate_date_day').val());
+        var end = new Date(
+            $('#basebundle_event_endDate_year').val()
+            ,
+            $('#basebundle_event_endDate_month').val()-1
+            ,
+            $('#basebundle_event_endDate_day').val());
+
+        var s = (end.getTime()-start.getTime());
+        var diff = Math.ceil(s / (1000 * 3600 * 24));
+        if(diff<0){
+            alert("Invalid date");
+        }
+
+        else return null;
+    });
+});

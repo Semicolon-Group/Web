@@ -13,7 +13,11 @@
         <div class="panel-heading">
             <h3 class="panel-title">Event</h3>
         </div>
+
+        <div id="selected_post" data-id=""></div>
         <div class="panel-body">
+
+            <div id="selected_post" data-id=""></div>
             <table class="table">
                 <thead>
                 <tr>
@@ -39,6 +43,7 @@
                             <td>{{ event.maxPlaces }}</td>
                             <td><a href="{{ path('business_events_delete',{'id':event.id}) }}">Delete</a></td>
                             <td><a href="{{ path('business_events_edit',{'id':event.id}) }}">Edit</a></td>
+                            <td><a href="{{ path('business_events_listp',{'id':event.id}) }}">listparticipant</a></td>
 
                         </tr>
                     {% endfor %}

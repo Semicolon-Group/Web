@@ -25,6 +25,7 @@ class DefaultController extends Controller
         ));
     }
 
+
     /**
      * @Route("/Delete/{id}", name="business_events_delete")
      */
@@ -99,5 +100,16 @@ class DefaultController extends Controller
             'edit_form' => $editForm->createView(),
 
         ));
+    }
+    /**
+     * @Route("/listparticipant/{id}", name="business_events_listp")
+     */
+    public function listparticipantAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
+        $participant = $event->getUser();
+        return $this->render('BusinessEventBundle:Default:listparticipant.html.twig',
+            array('event' => $event));
     }
 }

@@ -1,0 +1,40 @@
+{% extends 'business_base.html.twig' %}
+{% block title %}Event | List{% endblock %}
+{% block page_title %}Event list{% endblock %}
+{% block page_path %}
+    <li class="breadcrumb-item">Event</li>
+    <li class="breadcrumb-item active">List</li>
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Event</h3>
+        </div>
+
+        <div id="selected_post" data-id=""></div>
+        <div class="panel-body">
+
+            <div id="selected_post" data-id=""></div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>participant firstname</th>
+                    <th>participant lastname</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for participant in event.user %}
+                    <tr>
+                        <td>{{ participant.firstname }}</td>
+                        <td>{{ participant.lastname }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

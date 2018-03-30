@@ -109,6 +109,21 @@ class BusinessAdvertController extends Controller
         ));
     }
     /**
+     * @Route("",name="refrech")
+     */
+    public function RefrechAction(Request $request)
+    {
+        if($request->isXmlHttpRequest()) {
+            $var = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
+          ;
+            Return new JsonResponse(array('pubs'=>$var));
+
+        }
+    }
+
+
+
+    /**
      * @Route("/Supprimer/{id}" , name="supprimer_business")
      */
     public function SupprimerAction($id)
@@ -275,7 +290,7 @@ class BusinessAdvertController extends Controller
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
-                ->setFrom('MySoulmate')
+                ->setFrom('mysoulmatepi@gmail.com')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
                     "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
@@ -288,7 +303,7 @@ class BusinessAdvertController extends Controller
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
-                ->setFrom('MySoulmate')
+                ->setFrom('mysoulmatepi@gmail.com')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
                     "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
@@ -323,27 +338,30 @@ class BusinessAdvertController extends Controller
         $user = $this->container
             ->get('security.token_storage')
             ->getToken()->getUser()->getId();
-
-
-
-
-        if($request->isXmlHttpRequest()){
-
-            $var = $this->getDoctrine()->getRepository(Advert::class)->findAjaxDQL($user,$request->get('txt'));
-
-
-
+    if($request->isXmlHttpRequest()){
+             $var = $this->getDoctrine()->getRepository(Advert::class)->findAjaxDQL($user,$request->get('txt'));
             $serializer=new Serializer(array(new ObjectNormalizer()));
             $data=$serializer->normalize($var);
-
-
-
-
-
-        }
+  }
         return $this->render('BusinessAdvertBundle:BusinessAdvert:lister.html.twig', array(
             'pubs'=>$var
         ));
+    }
+    /**
+     * @Route("/delete_post_business", name = "delete_post_business")
+     */
+    public function deletePostAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $id = $request->request->get('id');
+            $advert = new Advert();
+            $repo = $this->getDoctrine()->getRepository(Advert::class);
+            $advert = $repo->find($id);
+
+            $em=$this->getDoctrine()->getManager();
+            $em->remove($advert);
+            $em->flush();
+            return new JsonResponse();
+        }
     }
 
 

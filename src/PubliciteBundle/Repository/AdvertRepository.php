@@ -31,12 +31,13 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         $q=$this->getEntityManager();
         $max = $q->createQuery('Select MAX(m.id) FROM BaseBundle:Advert m where m.position=:pos ')
             ->setParameter('pos','1')->getSingleScalarResult();
-        return $q->createQuery('select m from BaseBundle:Advert m where  m.id<=:rand and m.position=:pos and m.payed=:payed
+        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand and m.position=:pos and m.payed=:payed
 ORDER BY m.clicks DESC
          ')  ->setParameter('rand',rand(0,$max))->setParameter('pos','1')->setParameter('payed','1')
             ->setMaxResults(1)
             ->getResult();
     }
+
     public function findThisUserPubs($user)
     {
         $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.business=:a ')

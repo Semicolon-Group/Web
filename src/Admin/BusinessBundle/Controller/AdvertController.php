@@ -61,7 +61,7 @@ class AdvertController extends Controller
 
                 $message = (new Swift_Message())
                     ->setSubject('MySoulmate | Add approved !')
-                    ->setFrom('MySoulmate')
+                    ->setFrom('mysoulmatepi@gmail.com')
                     ->setTo($advert->getBusiness()->getEmail())
                     ->setBody(
                         "Bonjour Monsieur " .$advert->getBusiness()->getFirstName() . " ,  Nous avons confirmé votre demande de pub ! 

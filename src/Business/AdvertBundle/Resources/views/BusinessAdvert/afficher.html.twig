@@ -5,6 +5,23 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+        function f(){
+            {% for m in bigs %}
+        $.ajax({
+            url: "{{path('refrech')}}",
+            type: "POST",
+            cache: false
+
+
+
+        })
+            {% endfor %};}
+
+        setInterval(f(), 5000);
+
+
+
+
         {% for m in sides %}
 
         $('#{{ m.id }}').click(function (){
@@ -40,23 +57,38 @@
  });
 
 </script>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v2.12&appId=212394559315715&autoLogAppEvents=1';
+            fjs.parentNode.insertBefore(js, fjs); }
+        (document, 'script', 'facebook-jssdk'));
+    </script>
 {% endblock %}
 {% block title %}News Feed{% endblock %}
 
        {% block banner %}
 
            {% for m in bigs %}
-               {% for i in [1..10]%}
-               <section class="banner_area" style="background: url({% block banner_img %} {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %}) no-repeat scroll center center; background-size: cover;">
+               {% set menuUri %}https://{{ m.business.link }}{% endset %}
+
+               <section class="banner_area" style="background: url({% block banner_img %} {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %}) no-repeat scroll center center; background-size: cover;" id="{{ m.id }}">
                    <div class="container">
                        <div class="banner_content">
-
+                           {% set title %}
+                               https://
+                           {% endset %}
                            <br><br><br><br><br><br><br><br><br><br>
-                           <a  id="{{ m.id }}"+i ><i class="fa fa-heart" aria-hidden="true" style="height: 300px;"></i></a>
+                           <a  id="{{ m.id }}" ><i class="fa fa-heart" aria-hidden="true" style="height: 300px;"></i></a>
+
                        </div>
                    </div>
+                   <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+    
                </section>
-           {% endfor %}
+
            {% endfor %}
        {% endblock %}
 {% block body %}
@@ -76,6 +108,8 @@
                                             <div class="blog_share_area">
                                                 <a></a>
                                                 <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true"></i>{{ m.clicks }}</a>
+                                                <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -86,8 +120,10 @@
                     {% elseif  'https://www.youtube.com/embed/' in m.videoUrl %}
                         <iframe width="280" height="250"
                                 src="{{ m.videoUrl }}">
+
                         </iframe>
-                        {% else  %}
+
+                    {% else  %}
                         <div class="row">
                             <div class="blog_grid_inner">
                                 <div class="col-md-3 col-sm-6">
@@ -96,6 +132,8 @@
                                             <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
                                             <div class="blog_share_area">
                                                 <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true"></i>{{ m.clicks }}</a>
+                                                <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+
                                             </div>
                                         </div>
                                     </div>

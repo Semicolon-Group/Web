@@ -35,13 +35,6 @@ class UserRepository extends EntityRepository
     }
 
     public function getGenderNumber(){
-        $emConfig = $this->getEntityManager()->getConfiguration();
-        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
-        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
-        $emConfig->addCustomDatetimeFunction('DAY', 'DoctrineExtensions\Query\Mysql\Day');
-
-        $year = (new DateTime)->format("Y");
-
         $query = $this->getEntityManager()
             ->createQuery("
                 select COUNT(m) as total, m.gender
@@ -68,6 +61,18 @@ class UserRepository extends EntityRepository
                 GROUP BY creation_month, creation_year
             ")->setParameter('roles', '%"ROLE_BUSINESS"%')->setParameter('cyear', $year);
 
+        return $query->getResult();
+    }
+
+    public function getMembersCountByCity(){
+        $query = $this->getEntityManager()
+            ->createQuery("
+                select COUNT(m) as total, a.city as city
+                from BaseBundle:User m 
+                INNER JOIN m.address a
+                WHERE m.roles LIKE :roles
+                GROUP BY city
+            ")->setParameter('roles', 'a:0%');
         return $query->getResult();
     }
 }

@@ -69,9 +69,9 @@
                                 <button type="button" id="like" value="LogIn" class="btn form-control login_btn">Like </button>
                             {% else %}
                                 <button type="button" id="dislike" value="LogIn" class="btn form-control login_btn">Dislike</button>
+                                <button type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
                             {% endif %}
                         </span>
-                        <button type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
                     </div>
                 </div>
             </div>
@@ -454,7 +454,11 @@
                 url: "{{ path('like_profile') }}",
                 data: { id : userId},
                 success: function (data) {
-                    $('#dis-like-display').html('<button onclick="dislike(this);" type="button" id="dislike" value="LogIn" class="btn form-control login_btn">Dislike</button>');
+                    var iconPath = "{{ asset('member_assets/img/comment.png') }}";
+                    $('#dis-like-display').html('' +
+                        '<button onclick="dislike(this);" type="button" id="dislike" value="LogIn" class="btn form-control login_btn">Dislike</button>' +
+                        '<button type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="'+iconPath+'" alt=""></button>' +
+                        '');
                 },
                 error: function (data) {
                     $(node).show();
@@ -468,6 +472,7 @@
 
         function dislike(node) {
             $(node).hide();
+            $(node).next().hide();
             var userId = $('#user-id').html();
             $.ajax({
                 type: "POST",

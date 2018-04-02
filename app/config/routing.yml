@@ -70,7 +70,7 @@ news_feed:
     prefix:   /member/home
 
 member:
-    resource: "@MemberBundle/Controller/MemberController.php"
+    resource: "@MemberBundle/Controller/"
     type:     annotation
     prefix:   /member
 

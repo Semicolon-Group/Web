@@ -1,0 +1,45 @@
+{% extends 'business_base.html.twig' %}
+{% block title %}Charts | Advert{% endblock %}
+{% block page_title %}Advertisement charts{% endblock %}
+{% block page_path %}
+    <li class="breadcrumb-item">Charts</li>
+    <li class="breadcrumb-item active">Ads</li>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <!-- /# column -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-title">
+                    <h4>Top 5 clicked Ads </h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Content</th>
+                                <th>End Date</th>
+                                <th><b>Clicks</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for ad in ads %}
+                                <tr>
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td>{{ ad.content }}</td>
+                                    <td>{{ ad.endDate|date }}</td>
+                                    <td><span class="badge badge-primary">{{ ad.clicks }}</span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /# column -->
+    </div>
+{% endblock %}

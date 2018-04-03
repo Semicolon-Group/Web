@@ -54,25 +54,42 @@ class MemberChartsController extends Controller
             11 => 'December'
         );
 
-        $counts = $this->getDoctrine()->getRepository(User::class)->getCountByMonth();
+        $maleCounts = $this->getDoctrine()->getRepository(User::class)->getCountMaleByMonth();
+        $femaleCounts = $this->getDoctrine()->getRepository(User::class)->getCountFemaleByMonth();
 
-        $tabs = array();
+        $maleTabs = array();
+        $femaleTabs = array();
         $tabs2 = array();
+        $tabs2fem = array();
+        $tabs2mal = array();
         for($i=1; $i<=12; $i++){
-            $count = $this->containsMonth($counts, $i);
+            $femaleCount = $this->containsMonth($maleCounts, $i);
+            $maleCount = $this->containsMonth($femaleCounts, $i);
+
             if($i==1){
-                array_push($tabs2, (int)$count['total']);
+                array_push($tabs2, (int)$femaleCount['total']+(int)$maleCount['total']);
+                array_push($tabs2fem, (int)$femaleCount['total']);
+                array_push($tabs2mal, (int)$maleCount['total']);
             }else{
-                array_push($tabs2, $tabs2[$i-2]+(int)$count['total']);
+                array_push($tabs2, $tabs2[$i-2]+(int)$femaleCount['total']+(int)$maleCount['total']);
+                array_push($tabs2fem, $tabs2fem[$i-2]+(int)$femaleCount['total']);
+                array_push($tabs2mal, $tabs2mal[$i-2]+(int)$maleCount['total']);
             }
-            if ($count!=null){
-                array_push($tabs, (int)$count['total']);
-            }else{
-                array_push($tabs, 0);
-            }
+            $fem =0;
+            $mal = 0;
+
+            if($femaleCount != null)
+                $fem=(int)$femaleCount['total'];
+            if($maleCount != null)
+                $mal=(int)$maleCount['total'];
+
+
+            array_push($femaleTabs, $fem);
+            array_push($maleTabs, $mal);
         }
         $series = array(
-            array("name" => "Member inscriptions number", "data" => $tabs)
+            array("name" => "Male inscriptions number",'color' => '#4572A7', "data" => $maleTabs),
+            array("name" => "Female inscriptions number",'color' => '#f9354c', "data" => $femaleTabs)
         );
         $ob = new Highchart();
         $ob->chart->renderTo('linechart'); // #id du div où afficher le graphe
@@ -83,7 +100,9 @@ class MemberChartsController extends Controller
         $ob->series($series);
 
         $series2 = array(
-            array("name" => "Member cumulative number", "data" => $tabs2)
+            array("name" => "Member cumulative number", "data" => $tabs2),
+            array("name" => "Male cumulative number",'color' => '#4572A7', "data" => $tabs2mal),
+            array("name" => "Female cumulative number",'color' => '#f9354c', "data" => $tabs2fem)
         );
         $ob2 = new Highchart();
         $ob2->chart->renderTo('cumlinechart'); // #id du div où afficher le graphe
@@ -103,7 +122,7 @@ class MemberChartsController extends Controller
             'allowPointSelect' => true,
             'cursor' => 'pointer',
             'dataLabels' => array('enabled' => false),
-            'showInLegend' => true
+            'showInLegend' => true,
         ));
         $stats = $this->getDoctrine()->getRepository(User::class)->getGenderNumber();
         $totalMembers=0;
@@ -118,7 +137,9 @@ class MemberChartsController extends Controller
             array_push($data,$res);
         }
         // var_dump($data);
-        $ob->series(array(array('type' => 'pie','name' => 'Gender share', 'data' => $data)));
+        $ob->series(array(
+            array('type' => 'pie','name' => 'Gender share', 'data' => $data)
+        ));
         return ['chart' => $ob, 'total_number' => $totalMembers];
     }
 
@@ -127,6 +148,7 @@ class MemberChartsController extends Controller
 
         $categories= array();
         $nbMembers=array();
+
         foreach($datas as $data) {
             array_push($categories,$data['city']);
             array_push($nbMembers,(int)$data['total']);
@@ -135,7 +157,6 @@ class MemberChartsController extends Controller
             array(
                 'name' => 'Members',
                 'type' => 'column',
-                'color' => '#4572A7',
                 'yAxis' => 0,
                 'data' => $nbMembers,
             )

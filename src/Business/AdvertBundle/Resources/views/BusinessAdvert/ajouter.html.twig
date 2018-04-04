@@ -34,18 +34,17 @@ $(document).ready(function () {
     $('#basebundle_advert_endDate_year').addClass("form-control")
     $('#basebundle_advert_endDate_month').addClass("form-control")
     $('#basebundle_advert_endDate_day').addClass("form-control");
-
-
+    $('#promcode').addClass("form-control");
     $('#basebundle_advert_position').addClass("form-control");
     $('#durée').addClass("form-control");
-    $('#basebundle_advert_content').addClass("form-control")
-    $('#basebundle_advert_photoUrl').addClass("form-control")
-    $('#basebundle_advert_videoUrl').addClass("form-control")
-    $('#basebundle_advert_reason').addClass("form-control")
-    $('#basebundle_advert_price').addClass("form-control")
+    $('#basebundle_advert_content').addClass("form-control");
+    $('#basebundle_advert_photoUrl').addClass("form-control");
+    $('#basebundle_advert_videoUrl').addClass("form-control");
+    $('#basebundle_advert_price').addClass("form-control");
+    $('#basebundle_advert_videoUrl').attr('required',"false");
 
 
-
+    var prom = 1 ;
     $('#calcul-prix').click(function () {
         var conceptName = $('#basebundle_advert_position').find(":selected").text();
 
@@ -66,7 +65,7 @@ $(document).ready(function () {
             var d = new Date();
             var s = (pub.getTime()-d.getTime());
             var diff = Math.ceil(s / (1000 * 3600 * 24));
-            var prixtotal = (diff * prix) ;
+            var prixtotal = (diff * prix * prom) ;
             if (diff>0)
             {
                 $('#basebundle_advert_price').val(prixtotal);
@@ -75,12 +74,57 @@ $(document).ready(function () {
             }
             else return null;
     });
+    $('#promcode').keyup(function (){
+       if ( $('#promcode').val() != '')
+       {
+        $.ajax({
+            url: "{{path('find_promo')}}",
+            type: "POST",
+            cache: false,
+            data: {
+                "code" : $('#promcode').val()
+            },
+            success  : function (data) {
+                var id = data['id'];
+                if ( id !=null ) {
+                    $('#yes').attr('hidden',false);
+                    $('#no').attr('hidden', true);
 
+                    prom = 0.7;
+                }
+                else {
+                    $('#no').attr('hidden', false);
+                    $('#yes').attr('hidden',true);
+                    prom = 1;
+                }
+
+            }
+
+        });
+       }
+
+    });
 
         });
 </script>
     {{ form_start(form,  { 'id': 'formtwig' }) }}<br>
     <table id="table">
+
+        <tr>
+            <td> Promotion code:  </td>
+            <td>
+                <div> <input type="text" id="promcode" placeholder="promo code" >
+                    <div class="alert alert-danger alert-dismissible" role="alert" id="no" hidden="true">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-times-circle"></i> This code is wrong ,insert another one . </div>
+                    <div class="alert alert-success alert-dismissible" role="alert" id="yes" hidden="true">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-check-circle"></i> This code gives you 30% discount
+                    </div>
+                </div>
+
+            </td>
+        </tr>
         <tr>
             <td>Content : </td>
             <td>{{ form_widget(form.content) }}</td>
@@ -96,10 +140,7 @@ $(document).ready(function () {
         <td>{{ form_widget(form.videoUrl)}}</td>
         </tr>
 
-        <tr>
-            <td>Reason</td>
-            <td>{{ form_widget(form.reason) }}</td>
-        </tr>
+
 
         <tr>
             <td>end date</td>

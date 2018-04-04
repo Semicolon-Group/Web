@@ -2,12 +2,17 @@
 
 namespace Admin\BusinessBundle\Controller;
 
+use BaseBundle\Entity\Promotion;
+use BaseBundle\Entity\User;
+use BaseBundle\Form\PromotionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use BaseBundle\Entity\Advert;
 use BaseBundle\Form\AdvertType;
 use Swift_Message;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -45,10 +50,14 @@ class AdvertController extends Controller
         $form=$this->createForm(AdvertType::class,$advert)->add('state', ChoiceType::class,[
             'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
         ])->
-        add('videoUrl',TextType::class)
+        add('videoUrl',TextType::class, [ 'attr' => array(
+
+            'required' => false
+
+        )])
             ->add('payed',ChoiceType::class,[
             'choices' => ['Payed' => '1', 'Not payed' => '0']
-        ])->add('Valider',SubmitType::class);;
+        ])->add('reason',TextType::class, ['required' => true]) ->add('Valider',SubmitType::class);;
         $form->handleRequest($request);
         if ($form->isSubmitted() )
         {
@@ -92,5 +101,99 @@ class AdvertController extends Controller
         $em->flush();
         return $this->redirectToRoute("lister_admin");
 
+    }
+    /**
+     * @Route("/AjouterPromotion",name="admin_promotion_add")
+     */
+    public function AjouterPromoAction(Request $request)
+    {
+        $promotion = new Promotion();
+        $form = $this->createForm(PromotionType::class,$promotion)->add('Valider',SubmitType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted())
+        {
+
+            $em=$this->getDoctrine()->getManager();
+            $em->persist($promotion);
+            $em->flush();
+            $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+            foreach ($users as $user )
+            {
+
+                $message = (new Swift_Message())
+                    ->setSubject('MySoulmate | Discount !')
+                    ->setFrom('mysoulmatepi@gmail.com')
+                    ->setTo($user->getEmail())
+                    ->setBody("Hi for our special occasion ".$promotion->getName()." , this discount code will give you 30% of discount on your next purchases : ".$promotion->getCode()." , Ejoy it !" ,
+
+                        'text/html'
+                    );
+                $this->get('mailer')->send($message);
+            }
+            return $this->redirectToRoute('admin_promotions_list');
+
+        }
+        return $this->render('AdminBusinessBundle:Advert:ajouterPromotion.html.twig', array(
+            'form'=>$form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/PromotionsList",name="admin_promotions_list")
+     */
+    public function ListerPromosAction()
+    {
+
+        $var2 =$this->getDoctrine()->getRepository(Promotion::class)->findAll();
+
+        return $this->render('AdminBusinessBundle:Advert:listerpromos.html.twig', array(
+            'promos'=>$var2,
+        ));
+    }
+
+    /**
+     * @Route("/SupprimerPromoAdmin" , name="supprimer_promo_admin")
+     */
+    public function deletePostAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $id = $request->request->get('id');
+            $promotion = new Promotion();
+            $repo = $this->getDoctrine()->getRepository(Promotion::class);
+            $promotion = $repo->find($id);
+            $em=$this->getDoctrine()->getManager();
+            $em->remove($promotion);
+            $em->flush();
+            return new JsonResponse();
+        }
+    }
+
+
+    /**
+     * @Route("/TraiterPromo/{id}" , name="traiter_promo_admin")
+     */
+    public function TraiterPromoAction(Request $request , $id)
+    {
+
+
+        $promotion = new Promotion();
+        $repo = $this->getDoctrine()->getRepository(Promotion::class);
+        $promotion=$repo->find($id);
+
+        $form=$this->createForm(PromotionType::class,$promotion)
+
+            ->add('Valider',SubmitType::class);;
+        $form->handleRequest($request);
+        if ($form->isSubmitted() )
+        {
+
+
+            $em=$this->getDoctrine()->getManager();
+            $em->flush();
+            return $this->redirectToRoute('admin_promotions_list');
+
+        }
+        return $this->render('AdminBusinessBundle:Advert:modifierpromos.html.twig', array(
+            'form'=>$form->createView(),'promos'=>$promotion
+        ));
     }
 }

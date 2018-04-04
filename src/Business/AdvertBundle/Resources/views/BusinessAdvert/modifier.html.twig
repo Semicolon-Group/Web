@@ -8,7 +8,7 @@
      <link href="{{ asset('business_assets/') }}css/main.css" rel="stylesheet" />
 
  {% endblock %}
-{% block page_title %}Advert creation form{% endblock %}
+{% block page_title %}Advert modification form{% endblock %}
 {% block page_path %}
     <li class="breadcrumb-item">Advert</li>
     <li class="breadcrumb-item active">Create</li>
@@ -38,6 +38,7 @@
     <script type="text/javascript" >
         $(document).ready(function () {
             $('#basebundle_advert_price').attr('readonly',"true");
+            $('#basebundle_advert_content').attr('readonly',"true");
             $('#valider').addClass("btn btn-success","fa fa-check-circle");
             $('#basebundle_advert_endDate_year').addClass("form-control");
             $('#basebundle_advert_endDate_month').addClass("form-control");
@@ -134,9 +135,7 @@
     {{ form_start(form,  { 'id': 'formtwig' }) }}<br>
     <table>
         <tr>
-            <div id="getting-started">
 
-            </div>
         </tr>
 
 
@@ -153,9 +152,6 @@
             <td>Video :</td>
             <td> {{ form_widget(form.videoUrl) }}</td>
         </tr>
-
-
-
         <tr>
             <td>Reason</td>
             <td>{{ form_widget(form.reason) }}</td>

@@ -96,86 +96,10 @@
             $('#basebundle_advert_reason').addClass("form-control")
             $('#basebundle_advert_price').addClass("form-control")
 
-            $('#valider').click(function(e){
-                if ( $('#25').val()=='' && $('#20').val()=='' && $('#15').val()=='')
-                {$(function(){ alert("Choose type") ;  $('#basebundle_advert_price').val("25"); } );
-                    e.preventDefault();}
-            });
-
-
-            var s = 0 ;
-            $('#1').click(function () {
-
-                $('#photo').show();
-                $('#video').hide();
-
-
-
-            });
-            $('#2').click(function () {
-                $('#photo').hide();
-                $('#video').show();
-            });
-            $('#25').click(function () {
-                $('#basebundle_advert_price').val("25");
-                $('#basebundle_advert_position').val(1);
-
-            });
-            $('#20').click(function () {
-
-                $('#basebundle_advert_price').val("20");
-                $('#basebundle_advert_position').val(2);
-            });
-
-            $('#15').click(function () {
-                $('#basebundle_advert_price').val("15");
-                $('#basebundle_advert_position').val(3);
-            });
-            function CalculPrix() {
-
-            }
-
-
-
         });
     </script>
     {{ form_start(form,  { 'id': 'formtwig' }) }}<br>
     <table>
-        <tr>
-            <div id="getting-started">
-
-            </div>
-        </tr>
-
-        <tr>
-            <label class="fancy-radio">
-                <td> Formule Top banner 25dt: </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="25">
-                </td>
-            </label>
-        </tr>
-        <tr>
-
-            <label class="fancy-radio">
-                <td> Formule Side banner 20dt : </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="20">
-                </td>
-            </label>
-        </tr>
-        <tr>
-
-            <label class="fancy-radio">
-                <td> Formule Slider 15dt : </td>
-                <td>
-                    <input value="Male" name="gender" class="fancy-radio" type="radio" id="15">
-                </td>
-            </label>
-        </tr>
-
-
-
         <tr>
             <td>Content : </td>
             <td>{{ form_widget(form.content) }}</td>

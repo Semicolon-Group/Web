@@ -2,6 +2,7 @@
 
 namespace Business\AdvertBundle\Controller;
 
+use BaseBundle\Entity\Promotion;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
@@ -39,12 +40,13 @@ class BusinessAdvertController extends Controller
      * @Route("/Afficher")
      */
     public function AfficherAction()
-    {   $var =$this->getDoctrine()->getRepository(Advert::class)->findSidePubDQL();
-        $var2 =$this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
+    {
+        $var = $this->getDoctrine()->getRepository(Advert::class)->findSidePubDQL();
+        $var2 = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
 
         return $this->render('BusinessAdvertBundle:BusinessAdvert:afficher.html.twig', array(
-            'sides'=>$var,
-            'bigs'=>$var2
+            'sides' => $var,
+            'bigs' => $var2
         ));
     }
 
@@ -54,35 +56,36 @@ class BusinessAdvertController extends Controller
     public function AjouterAction(Request $request)
     {
         $advert = new Advert();
-        $form = $this->createForm(AdvertType::class,$advert)
+        $form = $this->createForm(AdvertType::class, $advert)
             ->
-            add('position',ChoiceType::class,[
+            add('position', ChoiceType::class, [
                 'choices' => [
 
                     'Top Banner 10dt/j' => '1',
                     'Side Banner 7dt/j' => '2',
-                    'Bottom Banner 4dt/j '=>'3'
+                    'Bottom Banner 4dt/j ' => '3'
                 ],
-                'attr' => array(
-
-                )])
+                'attr' => array()])
             ->
-            add('photoUrl',FileType::class, ['required' => true , 'data_class' => null])->
-            add('videoUrl',TextType::class)->
-            add('Valider',SubmitType::class);
+            add('photoUrl', FileType::class, ['required' => true, 'data_class' => null])->
+            add('videoUrl', TextType::class , [ 'attr' => array(
+
+                'required' => false
+
+            )])->
+            add('Valider', SubmitType::class);
         $form->handleRequest($request);
-        if ($form->isSubmitted())
-        {
+        if ($form->isSubmitted()) {
             $user = $this->container
                 ->get('security.token_storage')
                 ->getToken()->getUser();
-            $em=$this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
             /**
              * @var UploadedFile $file
              */
             $file = $advert->getPhotoUrl();
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move($this->getParameter('image_directory'),$fileName);
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+            $file->move($this->getParameter('image_directory'), $fileName);
             $advert->setPhotoUrl($fileName);
             $advert->setBusiness($user);
             $em->persist($advert);
@@ -90,7 +93,7 @@ class BusinessAdvertController extends Controller
             return $this->redirectToRoute('business_adverts_list');
         }
         return $this->render('BusinessAdvertBundle:BusinessAdvert:ajouter.html.twig', array(
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ));
     }
 
@@ -103,24 +106,23 @@ class BusinessAdvertController extends Controller
             ->get('security.token_storage')
             ->getToken()->getUser()->getId();
 
-        $var =$this->getDoctrine()->getRepository(Advert::class)->findThisUserPubs($user);
+        $var = $this->getDoctrine()->getRepository(Advert::class)->findThisUserPubs($user);
         return $this->render('BusinessAdvertBundle:BusinessAdvert:lister.html.twig', array(
-            'pubs'=>$var
+            'pubs' => $var
         ));
     }
+
     /**
      * @Route("",name="refrech")
      */
     public function RefrechAction(Request $request)
     {
-        if($request->isXmlHttpRequest()) {
-            $var = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
-          ;
-            Return new JsonResponse(array('pubs'=>$var));
+        if ($request->isXmlHttpRequest()) {
+            $var = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();;
+            Return new JsonResponse(array('pubs' => $var));
 
         }
     }
-
 
 
     /**
@@ -128,8 +130,8 @@ class BusinessAdvertController extends Controller
      */
     public function SupprimerAction($id)
     {
-        $em= $this->getDoctrine()->getManager();
-        $advert=$em->getRepository(Advert::class)->find($id);
+        $em = $this->getDoctrine()->getManager();
+        $advert = $em->getRepository(Advert::class)->find($id);
 
         $em->remove($advert);
         $em->flush();
@@ -140,52 +142,57 @@ class BusinessAdvertController extends Controller
     /**
      * @Route("/Modifier/{id}",name="traiter_business")
      */
-    public function ModifierAction(Request $request , $id)
+    public function ModifierAction(Request $request, $id)
     {
         $advert = new Advert();
         $repo = $this->getDoctrine()->getRepository(Advert::class);
-        $advert=$repo->find($id);
-        $form=$this->createForm(AdvertType::class,$advert)->
-        add('position',ChoiceType::class,[
-            'choices' => [
-                'TOP' => '1',
-                'Side' => '2',
-                'Bottom'=>'3'
-            ],'attr' => array(
-                    'hidden'=>true
+        $advert = $repo->find($id);
+        $form = $this->createForm(AdvertType::class, $advert)->
+        add('position', ChoiceType::class, [
+                'choices' => [
+                    'TOP' => '1',
+                    'Side' => '2',
+                    'Bottom' => '3'
+                ], 'attr' => array(
+                    'hidden' => true
 
                 )]
-            ) ->add('state', ChoiceType::class,[
-            'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ] ,'attr' => array(
-                'hidden'=>true
+        )->add('state', ChoiceType::class, [
+            'choices' => ['Approved' => '1', 'Not processed' => '0', 'Denied' => '2'], 'attr' => array(
+                'hidden' => true
 
             )
         ])->
-        add('videoUrl',TextType::class , ['attr' => array(
-            'readonly'=>true
+        add('videoUrl', TextType::class, ['attr' => array(
+            'readonly' => true
 
 
-    )])
-            ->add('payed',ChoiceType::class,[
+        )])
+            ->add('payed', ChoiceType::class, [
                 'choices' => ['Payed' => '1', 'Not payed' => '0']
-             , 'attr' => array(
-                    'hidden'=>true
+                , 'attr' => array(
+                    'hidden' => true
 
                 )])->
+            add('reason',TextType::class, ['attr' => array(
+                'readonly' => true
 
-            add('Valider',SubmitType::class);
+
+            )])->
+
+            add('Valider', SubmitType::class);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted())
-        {
-            $em=$this->getDoctrine()->getManager();
+        if ($form->isSubmitted()) {
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
             return $this->redirectToRoute("business_adverts_list");
         }
         return $this->render('BusinessAdvertBundle:BusinessAdvert:modifier.html.twig', array(
-            'form'=>$form->createView(), 'ad'=>$advert
+            'form' => $form->createView(), 'ad' => $advert
         ));
     }
+
     /**
      * @Route("/Success/{id}",name="success_business")
      */
@@ -194,29 +201,31 @@ class BusinessAdvertController extends Controller
         $ids = require('C:\xampp\htdocs\mysoulmate\src\Business\AdvertBundle\config.php');
         $apiContext = new ApiContext(
             new OAuthTokenCredential(
-                $ids['id'],$ids['secret']
+                $ids['id'], $ids['secret']
             )
         );
 
-        $payment = Payment::get($_GET['paymentId'],$apiContext);
+        $payment = Payment::get($_GET['paymentId'], $apiContext);
         $execution = (new \PayPal\Api\PaymentExecution())->setPayerId($_GET['PayerID'])->setTransactions($payment->getTransactions());
 
         try {
-            $payment->execute($execution,$apiContext);
+            $payment->execute($execution, $apiContext);
             $idq = $payment->getTransactions()[0]->getCustom();
-            if ($payment->getId()!=null)
-            {
-                $em=$this->getDoctrine()->getManager();
+            if ($payment->getId() != null) {
+                $em = $this->getDoctrine()->getManager();
                 $em->getRepository(\BaseBundle\Entity\Advert::class)->UpdateThisAddDQL($idq);
 
                 $em->flush();
                 return $this->redirectToRoute("business_adverts_list");
-            }else { return $this->redirectToRoute("business_adverts_list");}
+            } else {
+                return $this->redirectToRoute("business_adverts_list");
+            }
 
-        }catch (PayPalConnectionException $ex) { var_dump(json_decode($ex->getData()));}
+        } catch (PayPalConnectionException $ex) {
+            var_dump(json_decode($ex->getData()));
+        }
         return $this->redirectToRoute("business_adverts_list");
     }
-
 
 
     /**
@@ -227,29 +236,29 @@ class BusinessAdvertController extends Controller
     {
         $advert = new Advert();
         $repo = $this->getDoctrine()->getRepository(Advert::class);
-        $advert=$repo->find($id);
+        $advert = $repo->find($id);
 
         $ids = require('C:\xampp\htdocs\mysoulmate\src\Business\AdvertBundle\config.php');
         $apiContext = new ApiContext(
             new OAuthTokenCredential(
-                $ids['id'],$ids['secret']
+                $ids['id'], $ids['secret']
             )
         );
         $price = $advert->getPrice();
         $list = new ItemList();
-        $item = (new Item())->setName(''.$advert->getContent())->setPrice($price)->setCurrency("EUR")
+        $item = (new Item())->setName('' . $advert->getContent())->setPrice($price)->setCurrency("EUR")
             ->setQuantity('1');
         $list->addItem($item);
-        $details= (new Details())->setSubtotal($price);
+        $details = (new Details())->setSubtotal($price);
         $amout = (new Amount())->setTotal($price)->setCurrency('EUR')->setDetails($details);
-        $transaction = (new Transaction())->setItemList($list)->setDescription('Buying advert space '.$advert->getContent())
-        ->setAmount($amout)->setCustom(''.$advert->getId());
+        $transaction = (new Transaction())->setItemList($list)->setDescription('Buying advert space ' . $advert->getContent())
+            ->setAmount($amout)->setCustom('' . $advert->getId());
 
         $payment = new Payment();
         $payment->setTransactions([$transaction]);
         $payment->setIntent('sale');
         $redirecUrls = new RedirectUrls();
-        $redirecUrls->setReturnUrl('http://localhost/mysoulmate/web/app_dev.php/business/adverts/Success/'.$payment->getTransactions()[0]->getCustom());
+        $redirecUrls->setReturnUrl('http://localhost/mysoulmate/web/app_dev.php/business/adverts/Success/' . $payment->getTransactions()[0]->getCustom());
         $redirecUrls->setCancelUrl('http://localhost/mysoulmate/web/app_dev.php/business/adverts/Lister');
 
         $payment->setRedirectUrls($redirecUrls);
@@ -259,68 +268,70 @@ class BusinessAdvertController extends Controller
         try {
             $payment->create($apiContext);
 
-        }catch (PayPalConnectionException $ex) { var_dump(json_decode($ex->getData()));}
-        return $this->redirect(''.$payment->getApprovalLink());
+        } catch (PayPalConnectionException $ex) {
+            var_dump(json_decode($ex->getData()));
+        }
+        return $this->redirect('' . $payment->getApprovalLink());
     }
+
     /**
      * @Route("/Increment" , name="increment")
      */
 
-    public function IncrementAction(Request $request )
+    public function IncrementAction(Request $request)
     {
         $id = $request->request->get('id');
         $advert = new Advert();
         $repo = $this->getDoctrine()->getRepository(Advert::class);
         $advert = $repo->IncrementClickDQL($id);
-        $var1 =$this->getDoctrine()->getRepository(Advert::class)->find($id);
-        if ($var1->getClicks() == 50 ) {
+        $var1 = $this->getDoctrine()->getRepository(Advert::class)->find($id);
+        if ($var1->getClicks() == 50) {
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
                 ->setFrom('mysoulmatepi@gmail.com')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
-                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
                     le seuil de 50 clicks ! ",
 
                     'text/html'
                 );
             $this->get('mailer')->send($message);
-        } else if ($var1->getClicks() == 100 ) {
+        } else if ($var1->getClicks() == 100) {
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
                 ->setFrom('mysoulmatepi@gmail.com')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
-                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
                     le seuil de 100 clicks ! ",
 
                     'text/html'
                 );
             $this->get('mailer')->send($message);
-        }else if ($var1->getClicks() == 150 ) {
+        } else if ($var1->getClicks() == 150) {
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
                 ->setFrom('mysoulmatepi@gmail.com')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
-                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
                     le seuil de 150 clicks ! ",
 
                     'text/html'
                 );
             $this->get('mailer')->send($message);
-        }
-        else if ($var1->getClicks() == 200 ) {
+        } else if ($var1->getClicks() == 200) {
 
             $message = (new Swift_Message())
                 ->setSubject('MySoulmate | Add approved !')
                 ->setFrom('mysoulmatepi@gmail.com')
                 ->setTo($var1->getBusiness()->getEmail())
                 ->setBody(
-                    "Bonjour Monsieur " .$var1->getBusiness()->getFirstName() . " , Votre Publicité : ".$var1->getContent()." vient d'achever 
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
                     le seuil de 250 clicks ! ",
 
                     'text/html'
@@ -338,31 +349,61 @@ class BusinessAdvertController extends Controller
         $user = $this->container
             ->get('security.token_storage')
             ->getToken()->getUser()->getId();
-    if($request->isXmlHttpRequest()){
-             $var = $this->getDoctrine()->getRepository(Advert::class)->findAjaxDQL($user,$request->get('txt'));
-            $serializer=new Serializer(array(new ObjectNormalizer()));
-            $data=$serializer->normalize($var);
-  }
+        if ($request->isXmlHttpRequest()) {
+            $var = $this->getDoctrine()->getRepository(Advert::class)->findAjaxDQL($user, $request->get('txt'));
+            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $data = $serializer->normalize($var);
+        }
         return $this->render('BusinessAdvertBundle:BusinessAdvert:lister.html.twig', array(
-            'pubs'=>$var
+            'pubs' => $var
         ));
     }
+
     /**
      * @Route("/delete_post_business", name = "delete_post_business")
      */
-    public function deletePostAction(Request $request){
-        if($request->isXmlHttpRequest()){
+    public function deletePostAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
             $id = $request->request->get('id');
             $advert = new Advert();
             $repo = $this->getDoctrine()->getRepository(Advert::class);
             $advert = $repo->find($id);
 
-            $em=$this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($advert);
             $em->flush();
             return new JsonResponse();
         }
     }
 
+    /**
+     * @Route("/Findpromo", name = "find_promo")
+     */
+    public function findPromoAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $code = $request->request->get('code');
+            $promotion = new Promotion();
+            $repository = $this->getDoctrine()->getRepository(Promotion::class);
+            $exists = $this->getDoctrine()->getRepository(Promotion::class)->findBy([
+                'code' => $code,
 
+            ]);
+            if (!empty($exists)) {
+                $promotion = $exists[0];
+
+
+                $serializer = new Serializer([new ObjectNormalizer()]);
+                $data = $serializer->normalize([
+                    'id' => $promotion->getCode(),
+
+                ]);
+                return new JsonResponse($data);
+
+            }
+        }
+
+        return new JsonResponse();
+    }
 }

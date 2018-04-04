@@ -58,12 +58,9 @@
                 <tr>
 
                     <th>Content</th>
-                    <th>Reason</th>
-
                     <th>Photo</th>
                     <th>Price</th>
                     <th>Payed</th>
-
                     <th>State</th>
                     <th>Ends in</th>
                     <th>Actions</th>
@@ -75,7 +72,6 @@
                 <tr id="a{{ m.id }}"+i >
 
                     <td><span class="label label-info"> {{ m.content }}</span></td>
-                    <td><span class="label label-info">{{ m.reason }}</span></td>
                     <td> <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
                                 style="height : 150px ;width:150px" alt=""></td>
                     <td ><span class="label label-info">{{ m.price }} EUR</span></td>

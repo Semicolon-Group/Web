@@ -62,6 +62,7 @@ class DefaultController extends Controller
                 $fileName
             );
             $event->setPhotoUrl($fileName);
+            
             $em->persist($event);
             $em->flush();
 

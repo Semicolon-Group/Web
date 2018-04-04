@@ -9,6 +9,7 @@
 namespace BaseBundle\Repository;
 
 
+use BaseBundle\Entity\Advert;
 use Doctrine\ORM\EntityRepository;
 
 class AdvertRepository extends EntityRepository
@@ -19,7 +20,7 @@ class AdvertRepository extends EntityRepository
                 select m
                 from BaseBundle:Advert m 
                 WHERE m.business = :user
-                ORDER BY m.clicks
+                ORDER BY m.clicks DESC 
             ")->setParameter('user', $user)->setMaxResults(5);
         return $query->getResult();
     }

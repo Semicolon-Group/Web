@@ -6,6 +6,27 @@
     <li class="breadcrumb-item active">Event</li>
 {% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
-    <p>Test Event Chart</p>
+    <div class="row card-container" style="width: 100%; height: 70vh">
+        <div class="col-md-12">
+            <div class="card horizontal" style="">
+                <div class="card-stacked" style="">
+                    <div class="card-content" style="width: 100%;">
+                        <div id="barchart" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ asset('admin_assets/scripts/charts/highcharts.src.js') }}"></script>
+    <script src="{{ asset('admin_assets/scripts/charts/exporting.js') }}"></script>
+    <script type="text/javascript">
+        {{ chart(ev_chart) }}
+    </script>
 {% endblock %}

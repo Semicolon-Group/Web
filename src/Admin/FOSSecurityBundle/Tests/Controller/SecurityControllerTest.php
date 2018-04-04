@@ -1,6 +1,6 @@
 <?php
 
-namespace Business\FOSSecurityBundle\Tests\Controller;
+namespace Admin\FOSSecurityBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

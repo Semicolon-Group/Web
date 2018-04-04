@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Post
  *
  * @ORM\Table(name="post", indexes={@ORM\Index(name="user_id", columns={"user_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BaseBundle\Repository\PostRepository")
  */
 class Post
 {
@@ -45,7 +45,17 @@ class Post
      */
     private $user;
 
+    /**
+     * @var string
+     */
+    private $photoUrl;
 
+    /**
+     * @var boolean
+     */
+    /* true = photo
+        false = text */
+    private $type;
 
     /**
      * Get id
@@ -127,5 +137,53 @@ class Post
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set photoUrl
+     *
+     * @param string $photoUrl
+     *
+     * @return Post
+     */
+    public function setPhotoUrl($photoUrl)
+    {
+        $this->photoUrl = $photoUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get photoUrl
+     *
+     * @return string
+     */
+    public function getPhotoUrl()
+    {
+        return $this->photoUrl;
+    }
+
+    /**
+     * Set type
+     *
+     * @param boolean $type
+     *
+     * @return Post
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return boolean
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

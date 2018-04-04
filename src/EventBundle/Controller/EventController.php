@@ -2,9 +2,12 @@
 
 namespace EventBundle\Controller;
 
+use blackknight467\StarRatingBundle\Form\RatingType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use BaseBundle\Entity\Event;
+use BaseBundle\Entity\Rating;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,6 +20,7 @@ class EventController extends Controller
     public function eventsAction(Request $request)
     {
         $em=$this->getDoctrine();
+        $rating = $em->getRepository('BaseBundle:Rating')->avgrating();
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $event=$em->getRepository(Event::class)->findAll();
         if($request->isMethod('POST')){
@@ -33,7 +37,44 @@ class EventController extends Controller
             }
             array_push($data, ['event' => $e, 'exists' => $exists]);
         }
-        return $this->render('EventBundle:Event:events.html.twig', array('events'=>$data));
+
+        return $this->render('EventBundle:Event:events.html.twig', array(
+            'events'=>$data,
+            'rating'=>$rating
+
+        ));
+    }
+
+    /**
+     * @Route("/info/{id}", name="info_event")
+     */
+    public function infoAction($id,Request $request){
+
+        $rating = new Rating();
+        $m = $this->getDoctrine()->getManager();
+        $mark = $m->getRepository('BaseBundle:Event')->find($id);
+        $form = $this->createFormBuilder($rating)
+            ->add('rating', RatingType::class, [
+                'label' => 'Rating'
+            ])
+            ->add('valider', SubmitType::class, array(
+                'attr' => array(
+
+                    'class' => 'btn btn-xs btn-primary'
+                )))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $rating->setIdE($mark->getId());
+            $m->persist($rating);
+            $m->flush();
+        }
+
+        $data=array(
+            'm' => $mark,
+            'f' => $form->createView()
+        );
+        return $this->render('EventBundle:Event:info.html.twig',$data);
     }
 
 

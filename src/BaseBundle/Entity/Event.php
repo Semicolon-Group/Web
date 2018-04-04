@@ -112,6 +112,7 @@ class Event
      */
     private $user;
 
+
     /**
      * Constructor
      */

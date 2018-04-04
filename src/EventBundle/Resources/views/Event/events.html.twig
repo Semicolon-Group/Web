@@ -7,6 +7,13 @@
 {% endblock %}
 
 {% block banner_title %}Events{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/starrating/css/rating.css') }}" />
+    <script src="{{ asset('//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/starrating/js/rating.js') }}"></script>
+{% endblock %}
+
+
 
 {% block body %}
     <!--================Blog grid Area =================-->
@@ -35,12 +42,28 @@
                                         <a href="#">{{ event['event'].startDate | date('y-M-d') }}</a>
                                         <a href="#">Dating</a>
                                     </div>
+
+
                                     <p>{{ event['event'].content }}</p>
+
                                     {% if(event['exists']) %}
                                         <a href="#" data-id="{{ event['event'].id }}" data-url="{{ path('unparticipate_event') }}" class="participate green">participed <i class="fa fa-check"></i></a>
                                     {% else %}
                                         <a href="#" data-id="{{ event['event'].id }}" data-url="{{ path('participate_event') }}" class="participate">participate <i class="fa fa-angle-double-right"></i></a>
                                     {% endif %}
+
+                                    {% for rate in rating %}
+                                        {% if event['event'].id == rate.idE %}
+                                            {{ rate.avgrating|rating }}
+                                        {% endif %}
+                                    {% endfor %}
+
+
+                                    </p>
+                                    <ul class="list-inline btn-yellow">
+                                        <li><a href="{{ path('info_event',{'id':event['event'].id}) }}"class="btn btn-primary ">EVALUER</a></li>
+                                    </ul>
+
                                 </div>
                             </div>
                         </div>

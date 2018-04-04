@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ asset("member_assets/js/jquery-2.1.4.min.js") }}"></script>
     <script src="{{ asset("member_assets/js/match.js") }}"></script>
 {% endblock %}
 
@@ -20,7 +19,105 @@
 
 
 {% block body %}
+    <div class="filler"></div>
+
+    <div class="filter">
+        <!--Age-->
+        <div class="criteria">
+            <label for="age-amount" class="filter-label">Age:</label>
+            <input type="text" class="slider-amount choice-label" id="age-amount" readonly value="18 - 100" autocomplete="off">
+            <div id="age-slider" class="slider"></div>
+        </div>
+        <!--Height-->
+        <div class="criteria">
+            <label for="height-amount" class="filter-label">Height:</label>
+            <input type="text" class="slider-amount choice-label" id="height-amount" readonly value="150cm - 250cm" autocomplete="off">
+            <div id="height-slider" class="slider"></div>
+        </div>
+        <!--Distance-->
+        <div class="criteria">
+            <label for="distance" class="filter-label">Distance:</label>
+            <select id="distance" class="form-control select" autocomplete="off">
+                <option value="" selected disabled>Please choose...</option>
+                {% for distance in distance %}
+                    <option value="{{ distance }}">{{ distance }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!--Last Login-->
+        <div class="criteria">
+            <label for="last-login" class="filter-label">Last Login:</label>
+            <select id="login" class="form-control select" autocomplete="off">
+                <option value="" selected disabled>Less than...</option>
+                {% for lastLogin in lastLogin %}
+                    <option value="{{ lastLogin }}">{{ lastLogin }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!--Smokes-->
+        <div class="criteria">
+            <label for="last-login" class="filter-label">Smokes:</label>
+            <input class="form-check-input" type="radio" id="yesSmoke" name="smokes" value="1" autocomplete="off">
+            <label class="form-check-label choice-label" for="yesSmoke">
+                Yes
+            </label>
+            <input class="form-check-input" type="radio" id="noSmoke" name="smokes" value="0" autocomplete="off">
+            <label class="form-check-label choice-label" for="noSmoke">
+                No
+            </label>
+        </div>
+        <!--Drinks-->
+        <div class="criteria">
+            <label for="last-login" class="filter-label">Drinks:</label>
+            <input class="form-check-input" type="radio" id="yesDrink" name="drinks" value="1" autocomplete="off">
+            <label class="form-check-label choice-label" for="yesDrink">
+                Yes
+            </label>
+            <input class="form-check-input" type="radio" id="noDrink" name="drinks" value="0" autocomplete="off">
+            <label class="form-check-label choice-label" for="noDrink">
+                No
+            </label>
+        </div>
+        <!--Body Type-->
+        <div class="criteria">
+            <label for="last-login" class="filter-label">Body Type:</label><br>
+            {% for type in bodyTypes %}
+                <input class="form-check-input" type="checkbox" id="{{ type }}" name="body" value="{{ type }}" autocomplete="off">
+                <label class="form-check-label choice-label" for="{{ type }}">
+                    {{ type }}
+                </label>&nbsp;&nbsp;
+            {% endfor %}
+        </div>
+        <!--Religion-->
+        <div class="criteria">
+            <label for="last-login" class="filter-label">Religion:</label><br>
+            {% for type in religions %}
+                <input class="form-check-input" type="checkbox" id="{{ type }}" name="religion" value="{{ type }}" autocomplete="off">
+                <label class="form-check-label choice-label" for="{{ type }}">
+                    {{ type }}
+                </label>&nbsp;&nbsp;
+            {% endfor %}
+        </div>
+        <!--Marital Status-->
+        <div class="criteria">
+            <label for="last-login" class="filter-label">Marital Status:</label><br>
+            {% for type in maritalStatuses %}
+                <input class="form-check-input" type="checkbox" id="{{ type }}" name="status" value="{{ type }}" autocomplete="off">
+                <label class="form-check-label choice-label" for="{{ type }}">
+                    {{ type }}
+                </label>&nbsp;&nbsp;
+            {% endfor %}
+        </div>
+    </div>
     <div class="grid">
+        <div class="search">
+            <!--Search-->
+            <span class="search-label">Search</span>
+            <span class="fas fa-search search-icon" id="search-icon"></span><br><br>
+            <!--Reset-->
+            <span class="search-label reset reset-label">Reset</span>
+            <span class="fa fa-undo search-icon reset reset-icon" id="reset-icon"></span>
+        </div>
         <!--================Advanced Search Area =================-->
         <!--
         <section class="advanced_search_area">
@@ -349,7 +446,63 @@
         <!--================Active members Area =================-->
         <div class="active_members">
             {% for card in cards %}
-                <div class="matchcard">
+                <div class="matchcard" onclick="">
+                    <div class="photo-div">
+                        <img class="profile-photo" src="{{ card.photo }}">
+                    </div>
+                    <div class="matchcard-text">
+                        <div class="profile-info">
+                            <div class="username">
+                                {{ card.user.firstname ~ ' ' ~ card.user.lastname }}
+                            </div>
+                            <div class="user-info">
+                                <span class="age">{{ card.age }}</span>
+                                <span class="dot fas fa-circle"></span>
+                                <span class="location">{{ card.user.address.city }}, {{ card.user.address.country }}</span>
+                            </div>
+                        </div>
+                        <div class="percentages">
+                            <div class="percentage-wrapper">
+                                <span class="percentage">{{ card.match }}%</span>
+                                <span class="percentage-label">Match</span>
+                            </div><div class="percentage-wrapper enemy">
+                                <span class="percentage">{{ card.enemy }}%</span>
+                                <span class="percentage-label">Enemy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for card in cards %}
+                <div class="matchcard" onclick="">
+                    <div class="photo-div">
+                        <img class="profile-photo" src="{{ card.photo }}">
+                    </div>
+                    <div class="matchcard-text">
+                        <div class="profile-info">
+                            <div class="username">
+                                {{ card.user.firstname ~ ' ' ~ card.user.lastname }}
+                            </div>
+                            <div class="user-info">
+                                <span class="age">{{ card.age }}</span>
+                                <span class="dot fas fa-circle"></span>
+                                <span class="location">{{ card.user.address.city }}, {{ card.user.address.country }}</span>
+                            </div>
+                        </div>
+                        <div class="percentages">
+                            <div class="percentage-wrapper">
+                                <span class="percentage">{{ card.match }}%</span>
+                                <span class="percentage-label">Match</span>
+                            </div><div class="percentage-wrapper enemy">
+                                <span class="percentage">{{ card.enemy }}%</span>
+                                <span class="percentage-label">Enemy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for card in cards %}
+                <div class="matchcard" onclick="">
                     <div class="photo-div">
                         <img class="profile-photo" src="{{ card.photo }}">
                     </div>

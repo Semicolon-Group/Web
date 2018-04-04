@@ -2,7 +2,7 @@
 
 hr{
     width: 95%;
-    margin-top: 10px;
+    margin-top: 20px;
     margin-bottom: 10px;
 }
 
@@ -46,6 +46,13 @@ hr{
     min-height: 70px;
     cursor: text;
     text-align: left;
+}
+.textarea{
+    width: 100%;
+    outline: none;
+    border: none;
+    padding-right: 5px;
+    min-height: 80px;
 }
 [contentEditable=true]:empty:not(:focus):before{
     content:attr(data-text)
@@ -193,8 +200,9 @@ hr{
 }
 .comment-space{
     width: 100%;
-    min-height: 26px;
+    height: 26px;
     outline: none;
+    border: none;
 }
 .comment-profile-pic{
     display: table-cell;

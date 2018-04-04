@@ -58,4 +58,12 @@ abstract class BodyType
             'Curvy' => 6
         );
     }
+    
+    public static function getNames(){
+        $types = [];
+        $types [] = self::getName(self::Thin);
+        $types [] = self::getName(self::Fit);
+        $types [] = self::getName(self::Curvy);
+        return $types;
+    }
 }

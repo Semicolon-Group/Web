@@ -35,4 +35,12 @@ abstract class CivilStatus
     public static function getEnumAsArray(){
         return array('Single' => 0, 'Widow' => 1, 'Divorced' => 2);
     }
+    
+    public static function getNames(){
+        $types = [];
+        $types [] = self::getName(self::Single);
+        $types [] = self::getName(self::Divorced);
+        $types [] = self::getName(self::Widow);
+        return $types;
+    }
 }

@@ -8,7 +8,7 @@ $(function () {
     onlineId = $("#online_id").data('id');
 
     $("#post_button").click(function () {
-        var text = $("#post_space").html();
+        var text = $("#post_space").val().replace(/\n/g, "<br>");
         if(text === '')
             return;
 
@@ -60,7 +60,8 @@ $(function () {
                     "</div>" +
                     "</div>";
                 $("#feed").prepend(post_html);
-                $("#post_space").empty();
+                $("#post_space").val('');
+                $("#post_space").blur();
             }
         });
     });
@@ -71,7 +72,7 @@ $(function () {
         element = element ? $("#" + id + "-comment-content") : $("#" + id);
 
         var currentText = element.html();
-        var newText = $("#modal_post").html();
+        var newText = $("#modal_post").val().replace(/\n/g, "<br>");
         if(currentText === newText)
             return;
         element.html(newText);
@@ -108,8 +109,8 @@ $(function () {
 function updateModalText(id){
     var element = $("#" + id + "-comment-content");
     element = element.length != 0 ? element : $("#" + id);
-    var text = element.html();
-    $("#modal_post").html(text);
+    var text = element.html().replace(/<br>/g, "\n");
+    $("#modal_post").val(text);
     $("#selected_post").data('id',id);
 }
 
@@ -184,7 +185,7 @@ function addComment(event, id, type) {
         }
         var pic = $("#post_writing_pic").attr('src');
         var commentSpace = $("#" + id + "-comment-space");
-        var content = commentSpace.html();
+        var content = commentSpace.val().replace(/\n/g, "<br>");
         var comments = $("#" + id + "-comments");
 
         var DATA = {'postId':postId, 'photoId':photoId, 'content':content};
@@ -212,10 +213,24 @@ function addComment(event, id, type) {
                 window.setTimeout(function(){
                     newComment.css('background-color', 'transparent');
                 }, 2000);
-                commentSpace.empty();
+                commentSpace.val('');
+                commentSpace.blur();
             }
         });
-
         event.preventDefault();
+    }else{
+        expandArea(id, 100, 26);
+    }
+}
+
+function expandArea(id, max, def){
+    var area = $("#" + id + "-comment-space");
+    var count = (area.val().match(/\n/g) || []).length;
+    var height = def + count * 20;
+    console.log(count);
+    if(height < max) {
+        area.css('height', height + 'px');
+        area = document.getElementById(id + "-comment-space");
+        area.scrollTop = area.scrollHeight;
     }
 }

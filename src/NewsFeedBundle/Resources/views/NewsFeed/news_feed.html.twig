@@ -49,7 +49,7 @@
                         <img class="post_pic" src="{{ photo }}" alt="">
                     </div>
                     <div class="media-body">
-                        <div contenteditable="true" id="modal_post" class="writing_post"></div>
+                        <textarea id="modal_post" class="textarea"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -98,7 +98,8 @@
                                 <img id="post_writing_pic" class="post_pic" src="{{ photo }}" alt="">
                             </div>
                             <div class="media-body">
-                                <div contenteditable="true" id="post_space" class="writing_post" data-text="Share your thoughts..."></div>
+                                <!--<div contenteditable="true" id="post_space" class="writing_post" data-text="Share your thoughts..." hidden></div>-->
+                                <textarea id="post_space" class="textarea" placeholder="Share your thoughts..."></textarea>
                                 <hr>
                                 <button id="post_button" class="btn btn-default">Post</button>
                             </div>
@@ -215,7 +216,7 @@
                                             <img class="comment_pic" src="{{ photo }}" alt="">
                                         </div>
                                         <div class="comment-body comment comment-border comment-space">
-                                            <div contenteditable="true" id="{{ post.id }}-comment-space" class="comment-space" data-text="Leave a comment..." onkeypress="addComment(event, {{ post.id }}, {{ post.type }})"></div>
+                                            <textarea id="{{ post.id }}-comment-space" class="comment-space" placeholder="Leave a comment..." onkeypress="addComment(event, {{ post.id }}, {{ post.type }})"></textarea>
                                         </div>
                                     </div>
                                 </div>

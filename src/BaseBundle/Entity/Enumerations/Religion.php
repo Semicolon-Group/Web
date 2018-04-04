@@ -40,4 +40,14 @@ abstract class Religion
     public static function getEnumAsArray(){
         return array('Islam' => 0, 'Judaism' => 1, 'Christianity' => 2, 'Atheism' => 3, 'Agnosticism' => 4);
     }
+    
+    public static function getNames(){
+        $types = [];
+        $types [] = self::getName(self::Islam);
+        $types [] = self::getName(self::Christianity);
+        $types [] = self::getName(self::Judaism);
+        $types [] = self::getName(self::Agnosticism);
+        $types [] = self::getName(self::Atheism);
+        return $types;
+    }
 }

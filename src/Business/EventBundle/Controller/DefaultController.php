@@ -67,8 +67,7 @@ class DefaultController extends Controller
 
         }
         return $this->render('BusinessEventBundle:Default:create.html.twig', array(
-            'events'=>$event,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ));
     }
 

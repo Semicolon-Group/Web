@@ -3,21 +3,25 @@
 {% block scripts %}
 <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    function f(){
 
-        function f(){
-            {% for m in bigs %}
         $.ajax({
             url: "{{path('refrech')}}",
             type: "POST",
-            cache: false
+            cache: false,
+            success  : function (data){
+                var id = data['id'];
+                alert(id);
+                $('#x').css("background", "url("+id+") no-repeat scroll center center; background-size: cover;");
+
+
+            }
 
         })
-            {% endfor %};}
+        setInterval(f(),7000);
+        }
 
-        setInterval(f(), 5000);
-
-
+    $(document).ready(function () {
 
 
         {% for m in sides %}
@@ -72,15 +76,10 @@
            {% for m in bigs %}
                {% set menuUri %}https://{{ m.business.link }}{% endset %}
 
-               <section class="banner_area" style="background: url({% block banner_img %} {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %}) no-repeat scroll center center; background-size: cover;" id="{{ m.id }}">
+               <section role="button" class="banner_area" style="background: url({% block banner_img %} {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %}) no-repeat scroll center center; background-size: cover;" id="x">
                    <div class="container">
                        <div class="banner_content">
-                           {% set title %}
-                               https://
-                           {% endset %}
-                           <br><br><br><br><br><br><br><br><br><br>
-                           <a  id="{{ m.id }}" ><i class="fa fa-heart" aria-hidden="true" style="height: 300px;"></i></a>
-
+                           <br><br><br><br><br><br><br><br><br><br><br><br><br>
                        </div>
                    </div>
                    <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
@@ -105,7 +104,7 @@
                                             <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
                                             <div class="blog_share_area">
                                                 <a></a>
-                                                <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true"></i>{{ m.clicks }}</a>
+                                                <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true" role="button"></i>{{ m.clicks }}</a>
                                                 <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
 
                                             </div>
@@ -118,9 +117,7 @@
                     {% elseif  'https://www.youtube.com/embed/' in m.videoUrl %}
                         <iframe width="280" height="250"
                                 src="{{ m.videoUrl }}">
-
-                        </iframe>
-
+                         </iframe>
                     {% else  %}
                         <div class="row">
                             <div class="blog_grid_inner">
@@ -129,7 +126,7 @@
                                         <div class="blog_grid_img">
                                             <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
                                             <div class="blog_share_area">
-                                                <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true"></i>{{ m.clicks }}</a>
+                                                <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true" role="button"></i>{{ m.clicks }}</a>
                                                 <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
 
                                             </div>
@@ -154,16 +151,14 @@
     <section class="blog_slider_area">
 
         <div class="blog_slider_inner">
-            {% for m in sides %}
+            {% for m in bottoms %}
                 <div class="item">
                 <div class="single_blog_slider">
                     <img src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"alt="" style="width: 350px ; height: 400px">
                     <div class="blog_item_content">
-                        <h4>{{ m.content }}</h4>
-                        <h5>{{ m.reason }}<span>|</span> {{ m.reason }}</h5>
                         <ul>
-                            <li><a href="#"><i class="fa fa-search"></i></a></li>
-                            <li><a href="#"><i class="fa fa-link"></i></a></li>
+                            <li><a href="https://{{ m.business.link }}"><i class="fa fa-search"></i></a></li>
+                            <li><a href="https://{{ m.business.link }}"><i class="fa fa-link"></i></a></li>
                         </ul>
                     </div>
                 </div>

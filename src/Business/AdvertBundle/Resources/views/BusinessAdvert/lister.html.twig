@@ -3,48 +3,33 @@
 
 {% block title %}PubliciteBundle:Advert:Lister{% endblock %}
 {% block stylesheets %}
-    <link href="{{ asset("member_assets/css/newsfeed.css") }}" rel="stylesheet">
+
+
 
 {% endblock %}
 
 
 {% block body %}
-    {% block navbar %}
-        <!-- NAVBAR -->
-        <nav class="navbar navbar-default navbar-fixed-top">
-
-
-                <form class="navbar-form navbar-left">
-                    <div class="input-group">
-                        <input type="text" value="" class="form-control" placeholder="Search dashboard..." id="search-text">
-                        <span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
-                    </div>
-                </form>
-                <div id="navbar-menu">
-                    <ul class="nav navbar-nav navbar-right">
-
-
-                    </ul>
-                </div>
-
-        </nav>
-    {% endblock %}
-    <div class="modal fade" id="delete_post_modal" tabindex="-1" role="dialog" aria-labelledby="delete_post_modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <!-- Modal -->
+    <div id="delete_post_modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="modal-body">
-                    <div class="modal-body">
-                        <h4 class="modal-title">Are you sure?</h4>
-                    </div>
+                    <p>Are you sure ?.</p>
                 </div>
                 <div class="modal-footer">
+                    <button id="delete" type="button" class="btn btn-primary">Delete</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="delete" type="button" class="btn btn-primary" data-dismiss="modal">Delete</button>
                 </div>
             </div>
         </div>
     </div>
-    <div id="selected_post" data-id=""></div>
 
     <!-- RECENT PURCHASES -->
     <div class="panel" id="rslt">
@@ -77,7 +62,8 @@
                     <td ><span class="label label-info">{{ m.price }} EUR</span></td>
                     <td >{% if m.payed==1 %}<span class="label label-success"> Yes</span> {% else %}<span class="label label-danger"> No</span> {% endif %}</td>
 
-                    <td><span class="label label-{% if m.state==1 %}success{% elseif m.state==0 %}warning{% elseif m.state==2 %}danger{% endif %}">{% if m.state==1 %} approved {% elseif m.state==0 %}not processed{% elseif m.state==2 %} denied {% endif %}</span></td>
+                    <td><span class="label label-{% if m.state==1 %}success{% elseif m.state==0 %}warning{% elseif m.state==2 %}danger{% endif %}">{% if m.state==1 %}
+                    approved {% elseif m.state==0 %}not processed{% elseif m.state==2 %} denied {% endif %}</span></td>
 
 
 
@@ -93,7 +79,7 @@
                      {% if m.payed==0 and m.state == 1 %}   <button type="button" class="btn btn-success"  id="#paypal-button">
                             <a href="{{ path('payer_business', {'id':m.id}) }}" > <img src="{{ asset('member_assets/images/Paypal.png') }}">Paypal</a></button>
                         {% else %}<a></a>{% endif %}
-                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o" id="dlt{{ m.id }}"></i> <a >Delete</a>  </button></td>
+                        <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ m.id }})" data-toggle="modal" data-target="#delete_post_modal" ><i class="fa fa-trash-o" ></i> <a >Delete</a>  </button></td>
 
                 </tr>
                         {% endfor %}
@@ -110,13 +96,19 @@
             </div>
         </div>
 
-
+    <div id="selected_post" data-id=""></div>
     <!-- END RECENT PURCHASES -->
+
+    <!-- Delete Post Modal -->
+
 
 {% endblock %}
 {% block scripts %}
     <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
     <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
+
+
+
 
     <script >
 
@@ -172,27 +164,27 @@
                 });
             });
             {% endfor %}
-            {% for m in pubs %}
 
-            $('#dlt{{ m.id }}').click(function (){
-                $('#a{{ m.id }}').remove();
-                $.ajax({
-                    url: "{{path('delete_post_business')}}",
-                    type: "POST",
-                    cache: false,
-                    data: {
-                        "id" : {{ m.id }}
-                    }
+        });
+        $('#delete').click(function (){
+            var id = $("#selected_post").data('id');
+            $('#a'+id).remove();
+            $.ajax({
+                url: "{{path('delete_post_business')}}",
+                type: "POST",
+                cache: false,
+                data: {
+                    "id" : id
+                }
 
-                });
             });
-            {% endfor %}
-
-
-
 
         });
 
+
+        function showDeleteModal(id) {
+            $("#selected_post").data('id',id);
+        }
 
     </script>
 

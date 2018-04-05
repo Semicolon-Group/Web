@@ -28,7 +28,7 @@
         $('#dlt{{ m.id }}').click(function (){
             $('#a{{ m.id }}').remove();
             $.ajax({
-                url: "{{path('delete_post_business')}}",
+                url: "{{path('supprimer_admin')}}",
                 type: "POST",
                 cache: false,
                 data: {
@@ -38,6 +38,27 @@
             });
         });
         {% endfor %}
+
+
+        $('#delete').click(function (){
+            var id = $("#selected_post").data('id');
+            $('#a'+id).remove();
+            $.ajax({
+                url: "{{path('delete_post_business')}}",
+                type: "POST",
+                cache: false,
+                data: {
+                    "id" : id
+                }
+
+            });
+
+        });
+
+
+        function showDeleteModal(id) {
+            $("#selected_post").data('id',id);
+        }
     </script>
 
 
@@ -89,23 +110,26 @@
   {% endblock %}
 {% block body %}
     <!-- Delete Post Modal -->
-    <div class="modal fade" id="delete_post_modal" tabindex="-1" role="dialog" aria-labelledby="delete_post_modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <!-- Modal -->
+    <div id="delete_post_modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="modal-body">
-                    <div class="modal-body">
-                        <h4 class="modal-title">Are you sure?</h4>
-                    </div>
+                    <p>Are you sure ?.</p>
                 </div>
                 <div class="modal-footer">
+                    <button id="delete" type="button" class="btn btn-primary">Delete</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="delete" type="button" class="btn btn-primary" data-dismiss="modal">Delete</button>
                 </div>
             </div>
         </div>
     </div>
-
-
 
     <h1>Publicités actives : </h1>
 
@@ -117,11 +141,9 @@
                             <th>Owner</th>
                             <th>Content</th>
                             <th>Reason</th>
-
                             <th>Photo</th>
                             <th>Price</th>
                             <th>Payed</th>
-
                             <th>State</th>
                             <th>Ends in</th>
                             <th>Actions</th>
@@ -154,7 +176,7 @@
                                             <a href="{{ path('traiter_admin', {'id':m.id}) }}"> Modify </a></button>
 
 
-                                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o" id="dlt{{ m.id }}"></i>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ m.id }})" ><i class="fa fa-trash-o" ></i>
                                             <a  >Delete </a></button></td>
 
                                 </tr>

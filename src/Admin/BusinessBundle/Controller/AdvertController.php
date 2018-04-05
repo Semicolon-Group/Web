@@ -90,17 +90,21 @@ class AdvertController extends Controller
         ));
     }
     /**
-     * @Route("/Supprimer/{id}" , name="supprimer_admin")
+     * @Route("/Supprimer" , name="supprimer_admin")
      */
-    public function SupprimerAction($id)
+    public function deleteAdminAction(Request $request)
     {
-        $em= $this->getDoctrine()->getManager();
-        $advert=$em->getRepository(Advert::class)->find($id);
+        if ($request->isXmlHttpRequest()) {
+            $id = $request->request->get('id');
+            $advert = new Advert();
+            $repo = $this->getDoctrine()->getRepository(Advert::class);
+            $advert = $repo->find($id);
 
-        $em->remove($advert);
-        $em->flush();
-        return $this->redirectToRoute("lister_admin");
-
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($advert);
+            $em->flush();
+            return new JsonResponse();
+        }
     }
     /**
      * @Route("/AjouterPromotion",name="admin_promotion_add")
@@ -185,8 +189,6 @@ class AdvertController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() )
         {
-
-
             $em=$this->getDoctrine()->getManager();
             $em->flush();
             return $this->redirectToRoute('admin_promotions_list');

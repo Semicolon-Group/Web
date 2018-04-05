@@ -14,14 +14,28 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
     {
         $q=$this->getEntityManager();
         $max = $q->createQuery('Select MAX(m.id) from BaseBundle:Advert m 
-        where m.state=:state 
-        and m.position=:pos
-        and m.payed=:payed ')->setParameter('state','1')->setParameter('pos' , '2')
+        where m.position=:pos
+        and m.payed=:payed and m.endDate>=CURRENT_TIMESTAMP()')->setParameter('pos' , '2')
             ->setParameter('payed','1')->getSingleScalarResult();
 
         return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand
-        and m.position=:pos and m.payed=:payed ORDER BY m.id ')  ->setParameter('rand',rand(0,$max))->setParameter('pos','2')
+        and m.position=:pos and m.payed=:payed ')  ->setParameter('rand',rand(0,$max))->setParameter('pos','2')
         ->setParameter('payed','1')
+            ->setMaxResults(10)
+            ->getResult();
+
+    }
+    public function findBottomPubDQL()
+    {
+        $q=$this->getEntityManager();
+        $max = $q->createQuery('Select MAX(m.id) from BaseBundle:Advert m 
+        where  m.position=:pos
+        and m.payed=:payed ')->setParameter('pos' , '3')
+            ->setParameter('payed','1')->getSingleScalarResult();
+
+        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand
+        and m.position=:pos and m.payed=:payed and m.endDate>=CURRENT_TIMESTAMP() ')  ->setParameter('rand',rand(0,$max))->setParameter('pos','3')
+            ->setParameter('payed','1')
             ->setMaxResults(10)
             ->getResult();
 
@@ -31,16 +45,16 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         $q=$this->getEntityManager();
         $max = $q->createQuery('Select MAX(m.id) FROM BaseBundle:Advert m where m.position=:pos ')
             ->setParameter('pos','1')->getSingleScalarResult();
-        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand and m.position=:pos and m.payed=:payed
-ORDER BY m.clicks DESC
-         ')  ->setParameter('rand',rand(0,$max))->setParameter('pos','1')->setParameter('payed','1')
+        return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand and m.position=:pos and m.payed=:payed 
+          and m.endDate>=CURRENT_TIMESTAMP() ')
+            ->setParameter('rand',rand(0,$max))->setParameter('pos','1')->setParameter('payed','1')
             ->setMaxResults(1)
             ->getResult();
     }
 
     public function findThisUserPubs($user)
     {
-        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.business=:a ')
+        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.business=:a ORDER BY m.state')
             ->setParameter('a',$user);
         return $q->getResult();
 
@@ -48,7 +62,7 @@ ORDER BY m.clicks DESC
     public function findPubsPourAdminDQL()
     {
         $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where  m.endDate>=CURRENT_TIMESTAMP() ORDER BY 
-                  m.state , m.payed DESC ')
+                  m.state')
          ;
         return $q->getResult();
     }

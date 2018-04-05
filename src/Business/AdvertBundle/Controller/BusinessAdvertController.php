@@ -3,6 +3,8 @@
 namespace Business\AdvertBundle\Controller;
 
 use BaseBundle\Entity\Promotion;
+use BaseBundle\Entity\User;
+use MongoDB\BSON\Timestamp;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
@@ -32,6 +34,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Swift_Message;
+use Symfony\Component\Validator\Constraints\Date;
 
 require 'C:\xampp\htdocs\mysoulmate\vendor\autoload.php';
 class BusinessAdvertController extends Controller
@@ -43,10 +46,12 @@ class BusinessAdvertController extends Controller
     {
         $var = $this->getDoctrine()->getRepository(Advert::class)->findSidePubDQL();
         $var2 = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
+        $var3 = $this->getDoctrine()->getRepository(Advert::class)->findBottomPubDQL();
 
         return $this->render('BusinessAdvertBundle:BusinessAdvert:afficher.html.twig', array(
             'sides' => $var,
-            'bigs' => $var2
+            'bigs' => $var2,
+            'bottoms'=>$var3
         ));
     }
 
@@ -118,8 +123,16 @@ class BusinessAdvertController extends Controller
     public function RefrechAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $var = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();;
-            Return new JsonResponse(array('pubs' => $var));
+            $var = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
+            $advert = $var[0];
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $data = $serializer->normalize([
+                'id' => $advert->getPhotoUrl(),
+            ]);
+            return new JsonResponse($data);
+
+
+
 
         }
     }
@@ -393,13 +406,16 @@ class BusinessAdvertController extends Controller
             if (!empty($exists)) {
                 $promotion = $exists[0];
 
-
-                $serializer = new Serializer([new ObjectNormalizer()]);
-                $data = $serializer->normalize([
-                    'id' => $promotion->getCode(),
-
-                ]);
-                return new JsonResponse($data);
+                if ($promotion->getEndDate() > new \DateTime()) {
+                    $serializer = new Serializer([new ObjectNormalizer()]);
+                    $us = new Advert();
+                    $us->setContent('waw');
+                    $data = $serializer->normalize([
+                        'id' => $promotion->getCode(),
+                    ]);
+                    return new JsonResponse($data);
+                }else
+                    return new JsonResponse(null);
 
             }
         }

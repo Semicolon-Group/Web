@@ -13,30 +13,30 @@ security:
             id: fos_user.user_provider.username
 
     firewalls:
-        business:
-            pattern:            /business/(.*)
-            form_login:
-              provider:       fos_userbundle
-              login_path:     business_login
-              check_path:     business_login_check
-              default_target_path: business_home
-            logout:
-              path:           business_logout
-              target:         business_login
-            anonymous:        true
-            context:          application
-        admin:
-            pattern:            /admin/(.*)
-            form_login:
-              provider:       fos_userbundle
-              login_path:     admin_login
-              check_path:     admin_login_check
-              default_target_path: admin_home
-            logout:
-              path:           admin_logout
-              target:         admin_login
-            anonymous:        true
-            context:          application
+#        business:
+#            pattern:            /business/(.*)
+#            form_login:
+#              provider:       fos_userbundle
+#              login_path:     business_login
+#              check_path:     business_login_check
+#              default_target_path: business_home
+#            logout:
+#              path:           business_logout
+#              target:         business_login
+#            anonymous:        true
+#           context:          application
+#       admin:
+#            pattern:            /admin/(.*)
+#            form_login:
+#              provider:       fos_userbundle
+#              login_path:     admin_login
+#              check_path:     admin_login_check
+#              default_target_path: admin_home
+#            logout:
+#              path:           admin_logout
+#              target:         admin_login
+#            anonymous:        true
+#            context:          application
         main:
             pattern: ^/
             form_login:

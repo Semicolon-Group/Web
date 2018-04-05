@@ -28,8 +28,8 @@
                         <div class="item">
                             <div class="blog_grid_item">
                                 <div class="blog_grid_img">
-                                    <div class="author_name">
-                                        <h4>{{ m.title }}</h4>
+                                    <div class="blog_grid_img">
+                                        <img src="{{ asset('business_assets/images/img_event/') }}{{ m.photoUrl }}" alt="">
                                     </div>
                                 </div>
                                 <div class="blog_grid_content">
@@ -57,10 +57,7 @@
                         </div>
         </div>
     </section>
-    <!--================End Blog grid Area =================-->
 
-
-    <!--================End Blog grid Area =================-->
 {% endblock %}
 {% block scripts %}
     <script src="{{ asset('member_assets/js/events.js') }}"></script>

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use BaseBundle\Entity\Event;
 use BaseBundle\Form\EventType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -27,16 +28,20 @@ class DefaultController extends Controller
 
 
     /**
-     * @Route("/Delete/{id}", name="business_events_delete")
+     * @Route("/Delete", name="business_events_delete")
      */
-    public function DeleteAction($id)
+    public function DeleteAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $event = $em->getRepository(Event::class)->find($id);
-        $em->remove($event);
-        $em->flush();
-        return $this->redirectToRoute('business_events',array('event' => $event));
+        if($request->isXmlHttpRequest()){
+            $id = $request->get('id');
+            $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($event);
+            $em->flush();
+            return new JsonResponse();
+        }
     }
+
 
     /**
      * @Route("/create", name="business_create_event")
@@ -62,7 +67,7 @@ class DefaultController extends Controller
                 $fileName
             );
             $event->setPhotoUrl($fileName);
-            
+            $event->setBusiness($user);
             $em->persist($event);
             $em->flush();
 

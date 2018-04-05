@@ -1,0 +1,59 @@
+{% extends 'admin_base.html.twig' %}
+{% block title %}Admin | Businesses{% endblock %}
+{% block page_title %}Businesses{% endblock %}
+{% block body %}
+
+    <!--================Blog grid Area =================-->
+    <section class="blog_grid_area sticky_story_area">
+        <div class="container">
+            <div class="item">
+                <div class="blog_grid_item">
+                    <div class="blog_grid_img">
+                        <div class="blog_grid_img">
+                            <img src="{{ asset('business_assets/images/img_event/') }}{{ event.photoUrl }}" class="img-circle"    alt="">
+                        </div>
+                    </div>
+                    <div class="blog_grid_content">
+                        <h3>Name event: {{ event.title }}</h3>
+                        <div class="blog_grid_date">
+                            <h4>Business : <a href="#">{{event.business }}</a></h4>
+                            <h4>Date : <a href="#">{{ event.startDate | date('y-M-d') }}</a></h4>
+                        </div>
+                        <h4><p>{{ event.content }}</p></h4>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_start(edit_form) }}
+
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label  style="color: #0a0a0a" class="control-label" for="first-name">state </label><br>
+                {{ form_widget(edit_form.state, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label  style="color: #0a0a0a" class="control-label" for="first-name">reason </label><br>
+                {{ form_widget(edit_form.reason, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+
+
+        <div class="demo-button">
+            <div class="demo-button">
+                <input type="submit" value="Add" id="test" class="test"/>
+            </div>
+        </div>
+
+        {{ form_end(edit_form) }}
+
+    </section>
+
+
+{% endblock %}

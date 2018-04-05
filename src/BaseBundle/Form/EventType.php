@@ -29,6 +29,8 @@ class EventType extends AbstractType
             'attr' => array('style' => 'display: yes;'),
             'label' => false
         ))
+            ->add('state')
+            ->add('reason')
             ->add('endDate',DateType::class, ['required' => true])
             ->add('address', AddressType::class, array(
                 'label' => false

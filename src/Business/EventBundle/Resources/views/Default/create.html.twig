@@ -16,7 +16,7 @@
 
 
         <h1>Ajouter Event</h1>
-         {{ form_start(form) }}
+         {{ form_start(form,{'attr':{'id':'add_event_form'}}) }}
     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
         <div class="form-group">
             <label  style="color: #0a0a0a" class="control-label" for="first-name">Name event </label><br>
@@ -74,14 +74,13 @@
         {{ form_end(form) }}
 
 {% endblock %}
+
+
 {% block scripts %}
-
-
     <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
     <script src="{{ asset('member_assets/js/events.js') }}"></script>
-
-
 {% endblock %}
+
 
 
 

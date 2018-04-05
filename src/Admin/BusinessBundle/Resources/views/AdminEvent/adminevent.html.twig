@@ -1,13 +1,7 @@
-{% extends 'business_base.html.twig' %}
-{% block title %}Event | List{% endblock %}
-{% block page_title %}Event list{% endblock %}
-{% block page_path %}
-    <li class="breadcrumb-item">Event</li>
-    <li class="breadcrumb-item active">List</li>
-{% endblock %}
-
+{% extends 'admin_base.html.twig' %}
+{% block title %}Admin | Businesses{% endblock %}
+{% block page_title %}Businesses{% endblock %}
 {% block body %}
-
 
     <div id="business_events_delete" data-path = "{{ path('business_events_delete') }}"></div>
 
@@ -26,33 +20,27 @@
                 <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Content</th>
-                    <th>Start date</th>
-                    <th>End date</th>
-                    <th>Photo</th>
-                    <th>Max places</th>
 
 
 
                 </tr>
                 </thead>
                 <tbody>
-                    {% for event in events %}
-                        <tr id="{{ event.id }}">
-                            <td>{{ event.title }}</td>
-                            <td>{{ event.content }}</td>
-                            <td>{{ event.startDate | date('y-M-d') }}</td>
-                            <td>{{ event.endDate | date('y-M-d') }}</td>
-                            <td>{{ event.photoUrl }}</td>
-                            <td>{{ event.maxPlaces }} {{ event.user|length }}</td>
-                            <td><span onclick="delete_event({{ event.id }})">Delete</span></td>
-                            <td><a href="{{ path('business_events_edit',{'id':event.id}) }}">Edit</a></td>
-                            <td><a href="{{ path('business_events_listp',{'id':event.id}) }}">listparticipant</a></td>
+                {% for event in events %}
+                    <tr id="{{ event.id }}">
+                        <td>{{ event.title }}</td>
 
-                        </tr>
-                    {% endfor %}
+                        <td><a href="{{ path('Admin_events_edit',{'id':event.id}) }}">Edit</a></td>
+                        <td><span class="label label-{% if event.state==1 %}success{% elseif event.state==0 %}warning{% elseif event.state==2 %}danger{% endif %}">{% if event.state==1 %} approved {% elseif event.state==0 %}not processed{% elseif event.state==2 %} denied {% endif %}</span></td>
+
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
+
+            <div class="navbar-btn">
+                <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
+            </div>
 
         </div>
     </div>
@@ -110,5 +98,4 @@
         });
 
     </script>
-
 {% endblock %}

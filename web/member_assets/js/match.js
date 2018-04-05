@@ -14,15 +14,21 @@ $(function(){
    $('#search-icon').click(function(){
        toggleFilter();
        if($(".filter").css('width') != '0px'){
+           updateAgeHeight();
            updateSmokeDrink();
            updateDistanceLogin();
            updateBodyReligionStatus();
+           search();
        }
    });
     $('#reset-icon').click(function(){
         toggleFilter();
         resetVars();
         resetWidgets();
+        search();
+    });
+    $('#close-icon').click(function(){
+        toggleFilter();
     });
    $("#age-slider").slider({
        range: true,
@@ -31,8 +37,6 @@ $(function(){
        values: [ 18, 100 ],
        slide: function( event, ui ) {
            $( "#age-amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-           minAge = ui.values[0];
-           maxAge = ui.values[1];
        }
    });
     $("#height-slider").slider({
@@ -42,8 +46,6 @@ $(function(){
         values: [ 150, 250 ],
         slide: function( event, ui ) {
             $( "#height-amount" ).val( ui.values[ 0 ] + "cm - " + ui.values[ 1 ] + 'cm' );
-            minHeight = ui.values[0];
-            maxHeight = ui.values[1];
         }
     });
 });
@@ -55,8 +57,8 @@ function toggleFilter(){
         $(".search").css('right', '24%');
         $(".filler").css('width', '23%');
         $(".active_members").css('padding-left', '0');
-        $(".criteria, .reset-icon").delay(350).animate({opacity:1}, 300);
-        $(".reset-label").delay(350).animate({opacity:0.3}, 300);
+        $(".criteria, #reset-icon, #close-icon").delay(350).animate({opacity:1}, 300);
+        $("#reset-label, #close-label").delay(350).animate({opacity:0.3}, 300);
     }else{
         $(".filter").css('width', '0');
         $(".grid").css('margin-right', '0');
@@ -66,6 +68,56 @@ function toggleFilter(){
         $(".criteria").animate({opacity:0}, 100);
         $(".reset").delay(300).animate({opacity:0}, 300);
     }
+}
+
+function search() {
+    var DATA = {'minAge':minAge, 'maxAge':maxAge, 'minHeight':minHeight, 'maxHeight':maxHeight, 'distance':distance, 'login':login,
+                'smokes':smokes, 'drinks':drinks, 'body':body, 'religion':religion, 'status':statuses};
+    var path = $("#filter-path").data("path");
+    $.ajax({
+        url: path,
+        data: DATA,
+        type: 'POST',
+        success: function (data) {
+            var grid = $(".active_members");
+            grid.empty();
+            data.forEach(function (card) {
+                grid.append("<div class=\"matchcard\" onclick=\"\">\n" +
+                    "<div class=\"photo-div\">\n" +
+                    "<img class=\"profile-photo\" src='" + card['photo'] + "'>\n" +
+                    "</div>\n" +
+                    "<div class=\"matchcard-text\">\n" +
+                    "<div class=\"profile-info\">\n" +
+                    "<div class=\"username\">\n" +
+                    card['user']['firstname'] + ' ' + card['user']['lastname'] +
+                    "</div>\n" +
+                    "<div class=\"user-info\">\n" +
+                    "<span class=\"age\">" + card['age'] + "</span>\n" +
+                    "<span class=\"dot fas fa-circle\"></span>\n" +
+                    "<span class=\"location\">" + card['user']['address']['city'] + ", " + card['user']['address']['city'] + "</span>\n" +
+                    "</div>\n" +
+                    "</div>\n" +
+                    "<div class=\"percentages\">\n" +
+                    "<div class=\"percentage-wrapper\">\n" +
+                    "<span class=\"percentage\">" + card['match'] + "%</span>\n" +
+                    "<span class=\"percentage-label\">Match</span>\n" +
+                    "</div><div class=\"percentage-wrapper enemy\">\n" +
+                    "<span class=\"percentage\">" + card['enemy'] + "%</span>\n" +
+                    "<span class=\"percentage-label\">Enemy</span>\n" +
+                    "</div>\n" +
+                    "</div>\n" +
+                    "</div>\n" +
+                    "</div>")
+            });
+        }
+    });
+}
+
+function updateAgeHeight(){
+    minAge = $("#age-slider").slider("values", 0);
+    maxAge = $("#age-slider").slider("values", 1);
+    minHeight = $("#height-slider").slider("values", 0);
+    maxHeight = $("#height-slider").slider("values", 1);
 }
 
 function updateSmokeDrink() {

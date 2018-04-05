@@ -19,6 +19,10 @@
 
 
 {% block body %}
+    <!-- Data -->
+    <div id="filter-path" data-path="{{ path("filter") }}"></div>
+
+    <!-- Filter -->
     <div class="filler"></div>
 
     <div class="filter">
@@ -37,7 +41,7 @@
         <!--Distance-->
         <div class="criteria">
             <label for="distance" class="filter-label">Distance:</label>
-            <select id="distance" class="form-control select" autocomplete="off">
+            <select id="distance" class="form-control form-control-sm select" autocomplete="off">
                 <option value="" selected disabled>Please choose...</option>
                 {% for distance in distance %}
                     <option value="{{ distance }}">{{ distance }}</option>
@@ -47,7 +51,7 @@
         <!--Last Login-->
         <div class="criteria">
             <label for="last-login" class="filter-label">Last Login:</label>
-            <select id="login" class="form-control select" autocomplete="off">
+            <select id="login" class="form-control form-control-sm select" autocomplete="off">
                 <option value="" selected disabled>Less than...</option>
                 {% for lastLogin in lastLogin %}
                     <option value="{{ lastLogin }}">{{ lastLogin }}</option>
@@ -104,7 +108,7 @@
             {% for type in maritalStatuses %}
                 <input class="form-check-input" type="checkbox" id="{{ type }}" name="status" value="{{ type }}" autocomplete="off">
                 <label class="form-check-label choice-label" for="{{ type }}">
-                    {{ type }}
+                    {{ type }}{{ ((type == "Widow") and (gender == false)) ? 'er' : '' }}
                 </label>&nbsp;&nbsp;
             {% endfor %}
         </div>
@@ -115,8 +119,11 @@
             <span class="search-label">Search</span>
             <span class="fas fa-search search-icon" id="search-icon"></span><br><br>
             <!--Reset-->
-            <span class="search-label reset reset-label">Reset</span>
-            <span class="fa fa-undo search-icon reset reset-icon" id="reset-icon"></span>
+            <span id="reset-label" class="search-label reset">Reset</span>
+            <span id="reset-icon" class="fa fa-undo search-icon reset"></span><br><br>
+            <!--Close-->
+            <span id="close-label" class="search-label reset">Close</span>
+            <span id="close-icon" class="fa fa-arrow-right search-icon reset"></span>
         </div>
         <!--================Advanced Search Area =================-->
         <!--

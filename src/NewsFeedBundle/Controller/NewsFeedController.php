@@ -28,7 +28,7 @@ class NewsFeedController extends Controller
     {
         /**@var PhotoRepository $repo */
 
-        $user = $this->container->get("security.token_storage")->getToken()->getUser();
+        $user = $this->getUser();
         $posts = PostService::getPosts($this->getDoctrine(), $user);
         $repo = $this->getDoctrine()->getRepository(Photo::class);
         $photoUrl = $repo->getProfilePhotoUrl($user);

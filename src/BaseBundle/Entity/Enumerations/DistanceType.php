@@ -42,7 +42,6 @@ class DistanceType
 
     public static function getNames(){
         $types = [];
-        $types [] = self::getName(self::Close);
         $types [] = self::getName(self::City);
         $types [] = self::getName(self::Country);
         $types [] = self::getName(self::Anywhere);

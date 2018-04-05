@@ -14,6 +14,8 @@ use BaseBundle\Entity\Enumerations\Importance;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\User;
 use DateTime;
+use Doctrine\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory;
+use MatchBundle\Entity\Filter;
 use MatchBundle\Entity\MatchCard;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -22,17 +24,10 @@ class MatchCardService
     /**
      * @param User $online
      * @param ManagerRegistry $doctrine
-     * @return int
+     * @param Filter $filter
+     * @return array
      */
-    public static function getMatches($doctrine, $online){
-        /**
-         * @param DateTime $date
-         * @return int
-         */
-        function getAge($date){
-            $age = $date->diff(new DateTime('now'))->y;
-            return $age;
-        }
+    public static function getMatches($doctrine, $online, $filter){
 
         /**
          * @param \stdClass
@@ -138,7 +133,7 @@ class MatchCardService
             $card = new MatchCard();
             $card->setUser($user);
             $card->setPhoto($doctrine->getRepository(Photo::class)->getProfilePhotoUrl($user));
-            $card->setAge(getAge($user->getBirthDate()));
+            $card->setAge(MatchCardService::getTimeDiff($user->getBirthDate())->year);
             $couples = getCouples($doctrine, $online, $user);
             $card->setMatch(getMatchTotal($couples));
             $card->setEnemy(getEnemyTotal($couples));
@@ -159,7 +154,22 @@ class MatchCardService
         }
 
         $users = $doctrine->getRepository(User::class)->getUsersNotBlocked($online);
+        $users = FilterService::filter($users, $filter, $online->getAddress());
         $cards = getCards($doctrine, $users, $online);
         return $cards;
+    }
+
+
+    /**
+     * @param DateTime $date
+     * @return \stdClass
+     */
+    static function getTimeDiff($date){
+        $diff = new \stdClass();
+        $diff->year = $date->diff(new DateTime('now'))->y;
+        $diff->month = $date->diff(new DateTime('now'))->m;
+        $diff->day = $date->diff(new DateTime('now'))->d;
+        $diff->week = $diff->day / 7;
+        return $diff;
     }
 }

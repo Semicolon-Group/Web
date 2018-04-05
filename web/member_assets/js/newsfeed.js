@@ -2,6 +2,7 @@ var popupId;
 var timeout;
 var emoPath;
 var onlineId;
+var selectedPost;
 
 $(function () {
     emoPath = $("#emoticon_path").data('path');
@@ -88,13 +89,22 @@ $(function () {
         var id = $("#selected_post").data('id');
         var element = document.getElementById(id + "-comment-content");
         var DATA = {'id':id};
+        var comment = !!element;
         var path = element ? $("#delete_comment_path").data('path') : $("#delete_post_path").data('path');
         element = element ? $("#" + id + "-comment-content") : $("#" + id);
         element.parent().parent().remove();
         $.ajax({
             type: 'POST',
             data: DATA,
-            url: path
+            url: path,
+            success: function (data) {
+                if(comment){
+                    var stat = $("#" + selectedPost + "-nbr-comment");
+                    var nbr = stat.data('nbr');
+                    stat.html(nbr - 1);
+                    console.log(selectedPost);
+                }
+            }
         });
     });
     $(".reaction-popup").mouseenter(function () {
@@ -114,8 +124,9 @@ function updateModalText(id){
     $("#selected_post").data('id',id);
 }
 
-function showDeleteModal(id) {
+function showDeleteModal(id, postId) {
     $("#selected_post").data('id',id);
+    selectedPost = postId;
 }
 
 function react(id, type, reaction) {
@@ -135,6 +146,8 @@ function react(id, type, reaction) {
     }
     var DATA = {'id':id, 'type':type, 'reaction':reaction};
     var path = $("#react_path").data('path');
+    var stat = $("#" + id + "-nbr-reaction");
+    var nbr = stat.data('nbr');
     $.ajax({
         type: 'POST',
         data: DATA,
@@ -145,11 +158,14 @@ function react(id, type, reaction) {
                 button.html(
                     "<p>React</p>"
                 );
+                if(nbr != -1) stat.html(nbr);
             }else{
                 button.html(
                     "<img class='button-icon' src='" + emoPath + "/" + title + ".png'>\n" +
                     "<p>" + title + "</p>"
                 );
+                if(nbr != -1) stat.html("You and " + nbr + " others");
+                else stat.html("You");
             }
         },
         error: function () {

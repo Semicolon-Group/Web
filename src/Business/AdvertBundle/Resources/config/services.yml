@@ -1,0 +1,4 @@
+services:
+#    business_advert.example:
+#        class: Business\AdvertBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

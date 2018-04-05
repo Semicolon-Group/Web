@@ -5,3 +5,11 @@
 #affichage:
 #    path:     /affichage
 #    defaults: { _controller: BaseBundle:Default:displayAnswer }
+
+check_email_unicity:
+    path:     /isEmailUnique
+    defaults: { _controller: BaseBundle:User:checkEmailUnicity }
+
+check_username_unicity:
+    path:     /isUsernameUnique
+    defaults: { _controller: BaseBundle:User:checkUsernameUnicity }

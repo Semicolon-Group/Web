@@ -78,6 +78,11 @@ select{
   font-weight: 500;
 }
 
+.form_error {
+    color: darkred;
+    display: none;
+}
+
 ul {
   list-style: none;
   margin: 0px;
@@ -1088,6 +1093,22 @@ body, p, h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
+.register_form_inner .registration_form_s .form-group textarea {
+    width: 100%;
+    box-shadow: none;
+    border: 1px solid #f4f4f4;
+    border-radius: 3px;
+    background: #f4f4f4;
+    padding: 10px 15px 10px 28px;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+    font-size: 16px;
+    color: #334249;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 500;
+}
+
 textarea{
     resize: none;
 }
@@ -1106,7 +1127,21 @@ textarea{
   font-weight: 500;
 }
 
+.register_form_inner .registration_form_s .form-group textarea.placeholder {
+  font-size: 16px;
+  color: #334249;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+}
+
 .register_form_inner .registration_form_s .form-group input:-moz-placeholder {
+  font-size: 16px;
+  color: #334249;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+}
+
+.register_form_inner .registration_form_s .form-group textarea:-moz-placeholder {
   font-size: 16px;
   color: #334249;
   font-family: "Ubuntu", sans-serif;
@@ -1120,6 +1155,13 @@ textarea{
   font-weight: 500;
 }
 
+.register_form_inner .registration_form_s .form-group textarea::-moz-placeholder {
+  font-size: 16px;
+  color: #334249;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+}
+
 .register_form_inner .registration_form_s .form-group input::-webkit-input-placeholder {
   font-size: 16px;
   color: #334249;
@@ -1127,7 +1169,18 @@ textarea{
   font-weight: 500;
 }
 
+.register_form_inner .registration_form_s .form-group textarea::-webkit-input-placeholder {
+  font-size: 16px;
+  color: #334249;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+}
+
 .register_form_inner .registration_form_s .form-group input:focus {
+  border: 1px solid #e74c3c;
+}
+
+.register_form_inner .registration_form_s .form-group textarea:focus {
   border: 1px solid #e74c3c;
 }
 
@@ -4981,10 +5034,8 @@ textarea{
 /* Banner area css
 ============================================================================================ */
 .banner_area {
-  background: url(../img/banner/banner-bg-1.jpg) no-repeat scroll center center;
   min-height: 311px;
   position: relative;
-  background-size: cover;
   z-index: 3;
 }
 

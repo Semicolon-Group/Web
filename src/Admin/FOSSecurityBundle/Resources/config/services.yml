@@ -1,0 +1,4 @@
+services:
+#    admin_fos_security.example:
+#        class: Admin\FOSSecurityBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

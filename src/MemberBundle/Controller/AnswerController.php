@@ -39,19 +39,26 @@ class AnswerController extends Controller
             $questions = $this->getDoctrine()->getRepository(Question::class)->findAll();
 
             if(sizeof($answeredQuestions) != sizeof($questions)){
-                foreach ($answeredQuestions as $aq){
+                $diffQuestions = array_udiff($questions, $answeredQuestions,
+                    function ($obj_a, $obj_b) {
+                        return $obj_a->getId() - $obj_b->getId();
+                    }
+                );
+                /*foreach ($answeredQuestions as $aq){
                     for($i=0; $i<sizeof($questions); $i++){
                         if($questions[$i]->getId() == $aq->getId()){
                             unset($questions[$i]);
+                            $questions = array_values($questions);
                             break;
                         }
                     }
-                }
+                }*/
 
 
-                $questions = array_values($questions);
-                $questionIndex = rand ( 0 , sizeof($questions)-1 );
-                $question = $questions[$questionIndex];
+                //$questions = array_values($questions);
+                $diffQuestions = array_values($diffQuestions);
+                $questionIndex = rand ( 0 , sizeof($diffQuestions)-1 );
+                $question = $diffQuestions[$questionIndex];
                 $choices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
                 $toSend = array('question' => $question, 'choices' => $choices);
                 $data = $serializer->normalize($toSend);

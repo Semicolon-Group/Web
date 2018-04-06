@@ -453,9 +453,9 @@
         <!--================Active members Area =================-->
         <div class="active_members">
             {% for card in cards %}
-                <div class="matchcard" onclick="">
+                <div class="matchcard" onclick="" onmouseenter="enter({{ card.user.id }})" onmouseleave="leave({{ card.user.id }})">
                     <div class="photo-div">
-                        <img class="profile-photo" src="{{ card.photo }}">
+                        <img class="profile-photo" src="{{ card.photo }}" id="{{ card.user.id }}-photo">
                     </div>
                     <div class="matchcard-text">
                         <div class="profile-info">
@@ -469,13 +469,14 @@
                             </div>
                         </div>
                         <div class="percentages">
-                            <div class="percentage-wrapper">
+                            <div class="percentage-wrapper {{ card.user.id }}-perc">
                                 <span class="percentage">{{ card.match }}%</span>
                                 <span class="percentage-label">Match</span>
-                            </div><div class="percentage-wrapper enemy">
+                            </div><div class="percentage-wrapper enemy {{ card.user.id }}-perc">
                                 <span class="percentage">{{ card.enemy }}%</span>
                                 <span class="percentage-label">Enemy</span>
                             </div>
+                            <span id="{{ card.user.id }}-star" class="like-star far fa-star" onmouseenter="enterStar('{{ card.user.id }}-star')" onmouseleave="leaveStar('{{ card.user.id }}-star')"></span>
                         </div>
                     </div>
                 </div>

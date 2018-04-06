@@ -183,3 +183,27 @@ function resetVars(){
 function resetWidgets(){
 
 }
+function enter(id) {
+    var photo = $("#" + id + "-photo");
+    var perc = $("." + id + "-perc");
+    var star = $("#" + id + "-star");
+    photo.css('transform', 'scale(1.05)');
+    perc.css('opacity', '0');
+    star.css('cssText', 'display: inline !important');
+}
+function leave(id) {
+    var photo = $("#" + id + "-photo");
+    var perc = $("." + id + "-perc");
+    var star = $("#" + id + "-star");
+    photo.css('transform', 'scale(1)');
+    perc.css('opacity', '1');
+    star.css('cssText', 'display: none !important');
+}
+function enterStar(id) {
+    var star = $("#" + id);
+    star.attr('class', 'fas fa-star like-star');
+}
+function leaveStar(id) {
+    var star = $("#" + id);
+    star.attr('class', 'far fa-star like-star');
+}

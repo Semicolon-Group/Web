@@ -17,8 +17,6 @@ use Symfony\Component\Serializer\Serializer;
 
 class AnswerController extends Controller
 {
-
-
     /**
      * @Route("/answer/generate", name="generate_answer")
      */
@@ -88,11 +86,31 @@ class AnswerController extends Controller
             if(sizeof($answers)==0){
                 return null;
             }else{
-                $data = $serializer->normalize($answers);
+                $toSend = array("question_count" => $this->getAvailableQuestionCount(), 'answers' => $answers);
+                $data = $serializer->normalize($toSend);
                 return new JsonResponse($data);
             }
         }
         return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getAvailableQuestionCount(){
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user' => $user));
+        $answeredQuestions = array_map(function ($an){
+            return $an->getQuestion();
+        }, $answers);
+        $questions = $this->getDoctrine()->getRepository(Question::class)->findAll();
+
+        $diffQuestions = array();
+        if(sizeof($answeredQuestions) != sizeof($questions)){
+            $diffQuestions = array_udiff($questions, $answeredQuestions,
+                function ($obj_a, $obj_b) {
+                    return $obj_a->getId() - $obj_b->getId();
+                }
+            );
+        }
+        return sizeof($diffQuestions);
     }
 
 

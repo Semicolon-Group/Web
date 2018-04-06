@@ -63,8 +63,28 @@ class MemberController extends Controller
             'photos' => $photos,
             'cover' => sizeof($coverList)==0?null:$coverList[0],
             'profile' => sizeof($profileList)==0?null:$profileList[0],
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'available_questions_count' => $this->getAvailableQuestionCount()
         ));
+    }
+
+    public function getAvailableQuestionCount(){
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user' => $user));
+        $answeredQuestions = array_map(function ($an){
+            return $an->getQuestion();
+        }, $answers);
+        $questions = $this->getDoctrine()->getRepository(Question::class)->findAll();
+
+        $diffQuestions = array();
+        if(sizeof($answeredQuestions) != sizeof($questions)){
+            $diffQuestions = array_udiff($questions, $answeredQuestions,
+                function ($obj_a, $obj_b) {
+                    return $obj_a->getId() - $obj_b->getId();
+                }
+            );
+        }
+        return sizeof($diffQuestions);
     }
 
     /**

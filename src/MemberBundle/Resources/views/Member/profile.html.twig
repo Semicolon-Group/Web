@@ -262,6 +262,7 @@
                             <div role="tabpanel" class="tab-pane fade" id="answers">
                                 <div class="answers_list">
                                     <div id="answers-display">
+                                        <a href="#add_answer_div">Available question to answer: {{ available_questions_count }}</a>
                                         {% for answer in answers %}
                                             <div class="row card-container margins" style="width: 100%;">
                                                 <div class="col-md-12">
@@ -287,16 +288,20 @@
                                             </div>
                                         {% endfor %}
                                     </div>
-                                    <div class="row card-container margins" style="width: 100%;">
-                                        <div class="col-md-12">
-                                            <div id='answer-add' class="card horizontal clickable">
-                                                <div class="card-stacked">
-                                                    <div class="card-content">
-                                                        <h1 style="text-align: center" class="hoverable"><span class="glyphicon glyphicon-plus-sign"></span></h1>
+                                    <div id="add_answer_div">
+                                        {% if (available_questions_count) != 0 %}
+                                            <div class="row card-container margins" style="width: 100%;">
+                                                <div class="col-md-12">
+                                                    <div id='answer-add' class="card horizontal clickable">
+                                                        <div class="card-stacked">
+                                                            <div class="card-content">
+                                                                <h1 style="text-align: center" class="hoverable"><span class="glyphicon glyphicon-plus-sign"></span></h1>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -525,8 +530,25 @@
                 type: "POST",
                 url: "{{ path('get_answers') }}",
                 success: function (data) {
-                    $('#answers-display').html('');
-                    $.each(data, function (k, el) {
+                    $('#answers-display').html('' +
+                        '<a href="#add_answer_div">Available question to answer: '+data.question_count+'</a>' +
+                        '');
+                    if(data.question_count){
+                        $('#add_answer_div').html('' +
+                            '<div class="row card-container margins" style="width: 100%;">' +
+                            '   <div class="col-md-12">' +
+                            '       <div id="answer-add" onclick="generateAnswer();" class="card horizontal clickable">' +
+                            '           <div class="card-stacked">' +
+                            '               <div class="card-content">' +
+                            '                   <h1 style="text-align: center" class="hoverable"><span class="glyphicon glyphicon-plus-sign"></span></h1>' +
+                            '               </div>' +
+                            '           </div>' +
+                            '       </div>' +
+                            '   </div>' +
+                            '</div>' +
+                            '');
+                    }
+                    $.each(data.answers, function (k, el) {
                         var topic = "{% for key, value in topics %}{% if value == "+el.question.topic+" %}{{ key }}{% endif %}{% endfor %}";
                         var importance = "{% for key, value in importances %}{% if value == "+el.importance+" %}{{ key }}{% endif %}{% endfor %}";
                         var acceptedChoices = el.choice;

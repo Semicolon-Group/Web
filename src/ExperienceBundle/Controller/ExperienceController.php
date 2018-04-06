@@ -4,6 +4,8 @@ namespace ExperienceBundle\Controller;
 
 use BaseBundle\Entity\Address;
 use BaseBundle\Entity\Experience;
+use BaseBundle\Entity\Photo;
+use BaseBundle\Form\PhotoType;
 use DateTime;
 use DoctrineExtensions\Query\Mysql\Date;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,14 +21,18 @@ class ExperienceController extends Controller
     /**
      * @Route("/", name="experiences")
      */
-    public function experiencesAction(){
+    public function experiencesAction(Request $request){
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $otherExperiences = $this->getDoctrine()->getRepository(Experience::class)->getExperiences($user);
         $myExperiences = $this->getDoctrine()->getRepository(Experience::class)->findBy(array('user' => $user));
 
+        $photo = new Photo();
+        $form = $this->createForm(PhotoType::class, $photo);
+        $form->handleRequest($request);
         return $this->render('ExperienceBundle:Experience:experiences.html.twig', array(
             'others_experiences' => $otherExperiences,
-            'my_experiences' => $myExperiences
+            'my_experiences' => $myExperiences,
+            'photo_form' => $form->createView()
         ));
     }
 

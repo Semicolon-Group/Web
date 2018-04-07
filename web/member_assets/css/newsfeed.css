@@ -15,6 +15,7 @@ hr{
 .blog_grid_area{
     padding: 90px 0 80px 0;
     background-color: #e9ebee;
+    min-height: 100vh;
 }
 
 /* End blog grid area
@@ -26,6 +27,8 @@ hr{
 .media{
     background-color: #fff;
     padding-bottom: 0 !important;
+    padding-top: 30px !important;
+    position: relative;
     margin-bottom: 10px;
     border: 1px solid lightgray;
     border-radius: 5px;
@@ -77,10 +80,6 @@ hr{
     width: 70%;
     padding: 0 0 0 0 !important;
     border-radius: 20px;
-}
-.media{
-    padding-top: 30px !important;
-    position: relative;
 }
 .update_box{
     position: absolute;

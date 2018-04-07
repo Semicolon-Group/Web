@@ -35,6 +35,7 @@ class AppKernel extends Kernel
             new Business\FOSSecurityBundle\BusinessFOSSecurityBundle(),
             new Admin\FOSSecurityBundle\AdminFOSSecurityBundle(),
             new FOS\MessageBundle\FOSMessageBundle(),
+            new MessageBundle\MessageBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

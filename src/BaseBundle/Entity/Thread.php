@@ -48,4 +48,25 @@ class Thread extends BaseThread
      * @var ThreadMetadata[]|Collection
      */
     protected $metadata;
+
+    /**
+     * @var string
+     */
+    protected $photo;
+
+    /**
+     * @return string
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param string $photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+    }
 }

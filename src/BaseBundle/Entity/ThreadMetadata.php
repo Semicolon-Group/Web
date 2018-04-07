@@ -37,4 +37,6 @@ class ThreadMetadata extends BaseThreadMetadata
      * @var \FOS\MessageBundle\Model\ParticipantInterface
      */
     protected $participant;
+
+
 }

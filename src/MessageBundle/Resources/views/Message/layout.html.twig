@@ -1,0 +1,75 @@
+{% extends 'member_base.html.twig' %}
+
+{% block title %}MySoulmate | Messenger{% endblock %}
+
+{% block banner %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('member_assets/css/message.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="blog_grid_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-6">
+                    <div class="community_activity">
+                        {% if threads %}
+                            {% for thr in threads %}
+                                <div class="media" id="{{ thr.thread.id }}">
+                                    <div class="media-left">
+                                        <img class="thread_pic" src="{{ thr.photo }}">
+                                    </div>
+                                    <div class="media-body">
+                                        <span class="name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+                                        <div class="msg read-msg">
+                                            {{ thr.thread.lastmessage.body }}
+                                        </div>
+                                    </div>
+                                    <span class="time">{{ thr.thread.lastMessage.createdAt|date('d-m-Y') }}</span>
+                                </div>
+                            {% endfor %}
+                            {% for thr in threads %}
+                                <div class="media{{ not fos_message_is_read(thr.thread) ? ' new-msg' : '' }}" id="{{ thr.thread.id }}">
+                                    <div class="media-left">
+                                        <img class="thread_pic" src="{{ thr.photo }}">
+                                    </div>
+                                    <div class="media-body">
+                                        <span class="name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+                                        <div class="msg{{ fos_message_is_read(thr.thread) ? ' read-msg' : '' }}">
+                                            {{ thr.thread.lastmessage.body }}
+                                        </div>
+                                    </div>
+                                    <span class="time">{{ thr.thread.lastMessage.createdAt|date('d-m-Y') }}</span>
+                                </div>
+                            {% endfor %}
+                            {% for thr in threads %}
+                                <div class="media" id="{{ thr.thread.id }}">
+                                    <div class="media-left">
+                                        <img class="thread_pic" src="{{ thr.photo }}">
+                                    </div>
+                                    <div class="media-body">
+                                        <span class="name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+                                        <div class="msg read-msg">
+                                            {{ thr.thread.lastmessage.body }}
+                                        </div>
+                                    </div>
+                                    <span class="time">{{ thr.thread.lastMessage.createdAt|date('d-m-Y') }}</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <h2 class="empty-msg">You have no open conversations at the moment.</h2>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

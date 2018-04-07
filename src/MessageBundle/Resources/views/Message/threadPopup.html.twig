@@ -1,0 +1,20 @@
+<div class="popup" id="{{ thr.thread.id }}">
+    <div class="header" onclick="hide({{ thr.thread.id }})">
+        <img class="popup-photo" src="{{ thr.photo }}">
+        <span class="popup-name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+        <div class="popup-action">
+            <span class="fas fa-window-minimize"></span>
+            <span class="fas fa-times"></span>
+        </div>
+    </div>
+    <hr>
+    <div class="messages">
+        <ul class="message-list">
+            {% for message in messages %}
+                <li class="message{{ message.sender == online.username ?  }}">
+
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

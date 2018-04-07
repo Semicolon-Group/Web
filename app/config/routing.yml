@@ -1,3 +1,7 @@
+message:
+    resource: "@MessageBundle/Resources/config/routing.xml"
+    prefix:   /message
+
 admin_chart:
     resource: "@AdminChartBundle/Controller/"
     type:     annotation
@@ -123,4 +127,4 @@ admin_logout:
 
 fos_message:
     resource: "@FOSMessageBundle/Resources/config/routing.xml"
-    prefix: /chat
+    prefix: /fosmessage

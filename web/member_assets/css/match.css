@@ -17,6 +17,7 @@ select:invalid{
     padding-top: 80px;
     background-color: #e9ebee;
     transition: margin-right 0.5s;
+    min-height: 100vh;
 }
 
 .active_members{

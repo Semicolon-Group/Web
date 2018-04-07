@@ -96,3 +96,7 @@ fos_user:
     from_email:
             address: "yourapp@yourapp.com"
             sender_name: "Demo String"
+fos_message:
+    db_driver: orm
+    thread_class: BaseBundle\Entity\Thread
+    message_class: BaseBundle\Entity\Msg

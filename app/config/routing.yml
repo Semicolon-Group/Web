@@ -120,3 +120,7 @@ admin_login_check:
 admin_logout:
     path:  /admin/logout
     defaults: { _controller: FOSUserBundle:Security:logout }
+
+fos_message:
+    resource: "@FOSMessageBundle/Resources/config/routing.xml"
+    prefix: /chat

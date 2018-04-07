@@ -2,6 +2,7 @@
 
 namespace BaseBundle\Entity;
 
+use FOS\MessageBundle\Model\ParticipantInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Date;
@@ -12,7 +13,7 @@ use Symfony\Component\Validator\Constraints\Date;
  * @ORM\Table(name="user", indexes={@ORM\Index(name="address_id", columns={"address_id"})})
  * @ORM\Entity(repositoryClass="BaseBundle\Repository\UserRepository")
  */
-class User extends BaseUser
+class User extends BaseUser implements ParticipantInterface
 {
     /**
      * @var integer

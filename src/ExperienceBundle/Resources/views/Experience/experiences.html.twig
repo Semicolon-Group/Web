@@ -124,15 +124,15 @@
                 <div class="col-md-12">
                     <div class="members_profile_inners">
                         <ul class="nav nav-tabs profile_menu" role="tablist" style="text-align: center; border: none; border-bottom: 1px solid #ddd;">
-                            <li role="presentation" class="active col-md-6">
+                            <li role="presentation" class="{% if place_id is empty %}active{% endif %} col-md-6">
                                 <a href="#activity" aria-controls="activity" role="tab" data-toggle="tab"><h1>Others experiences</h1></a>
                             </li>
-                            <li role="presentation" class="col-md-6">
+                            <li role="presentation" class="{% if place_id is not empty %}active{% endif %} col-md-6">
                                 <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><h1>My experiences</h1></a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active fade in" id="activity">
+                            <div role="tabpanel" class="tab-pane {% if place_id is empty %}active{% endif %} fade {% if place_id is empty %}in{% endif %}" id="activity">
                                 <div class="profile_list">
                                     <div class="author_posts_inners">
                                         {% if others_experiences is empty %}
@@ -178,7 +178,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane fade" id="profile">
+                            <div role="tabpanel" class="tab-pane  {% if place_id is not empty %}active{% endif %} fade {% if place_id is not empty %}in{% endif %}" id="profile">
                                 <div class="profile_list">
                                     <div class="row card-container margins" style="width: 100%;">
                                         <div class="col-md-12">
@@ -233,6 +233,7 @@
             </div>
         </div>
     </section>
+    <div id="maps"></div>
 {% endblock %}
 
 {% block scripts %}
@@ -267,7 +268,42 @@
                 minDate: moment().subtract(3, 'year')
             });
             activateAutoComplete();
+            var placeId = "{{ place_id }}";
+            if(placeId != ""){
+                showAddModal(placeId);
+            }
         });
+
+        function showAddModal(placeId) {
+            getPlaceDetails(placeId);
+        }
+
+        function getPlaceDetails(placeId) {
+            var defLatLng = new google.maps.LatLng(0, 0);
+            var mapOptions = {
+                center: defLatLng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                disableDefaultUI: true,
+                panControl: false
+            };
+            map = new google.maps.Map(document.getElementById("maps"), mapOptions);
+            var service = new google.maps.places.PlacesService(map);
+
+            service.getDetails({
+                placeId: placeId
+            }, function(place, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    var components={};
+                    jQuery.each(place.address_components, function(k,v1) {jQuery.each(v1.types, function(k2, v2){components[v2]=v1.long_name});});
+                    $('#place_name').val(place.name);
+                    $('#lat').val(place.geometry.location.lat());
+                    $('#lng').val(place.geometry.location.lng());
+                    $('#city').val(components.locality);
+                    $('#country').val(components.country);
+                    $('#experience-modal').modal('show');
+                }
+            });
+        }
 
         $('#city').on('input', function () {
             $('#country').val('');

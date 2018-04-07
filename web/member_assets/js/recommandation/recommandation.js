@@ -191,7 +191,7 @@ function callback(results, status) {
                 open = place.opening_hours.open_now?"Open":"Closed";
                 color = place.opening_hours.open_now?"green":"red";
             }
-            var path = buildPath(place.geometry.location.lat(), place.geometry.location.lng(), place.vicinity, "Tunisia", place.name);
+            var path = buildPath(place.place_id);
             $('#recommandations').append("" +
                 "<div class=\"row card-container margins\" style=\"width: 100%;\">\n" +
                 "    <div class=\"col-sm-offset-1 col-md-10\">\n" +
@@ -201,11 +201,11 @@ function callback(results, status) {
                 "           </div>\n" +
                 "           <div class=\"card-stacked\">\n" +
                 "               <div class=\"card-content\">\n" +
-                "                   <span class=\"card-title\">"+place.name+" - <span style='font-size: medium'><a href='"+path+"'>Write an expereience</a></span><span style='float: right;'> "+place.rating+"   <span class='glyphicon glyphicon-star'></span> </span><br/><sub style='font-size: medium;'><span>"+place.vicinity+"</span> - <b><span style='color: "+color+";'>"+open+"</span></b></sub></span><br/>\n" +
+                "                   <span class=\"card-title\">"+place.name+" - <span style='font-size: medium'><a href='"+path+"' onclick='preventModal(this); return false;'>Write an expereience</a></span><span style='float: right;'> "+place.rating+"   <span class='glyphicon glyphicon-star'></span> </span><br/><sub style='font-size: medium;'><span>"+place.vicinity+"</span> - <b><span style='color: "+color+";'>"+open+"</span></b></sub></span><br/>\n" +
                 "                   " +
                 "               </div>\n" +
                 "               <div class=\"card-action\">\n" +
-                "                   <span id="+i+"></span>\n" +
+                "                   <span id="+i+"></span>" +
                 "               </div>\n" +
                 "           </div>\n" +
                 "       </div>\n" +
@@ -216,6 +216,12 @@ function callback(results, status) {
     }else{
         $('#recommandations').html("<h1 class='pressed'>No places found :(</h1>");
     }
+}
+
+function preventModal(node) {
+    $('#map').removeAttr('id');
+    var link = $(node).attr('href');
+    window.location = link;
 }
 
 function getDistance(i) {

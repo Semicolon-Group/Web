@@ -3,12 +3,15 @@
 namespace BaseBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Experience
  *
  * @ORM\Table(name="experience", indexes={@ORM\Index(name="address_id", columns={"address_id"}), @ORM\Index(name="user_id", columns={"user_id"})})
  * @ORM\Entity("BaseBundle\Repository\ExperienceRepository")
+ * @Vich\Uploadable
  */
 class Experience
 {
@@ -29,11 +32,16 @@ class Experience
     private $placeName;
 
     /**
+     * @ORM\Column(type="string", length=255)
      * @var string
-     *
-     * @ORM\Column(name="photo_url", type="text", length=65535, nullable=true)
      */
-    private $photoUrl;
+    private $image;
+
+    /**
+     * @Vich\UploadableField(mapping="photos", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
 
     /**
      * @var string
@@ -81,6 +89,34 @@ class Experience
         return $this->id;
     }
 
+    public function setImageFile(File $image = null)
+    {
+        $this->imageFile = $image;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            //$this->date = new \DateTime('now');
+        }
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
     /**
      * Set placeName
      *
@@ -103,30 +139,6 @@ class Experience
     public function getPlaceName()
     {
         return $this->placeName;
-    }
-
-    /**
-     * Set photoUrl
-     *
-     * @param string $photoUrl
-     *
-     * @return Experience
-     */
-    public function setPhotoUrl($photoUrl)
-    {
-        $this->photoUrl = $photoUrl;
-
-        return $this;
-    }
-
-    /**
-     * Get photoUrl
-     *
-     * @return string
-     */
-    public function getPhotoUrl()
-    {
-        return $this->photoUrl;
     }
 
     /**

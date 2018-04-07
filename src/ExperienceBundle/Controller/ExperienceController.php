@@ -5,11 +5,13 @@ namespace ExperienceBundle\Controller;
 use BaseBundle\Entity\Address;
 use BaseBundle\Entity\Experience;
 use BaseBundle\Entity\Photo;
+use BaseBundle\Form\ExperienceType;
 use BaseBundle\Form\PhotoType;
 use DateTime;
 use DoctrineExtensions\Query\Mysql\Date;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,13 +28,13 @@ class ExperienceController extends Controller
         $otherExperiences = $this->getDoctrine()->getRepository(Experience::class)->getExperiences($user);
         $myExperiences = $this->getDoctrine()->getRepository(Experience::class)->findBy(array('user' => $user));
 
-        $photo = new Photo();
-        $form = $this->createForm(PhotoType::class, $photo);
+        $experience = new Experience();
+        $form = $this->createForm(ExperienceType::class, $experience);
         $form->handleRequest($request);
         return $this->render('ExperienceBundle:Experience:experiences.html.twig', array(
             'others_experiences' => $otherExperiences,
             'my_experiences' => $myExperiences,
-            'photo_form' => $form->createView()
+            'form' => $form->createView()
         ));
     }
 
@@ -45,7 +47,6 @@ class ExperienceController extends Controller
             $experience->setContent($request->get('content'));
             $experience->setDate(new DateTime($request->get('date')));
             $experience->setPlaceName($request->get('placeName'));
-            $experience->setPhotoUrl($request->get('photoUrl'));
             $experience->getAddress()->setCity($request->get('city'));
             $experience->getAddress()->setCountry($request->get('country'));
             $experience->getAddress()->setLatitude($request->get('lat'));
@@ -62,21 +63,12 @@ class ExperienceController extends Controller
      * @Route("/add", name="add_experience")
      */
     public function addExperienceAction(Request $request){
-        if($request->isXmlHttpRequest()){
-            $experience = new Experience();
-            $experience->setContent($request->get('content'));
-            $experience->setDate(new DateTime($request->get('date')));
-            $experience->setPlaceName($request->get('placeName'));
-            $experience->setPhotoUrl($request->get('photoUrl'));
+        $experience = new Experience();
+        $form = $this->createForm(ExperienceType::class, $experience);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
             $experience->setUser($this->container->get('security.token_storage')->getToken()->getUser());
-            $address = new Address();
-            $address->setCity($request->get('city'));
-            $address->setCountry($request->get('country'));
-            $address->setLatitude($request->get('lat'));
-            $address->setLongitude($request->get('lng'));
-
-            $experience->setAddress($address);
-
             $this->getDoctrine()->getManager()->persist($experience);
             $this->getDoctrine()->getManager()->flush();
             return new Response(Response::HTTP_OK);

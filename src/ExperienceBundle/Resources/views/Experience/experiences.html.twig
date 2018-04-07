@@ -52,7 +52,7 @@
                 <div class="modal-body">
                     <div class="row card-container" style="width: 100%;">
                         <div class="col-md-12">
-                            <div class="card horizontal" style="height: 65vh;">
+                            <div class="card horizontal" style="">
                                 <div class="card-stacked">
                                     <form id="experience_form" action="add">
                                         <div class="card-content" style="max-height: 100%;">
@@ -89,18 +89,25 @@
                                                         <label for="content" style="display: inline-block;">Content:</label>
                                                         <textarea id="content" class="form-control textarea" placeholder="Describe your experience..." required></textarea>
                                                     </div>
-                                                    <div class="form-group" style="width: 100%;">
-                                                        <label for="photo_url" style="display: inline-block;">Photo URL:</label>
-                                                        {{ form_start(photo_form) }}
-
-                                                        {{ form_end(photo_form) }}
-                                                        <input id="photo_url" class="form-control" placeholder="Photo URL" required/>
+                                                    <div id="photo_uploader" class="form-group" style="width: 100%;">
+                                                        <label for="photo_url" style="display: inline-block;">Photo:</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-btn">
+                                                                <span class="btn btn-primary btn-file">
+                                                                    Browse&hellip;
+                                                                    <input id="basebundle_experience_imageFile_file" name="basebundle_experience[imageFile][file]" required="required" type="file">
+                                                                </span>
+                                                            </span>
+                                                            <input id="url_display" type="text" class="form-control" readonly>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-action">
-                                            <button id="experience-add-btn" type="submit" style="float: right;" class="btn btn-default">Confirm</button>
+                                            <div class="row">
+                                                <button id="experience-add-btn" type="submit" style="float: right;" class="btn btn-default">Confirm</button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -111,7 +118,6 @@
             </div>
         </div>
     </div>
-
     <section class="blog_grid_area">
         <div class="container">
             <div class="row">
@@ -152,7 +158,9 @@
                                                                         <h4>{{ other_experience.placeName }}<span> - {{ other_experience.address.city }}, {{ other_experience.address.country }}</span></h4>
                                                                         <h5 style="margin-left: 2%;"></h5><br/>
                                                                         <p>{{ other_experience.content }}</p><br/>
-                                                                        <img style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="{{ other_experience.photoUrl }}"/>
+                                                                        {% if vich_uploader_asset(other_experience, 'imageFile',  'BaseBundle\\Entity\\Experience') is not empty %}
+                                                                        <img style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="{{ asset(vich_uploader_asset(other_experience, 'imageFile',  'BaseBundle\\Entity\\Experience')) }}"/>
+                                                                        {% endif %}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -196,7 +204,9 @@
                                                                         <h4>{{ my_experience.placeName }}<span> - {{ my_experience.address.city }}, {{ my_experience.address.country }}</span></h4>
                                                                         <h5 style="margin-left: 2%;"></h5><br/>
                                                                         <p>{{ my_experience.content }}</p><br/>
-                                                                        <img style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="{{ my_experience.photoUrl }}"/>
+                                                                        {% if vich_uploader_asset(my_experience, 'imageFile',  'BaseBundle\\Entity\\Experience') is not empty %}
+                                                                        <img style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="{{ asset(vich_uploader_asset(my_experience, 'imageFile',  'BaseBundle\\Entity\\Experience')) }}"/>
+                                                                        {% endif %}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -222,9 +232,33 @@
 {% block scripts %}
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
     <script>
+        $(document).on('change', '.btn-file :file', function() {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        $(document).ready( function() {
+            $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if( input.length ) {
+                    input.val(log);
+                } else {
+                    if( log ) alert(log);
+                }
+
+            });
+        });
+
         $(function () {
             $('#datetimepicker1').datetimepicker({
-                format: 'LLL'
+                format: 'LLL',
+                maxDate: moment(),
+                minDate: moment().subtract(3, 'year')
             });
             activateAutoComplete();
         });
@@ -240,6 +274,10 @@
                 document.getElementById("city").setCustomValidity("");
             }
         });
+
+        $('#experience-add-btn').click(function () {
+
+        })
 
         function activateAutoComplete() {
             var input = document.getElementById('city');
@@ -350,7 +388,6 @@
         function editExperience() {
             var content = $('#content').val();
             var placeName = $('#place_name').val();
-            var photoUrl = $('#photo_url').val();
             var country = $('#country').val();
             var city = $('#city').val();
             var lat = $('#lat').val();
@@ -365,7 +402,6 @@
                     id : expId,
                     content: content,
                     placeName: placeName,
-                    photoUrl: photoUrl,
                     country: country,
                     city: city,
                     lat: lat,
@@ -380,28 +416,37 @@
         }
 
         function addExperience() {
-            var content = $('#content').val();
-            var placeName = $('#place_name').val();
-            var photoUrl = $('#photo_url').val();
-            var country = $('#country').val();
-            var city = $('#city').val();
-            var lat = $('#lat').val();
-            var lng = $('#lng').val();
-            var date = $('#datetimepicker1').data('date');
+            var date = moment.utc($("#datetimepicker1").data('date'), 'LLL').toDate();
+            var form = new FormData();
+            form.append('basebundle_experience[placeName]', $('#place_name').val());
+            form.append('basebundle_experience[imageFile][file]', document.getElementById('basebundle_experience_imageFile_file').files[0]);
+            form.append('basebundle_experience[content]', $('#content').val());
+            form.append('basebundle_experience[date][date][month]', moment.utc(date).format('M'));
+            form.append('basebundle_experience[date][date][day]', moment.utc(date).format('D'));
+            form.append('basebundle_experience[date][date][year]', moment.utc(date).format('YYYY'));
+            form.append('basebundle_experience[date][time][hour]', moment.utc(date).format('H'));
+            form.append('basebundle_experience[date][time][minute]', moment.utc(date).format('m'));
+            form.append('basebundle_experience[address][country]', $('#country').val());
+            form.append('basebundle_experience[address][city]', $('#city').val());
+            form.append('basebundle_experience[address][latitude]', $('#lat').val());
+            form.append('basebundle_experience[address][longitude]', $('#lng').val());
+            form.append('basebundle_experience[user]', 0);
+
+            console.log(moment.utc(date).format('D'));
+            console.log(moment.utc(date).format('M'));
+            console.log(moment.utc(date).format('YYYY'));
+            console.log(moment.utc(date).format('H'));
+            console.log(moment.utc(date).format('m'));
+            //return;
 
             $.ajax({
                 type: "POST",
                 url: "{{ path('add_experience') }}",
-                data: {
-                    content: content,
-                    placeName: placeName,
-                    photoUrl: photoUrl,
-                    country: country,
-                    city: city,
-                    lat: lat,
-                    lng: lng,
-                    date: date
-                },
+                data: form,
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                cache: false,
                 success: function (data) {
                     $('#experience-modal').modal('hide');
                     updateView();
@@ -437,7 +482,9 @@
                     $('#lat').val(data.address.latitude);
                     $('#lng').val(data.address.longitude);
                     $('#content').val(data.content);
-                    $('#photo_url').val(data.photoUrl);
+                    $('#basebundle_photo_imageFile_file').val('');
+                    $('#photo_uploader').hide();
+                    $('#url_display').val('');
                     $('#experience_form').attr('action', 'edit');
                     var dateObj = new Date(data.date.timestamp*1000);
                     dateObj.setTime( dateObj.getTime() + new Date().getTimezoneOffset()*60*1000 );
@@ -455,7 +502,9 @@
             $('#lat').val('');
             $('#lng').val('');
             $('#content').val('');
-            $('#photo_url').val('');
+            $('#basebundle_photo_imageFile_file').val('');
+            $('#photo_uploader').show();
+            $('#url_display').val('');
             $('#experience_form').attr('action', 'add');
             var dateObj = new Date();
             $('#datetimepicker1').data("DateTimePicker").date(moment(dateObj).format('LLL'));
@@ -474,6 +523,11 @@
                         $.each(data, function (k, el) {
                             var dateObj = new Date(el.date.timestamp*1000);
                             dateObj.setTime( dateObj.getTime() + new Date().getTimezoneOffset()*60*1000 );
+                            var photo ="";
+                            if(el.image!==""){
+                                photo = "{{ asset('uploads/images/') }}"+el.image;
+                                photo='<img onclick="displayPhoto(this);" style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="'+photo+'"/>'
+                            }
                            $('#my_experiences').append('' +
                                 '<div class="row card-container margins" style="width: 100%;">' +
                                 '   <div class="col-md-12">' +
@@ -489,7 +543,7 @@
                                 '                           <h4>'+el.placeName+'<span> - '+el.address.city+', '+el.address.country+'</span></h4>' +
                                 '                           <h5 style="margin-left: 2%;"></h5><br/>' +
                                 '                           <p>'+el.content+'</p><br/>' +
-                                '                           <img onclick="displayPhoto(this);" style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="'+el.photoUrl+'"/>' +
+                                '                           '+photo+
                                 '                       </div>' +
                                 '                   </div>' +
                                 '               </div>' +

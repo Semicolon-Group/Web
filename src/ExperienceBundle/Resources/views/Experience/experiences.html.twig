@@ -135,6 +135,9 @@
                             <div role="tabpanel" class="tab-pane active fade in" id="activity">
                                 <div class="profile_list">
                                     <div class="author_posts_inners">
+                                        {% if others_experiences is empty %}
+                                            <h1 class='pressed'>You still don't have any experience :(</h1>
+                                        {% endif %}
                                         {% for other_experience in others_experiences %}
                                             <div class="row card-container margins" style="width: 100%;">
                                                 <div class="col-md-12">
@@ -189,6 +192,9 @@
                                         </div>
                                     </div>
                                     <div id="my_experiences">
+                                        {% if my_experiences is empty %}
+                                            <h1 class='pressed'>You still don't have any experience :(</h1>
+                                        {% endif %}
                                         {% for my_experience in my_experiences %}
                                             <div class="row card-container margins" style="width: 100%;">
                                                 <div class="col-md-12">
@@ -517,7 +523,7 @@
                 url: "{{ path('get_my_experiences') }}",
                 success: function (data) {
                     if(data.length === undefined){
-                        $('#my_experiences').html('No data');
+                        $('#my_experiences').html("<h1 class='pressed'>You still don't have any experience :(</h1>");
                     }else{
                         $('#my_experiences').html('');
                         $.each(data, function (k, el) {

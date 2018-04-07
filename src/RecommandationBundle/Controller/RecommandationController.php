@@ -20,4 +20,11 @@ class RecommandationController extends Controller
         ));
     }
 
+
+    /**
+     * @Route("/to_experience/{lat}/{lng}/{city}/{country}/{placeName}", name="addExperienceFromRec")
+     */
+    public function toExperienceAction($lat, $lng, $city, $country, $placeName){
+
+    }
 }

@@ -148,5 +148,11 @@
 {% block scripts %}
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIdDidnYa6DrY7gbh4cocnriVYei7EaaQ&sensor=false"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
+    <script>
+        function buildPath(lat, lng, city, country, placeName) {
+            var x = '{{ path("addExperienceFromRec", {'lat': '_lat', 'lng': '_lng', 'city': '_city', 'country': '_country', 'placeName': '_placeName'}) }}';
+            return x.replace('_lat', lat).replace('_lng', lng).replace('_city', city).replace('_country', country).replace('_placeName', placeName);
+        }
+    </script>
     <script src="{{ asset('member_assets/js/recommandation/recommandation.js') }}"></script>
 {% endblock %}

@@ -27,14 +27,12 @@ class ExperienceController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $otherExperiences = $this->getDoctrine()->getRepository(Experience::class)->getExperiences($user);
         $myExperiences = $this->getDoctrine()->getRepository(Experience::class)->findBy(array('user' => $user));
+        if($request->get('place') != null){
 
-        $experience = new Experience();
-        $form = $this->createForm(ExperienceType::class, $experience);
-        $form->handleRequest($request);
+        }
         return $this->render('ExperienceBundle:Experience:experiences.html.twig', array(
             'others_experiences' => $otherExperiences,
-            'my_experiences' => $myExperiences,
-            'form' => $form->createView()
+            'my_experiences' => $myExperiences
         ));
     }
 

@@ -5,7 +5,7 @@
 {% block banner %}{% endblock %}
 
 {% block stylesheets %}
-    <link href="{{ asset('member_assets/css/message.css') }}" rel="stylesheet">
+    <link href="{{ asset('member_assets/css/message/message.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
@@ -13,7 +13,6 @@
 {% endblock %}
 
 {% block body %}
-
     <div class="blog_grid_area">
         <div class="container">
             <div class="row">
@@ -22,6 +21,7 @@
                     <div class="community_activity">
                         {% if threads %}
                             {% for thr in threads %}
+                                {{ render(controller('MessageBundle:Message:popup',{'threadId':thr.thread.id})) }}
                                 <div class="media" id="{{ thr.thread.id }}">
                                     <div class="media-left">
                                         <img class="thread_pic" src="{{ thr.photo }}">
@@ -71,5 +71,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

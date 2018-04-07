@@ -44,6 +44,24 @@ class MessageController extends Controller implements ContainerAwareInterface
     }
 
     /**
+     * @param string $threadId
+     * @return Response
+     */
+    public function popupAction($threadId){
+        $StdThread = $this->getProvider()->getThread($threadId);
+        $thread = new \stdClass();
+        $participant = $StdThread->getParticipants()[0]->getId() == $this->getUser()->getId() ? $StdThread->getParticipants()[1] : $StdThread->getParticipants()[0];
+        $participant = $this->getDoctrine()->getRepository(User::class)->find($participant->getId());
+        $thread->photo = $this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($participant);
+        $thread->participant = $participant;
+        $thread->thread = $StdThread;
+        return $this->render('MessageBundle:Message:threadPopup.html.twig', array(
+            'thr' => $thread,
+            'online' => $this->getUser(),
+        ));
+    }
+
+    /**
      * Displays the authenticated participant messages sent.
      *
      * @return Response

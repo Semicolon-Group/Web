@@ -1,20 +1,26 @@
-<div class="popup" id="{{ thr.thread.id }}">
-    <div class="header" onclick="hide({{ thr.thread.id }})">
-        <img class="popup-photo" src="{{ thr.photo }}">
-        <span class="popup-name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+<div class="popup" id="{{ thr.thread.id }}-popup">
+    <div class="popup-header" onclick="hide({{ thr.thread.id }})">
+        <div class="popup-profile">
+            <img class="popup-photo" src="{{ thr.photo }}">
+            <span class="popup-name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+        </div>
         <div class="popup-action">
-            <span class="fas fa-window-minimize"></span>
-            <span class="fas fa-times"></span>
+            <span class="fas fa-window-minimize popup-icon"></span>
+            <span class="fas fa-times popup-icon"></span>
         </div>
     </div>
-    <hr>
-    <div class="messages">
-        <ul class="message-list">
-            {% for message in messages %}
-                <li class="message{{ message.sender == online.username ?  }}">
-
-                </li>
-            {% endfor %}
-        </ul>
+    <hr class="popup-hr">
+    <ul class="message-list" id="{{ thr.thread.id }}-list">
+        {% for message in thr.thread.messages %}
+            <li class="popup-msg{{ message.sender.id == online.id ? ' msg-yours' : '' }}">
+                <div class="message-text {{ message.sender.id == online.id ? 'text-yours' : 'text-theirs' }}">
+                    {{ message.body }}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="compose-msg">
+        <textarea class="popup-textarea" placeholder="Write your message"></textarea>
+        <button class="btn btn-primary compose-btn">Send</button>
     </div>
 </div>

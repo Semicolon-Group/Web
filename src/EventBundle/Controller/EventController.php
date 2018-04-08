@@ -86,12 +86,18 @@ class EventController extends Controller
     public function participateAction(Request $request){
         $event = $this->getDoctrine()->getRepository(Event::class)->find($request->get('id'));
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $event->getUser()->add($user);
-        $this->getDoctrine()->getManager()->persist($event);
-        $this->getDoctrine()->getManager()->flush();
-        //create your collection
-        //if created $success = true
-        return new JsonResponse(['success' => true]);
+        //return new JsonResponse(['getMaxPlaces' => $event->getMaxPlaces(), 'user' => count($event->getUser())]);
+        if($event->getMaxPlaces() > count($event->getUser())){
+            $event->getUser()->add($user);
+            $this->getDoctrine()->getManager()->persist($event);
+            $this->getDoctrine()->getManager()->flush();
+            //create your collection
+            //if created $success = true
+            return new JsonResponse(['success' => true]);
+        }
+        else{
+            return new JsonResponse(['success' => false]);
+        }
     }
 
     /**

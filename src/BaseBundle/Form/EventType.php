@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,9 +23,9 @@ class EventType extends AbstractType
     {
         $builder
             ->add('content',TextareaType::class)
-            ->add('title')
+            ->add('title', TextareaType::class, ['required' => true])
             ->add('photoUrl',FileType::class, array('data_class' => null))
-            ->add('maxPlaces')
+            ->add('maxPlaces', NumberType::class, array('attr' => ['min' => 0]))
             ->add('startDate',DateTimeType::class, ['required' => true], array(
             'data' => new \DateTime(),
             'attr' => array('style' => 'display: yes;'),
@@ -32,7 +33,7 @@ class EventType extends AbstractType
         ))
             ->add('state',HiddenType::class)
             ->add('reason',HiddenType::class)
-            ->add('endDate',DateTimeType::class, ['required' => true])
+            ->add('endDate',DateType::class, ['required' => true])
             ->add('address', AddressType::class, array(
                 'label' => false))
             ->add('valider',SubmitType::class);

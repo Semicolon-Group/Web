@@ -65,11 +65,7 @@
         <i class="fa fa-warning"></i> Warning, Please fill all the fields
     </div>
 
-    <div class="demo-button">
-        <div class="demo-button">
-            <input type="submit" value="Add" id="test" class="test"/>
-        </div>
-    </div>
+
 
     {{ form_end(form) }}
 
@@ -77,10 +73,40 @@
 
 
 {% block scripts %}
-    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
     <script src="{{ asset('member_assets/js/events.js') }}"></script>
-{% endblock %}
+    <script>
+        $(document).ready(function(){
+            $('#basebundle_event_endDate').removeClass('form-control').find('select').addClass('myselect')
+            $('#basebundle_event_startDate').removeClass('form-control').find('select').addClass('myselect')
+        })
+        $("#basebundle_event_valider").click(function (event) {
+            var start = new Date(
+                $('#basebundle_event_startDate_date_year').val()
+                ,
+                $('#basebundle_event_startDate_date_month').val()-1
+                ,
+                $('#basebundle_event_startDate_date_day').val());
+            var end = new Date(
+                $('#basebundle_event_endDate_year').val()
+                ,
+                $('#basebundle_event_endDate_month').val()-1
+                ,
+                $('#basebundle_event_endDate_day').val());
 
+            var s = (end.getTime()-start.getTime());
+            var diff = Math.ceil(s / (1000 * 3600 * 24));
+            console.log(start)
+            console.log(end)
+            console.log(s)
+            console.log(diff)
+            if(diff<0){
+                alert("Invalid date");
+                event.preventDefault();
+            }
+        })
+
+    </script>
+{% endblock %}
 
 
 

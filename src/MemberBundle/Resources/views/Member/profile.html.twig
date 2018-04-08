@@ -360,11 +360,13 @@
                 type: "POST",
                 url: "{{ path('generate_mandatory_answer') }}",
                 success: function (data) {
+                    $('#answer-form').modal({
+                        backdrop: true,
+                        keyboard: true
+                    });
                     if(data.question != undefined){
-                        $('#answer-form').modal({
-                            backdrop: 'static',
-                            keyboard: false
-                        });
+                        $('#answer-form').data('bs.modal').options.backdrop = 'static';
+                        $('#answer-form').data('bs.modal').options.keyboard = false;
                         $('#answer-modal-close').hide();
 
                         var topic;

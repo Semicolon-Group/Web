@@ -96,11 +96,13 @@ class MemberController extends Controller
                         }
                     );
                     $diffQuestions = array_values($diffQuestions);
-                    $questionIndex = rand ( 0 , sizeof($diffQuestions)-1 );
-                    $question = $diffQuestions[$questionIndex];
-                    $choices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
-                    $toSend = array('question' => $question, 'choices' => $choices);
-                    $data = $serializer->normalize($toSend);
+                    if(sizeof($diffQuestions) != 0){
+                        $questionIndex = rand ( 0 , sizeof($diffQuestions)-1 );
+                        $question = $diffQuestions[$questionIndex];
+                        $choices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
+                        $toSend = array('question' => $question, 'choices' => $choices);
+                        $data = $serializer->normalize($toSend);
+                    }
                 }
             }
             return new JsonResponse($data);

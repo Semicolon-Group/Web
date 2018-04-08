@@ -31,8 +31,10 @@ class EventType extends AbstractType
             'attr' => array('style' => 'display: yes;'),
             'label' => false
         ))
-            ->add('state',HiddenType::class)
-            ->add('reason',HiddenType::class)
+            ->add('state', ChoiceType::class,[
+                'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
+            ])
+            ->add('reason',TextareaType::class, ['required' => true])
             ->add('endDate',DateType::class, ['required' => true])
             ->add('address', AddressType::class, array(
                 'label' => false))

@@ -66,6 +66,7 @@ class DefaultController extends Controller
                 $this->getParameter('event_directory'),
                 $fileName
             );
+            $event->setState(0);
             $event->setPhotoUrl($fileName);
             $event->setBusiness($user);
             $em->persist($event);

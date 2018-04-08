@@ -1,0 +1,28 @@
+{% extends "member_base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block title %}
+    Edit
+{% endblock %}
+{% block banner_img %}
+    {{ asset('member_assets/img/banner/banner-bg-1.jpg') }}
+{% endblock %}
+
+{% block banner_title %}Edit Profile{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="row" style="margin-top: 40px; margin-bottom: 40px;">
+        <div class="col-sm-offset-2 col-md-8">
+            <div class="card horizontal">
+                <div class="card-stacked">
+                    {% include "@FOSUser/Profile/edit_content.html.twig" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}

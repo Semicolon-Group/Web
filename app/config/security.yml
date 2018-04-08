@@ -13,7 +13,7 @@ security:
             id: fos_user.user_provider.username
 
     firewalls:
-#        business:
+#       business:
 #            pattern:            /business/(.*)
 #            form_login:
 #              provider:       fos_userbundle

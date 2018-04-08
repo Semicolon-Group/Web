@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use BaseBundle\Entity\Event;
 use BaseBundle\Form\EventType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Swift_Message;
@@ -23,24 +24,29 @@ class EventAdminController extends Controller
     {
         $em=$this->getDoctrine();
         $event=$em->getRepository(Event::class)->findAll();
+        $var1 =$em->getRepository('BaseBundle:Event')->findNotifsEventsAdmin();
         return $this->render('AdminBusinessBundle:AdminEvent:adminevent.html.twig', array(
             'events'=>$event,
             'user'=>$this->getUser(),
+            'notifs'=>$var1,
+
         ));
     }
 
     /**
      * @Route("/Edit/{id}", name="Admin_events_edit")
      */
-    public function EditAction(Request $request, event $event,$id)
+    public function EditAction(Request $request,event $event,$id)
     {
         $advert = new Event();
         $repo = $this->getDoctrine()->getRepository(Event::class);
+        $var2 =$this->getDoctrine()->getRepository(Event::class)->findNotifsEventsAdmin();
         $event=$repo->find($id);
         $x = $event->getState() ;
         $editForm = $this->createForm('BaseBundle\Form\EventType', $event)->add('state', ChoiceType::class,[
             'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
-        ]);
+        ])
+            ->add('reason',TextType::class, ['required' => true])->add('Valider',SubmitType::class);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -67,8 +73,23 @@ class EventAdminController extends Controller
 
 
         return $this->render('AdminBusinessBundle:AdminEvent:Edit_event_admin.html.twig', array('event' => $event,
-            'edit_form' => $editForm->createView(),
+            'edit_form' => $editForm->createView(),'notifs'=>$var2,
 
         ));
+    }
+
+    /**
+     * @Route("/Delete", name="admin_events_delete")
+     */
+    public function DeleteAction(Request $request)
+    {
+        if($request->isXmlHttpRequese()){
+            $id = $request->get('id');
+            $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($event);
+            $em->flush();
+            return new JsonResponse();
+        }
     }
 }

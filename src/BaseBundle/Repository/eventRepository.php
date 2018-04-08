@@ -6,6 +6,7 @@
  * Time: 00:07
  */
 namespace BaseBundle\Repository;
+use Doctrine\ORM\EntityRepository;
 class eventRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findEventByName($title)
@@ -16,5 +17,12 @@ class eventRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('x', '%'.$title . '%');
         return $q->getResult();
 
+    }
+
+    public function findNotifsEventsAdmin()
+    {
+        $qn=$this->getEntityManager()->createQuery('select m from BaseBundle:Event m where m.state=:a and  m.endDate>=CURRENT_TIMESTAMP() ')
+            ->setParameter('a','0');
+        return $qn->getResult();
     }
 }

@@ -22,7 +22,9 @@ class EventController extends Controller
         $em=$this->getDoctrine();
         $rating = $em->getRepository('BaseBundle:Rating')->avgrating();
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $event=$em->getRepository(Event::class)->findAll();
+        $event=$em->getRepository(Event::class)->findBy(array(
+            'state'=>['Approved' => '1']
+        ));
         if($request->isMethod('POST')){
             $title=$request->get('title');
             $event=$em->getRepository("BaseBundle:Event")->findEventByName($title);

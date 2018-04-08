@@ -10,7 +10,7 @@
                 <div class="blog_grid_item">
                     <div class="blog_grid_img">
                         <div class="blog_grid_img">
-                            <img src="{{ asset('business_assets/images/img_event/') }}{{ event.photoUrl }}" class="img-circle"    alt="">
+                            <img src="{{ asset('business_assets/images/img_event/') }}{{ event.photoUrl }}" alt="">
                         </div>
                     </div>
                     <div class="blog_grid_content">
@@ -44,16 +44,10 @@
             </div>
         </div>
 
+        <div>{{ form_widget(edit_form.Valider ,  { 'id': 'valider' })  }}</div>
 
-        <div class="demo-button">
-            <div class="demo-button">
-                <input type="submit" value="Add" id="test" class="test"/>
-            </div>
-        </div>
 
-        {{ form_end(edit_form) }}
-
-    </section>
+        {{ form_end(edit_form) }}    </section>
 
 
 {% endblock %}

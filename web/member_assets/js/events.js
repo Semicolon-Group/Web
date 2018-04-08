@@ -28,7 +28,8 @@ $('.participate').click(function(e){
         }
     })
 })
-$("#add_event_form").submit(function (event) {
+$("#basebundle_event").submit(function (event) {
+    alert("mmmmmmmmmmmmmmm");
     var start = new Date(
         $('#basebundle_event_startDate_date_year').val()
         ,
@@ -49,3 +50,4 @@ $("#add_event_form").submit(function (event) {
         event.preventDefault();
     }
 })
+

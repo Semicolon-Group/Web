@@ -4,6 +4,7 @@ namespace BaseBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -29,13 +30,13 @@ class EventType extends AbstractType
             'attr' => array('style' => 'display: yes;'),
             'label' => false
         ))
-            ->add('state')
-            ->add('reason')
-            ->add('endDate',DateType::class, ['required' => true])
+            ->add('state',HiddenType::class)
+            ->add('reason',HiddenType::class)
+            ->add('endDate',DateTimeType::class, ['required' => true])
             ->add('address', AddressType::class, array(
-                'label' => false
-            ));
-        /*->add('ajouter', SubmitType::class);*/
+                'label' => false))
+            ->add('valider',SubmitType::class);
+
     }/**
      * {@inheritdoc}
      */

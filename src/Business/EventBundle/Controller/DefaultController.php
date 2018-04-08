@@ -83,7 +83,9 @@ class DefaultController extends Controller
     public function EditAction(Request $request, event $event)
     {
 
-        $editForm = $this->createForm('BaseBundle\Form\EventType', $event);
+        $editForm = $this->createForm('BaseBundle\Form\EventType', $event)
+            ->add('Valider',SubmitType::class);
+        ;
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

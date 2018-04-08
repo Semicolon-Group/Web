@@ -31,12 +31,12 @@ function scrollDown() {
     if(messageList)
         messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
 }
-function send(threadId) {
+function send(threadId, userId) {
     var area = $("#" + threadId + "-popup-textarea");
     var text = area.val();
     if(text == '' || area.length == 0)
         return;
-    var DATA = {'text':text, 'threadId':threadId};
+    var DATA = {'text':text, 'threadId':threadId, 'userId':userId};
     var path = $("#send_msg_path").data('path');
     $.ajax({
        url: path,
@@ -53,6 +53,24 @@ function send(threadId) {
            if(threadBody.length != 0)
                threadBody.html(text);
            scrollDown();
+           readThread(threadId);
        }
+    });
+}
+function readThread(threadId) {
+    var path = $("#read_thread_path").data('path');
+    var DATA =  {'threadId':threadId};
+    $.ajax({
+        url: path,
+        method: 'post',
+        data: DATA,
+        success: function () {
+            var threadBody = $("#" + threadId + "-body");
+            var thread = $("#" + threadId);
+            if(threadBody.length != 0){
+                threadBody.addClass('read-msg');
+                thread.removeClass('new-msg');
+            }
+        }
     });
 }

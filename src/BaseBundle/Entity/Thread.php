@@ -69,4 +69,14 @@ class Thread extends BaseThread
     {
         $this->photo = $photo;
     }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+
 }

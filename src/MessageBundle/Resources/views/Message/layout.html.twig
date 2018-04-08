@@ -21,7 +21,7 @@
                     <div class="community_activity">
                         {% if threads %}
                             {% for thr in threads %}
-                                {{ render(controller('MessageBundle:Message:popup',{'threadId':thr.thread.id})) }}
+                                {{ render(controller('MessageBundle:Message:popup',{'threadId':thr.thread.id, 'userId':-1})) }}
                                 <div class="media{{ not fos_message_is_read(thr.thread) ? ' new-msg' : '' }}" id="{{ thr.thread.id }}" id="{{ thr.thread.id }}" onclick="popup({{ thr.thread.id }})">
                                     <div class="media-left">
                                         <img class="thread_pic" src="{{ thr.photo }}">

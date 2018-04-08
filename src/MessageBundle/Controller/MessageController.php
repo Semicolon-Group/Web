@@ -4,6 +4,7 @@ namespace MessageBundle\Controller;
 
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Thread;
+use BaseBundle\Entity\ThreadMetadata;
 use BaseBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -12,6 +13,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\MessageBundle\Provider\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Tests\SerializerTest;
 
 class MessageController extends Controller implements ContainerAwareInterface
 {
@@ -46,25 +50,25 @@ class MessageController extends Controller implements ContainerAwareInterface
     }
 
     /**
-     * @param string $threadId
      * @param int $userId
      * @return Response
      */
-    public function popupAction($threadId, $userId){
+    public function popupAction($userId){
+        $participant = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $thread = $this->getThread($this->getUser(), $participant);
         /* if thread doesn't exist */
-        if($threadId == 0 && $userId > 0){
+        if($thread == null){
             $StdThread = new Thread();
-            $StdThread->setId(0);
-            $participant = $this->getDoctrine()->getRepository(User::class)->find($userId);
+            //$participant = $this->getDoctrine()->getRepository(User::class)->find($userId);
         }
         /* if thread exists */
         else{
-            $StdThread = $this->getProvider()->getThread($threadId);
+            $StdThread = $this->getProvider()->getThread($thread->getId());
             $em = $this->getDoctrine()->getManager();
             $StdThread->setIsReadByParticipant($this->getUser(), $StdThread->isReadByParticipant($this->getUser()));
             $em->persist($StdThread);
             $em->flush();
-            $participant = $StdThread->getParticipants()[0]->getId() == $this->getUser()->getId() ? $StdThread->getParticipants()[1] : $StdThread->getParticipants()[0];
+            /*$participant = $StdThread->getParticipants()[0]->getId() == $this->getUser()->getId() ? $StdThread->getParticipants()[1] : $StdThread->getParticipants()[0];*/
         }
         $thread = new \stdClass();
         $participant = $this->getDoctrine()->getRepository(User::class)->find($participant->getId());
@@ -85,17 +89,16 @@ class MessageController extends Controller implements ContainerAwareInterface
         if($request->isXmlHttpRequest()){
             $composer = $this->container->get('fos_message.composer');
             $text = $request->get('text');
-            $threadId = $request->get('threadId');
-            $userId = $request->get('userId');
+            $participant = $this->getDoctrine()->getRepository(User::class)->find($request->get('partId'));
+            $thread = $this->getThread($participant, $this->getUser());
             /* if thread exists */
-            if($threadId > 0){
-                $thread = $this->getProvider()->getThread($threadId);
+            if($thread != null){
+                $thread = $this->getProvider()->getThread($thread->getId());
                 $message = $composer->reply($thread)->setBody($text)->setSender($this->getUser())->getMessage();
             }
-            /* if thread hasn't been started */
+            /* if thread doesn't exist */
             else{
-                $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-                $message = $composer->newThread()->addRecipient($user)->setSubject('hi')->setSender($this->getUser())->setBody($text)->getMessage();
+                $message = $composer->newThread()->addRecipient($participant)->setSubject('hi')->setSender($this->getUser())->setBody($text)->getMessage();
             }
             $sender = $this->container->get('fos_message.sender');
             $sender->send($message);
@@ -109,12 +112,42 @@ class MessageController extends Controller implements ContainerAwareInterface
      */
     public function readThreadAction(Request $request){
         if($request->isXmlHttpRequest()){
-            $thread = $this->getProvider()->getThread($request->get('threadId'));
-            $thread->setIsReadByParticipant($this->getUser(), true);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($thread);
-            $em->flush();
+            $participant = $this->getDoctrine()->getRepository(User::class)->find($request->get('partId'));
+            $thread = $this->getThread($participant, $this->getUser());
+            if($thread != null){
+                $thread = $this->getProvider()->getThread($thread->getId());
+                $thread->setIsReadByParticipant($this->getUser(), true);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($thread);
+                $em->flush();
+            }
             return new JsonResponse();
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateThreadAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $data = [];
+            $nbr = $request->get('nbr');
+            $participant = $this->getDoctrine()->getRepository(User::class)->find($request->get('partId'));
+            $thread = $this->getThread($participant, $this->getUser());
+            if($thread != null){
+                $thread = $this->getProvider()->getThread($thread->getId());
+                $messages = $thread->getMessages();
+                $count = count($messages);
+                if($count > $nbr){
+                    for($i=$nbr - 1; $i < $count; $i++){
+                        $data [] = $messages[$i]->getBody();
+                    }
+                }
+            }
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $data = $serializer->normalize($data);
+            return new JsonResponse($data);
         }
     }
 
@@ -134,5 +167,32 @@ class MessageController extends Controller implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    /**
+     * @param User $part1
+     * @param User $part2
+     * @return Thread
+     */
+    public function getThread($part1, $part2){
+        $tmd1 = $this->getDoctrine()->getRepository(ThreadMetadata::class)->findBy([
+            'participant' => $part1
+        ]);
+        $tmd2 = $this->getDoctrine()->getRepository(ThreadMetadata::class)->findBy([
+            'participant' => $part2
+        ]);
+        $thread = null;
+        $found = false;
+        foreach ($tmd1 as $t1){
+            foreach ($tmd2 as $t2){
+                if($t1->getThread()->getId() == $t2->getThread()->getId()){
+                    $thread = $t1->getThread();
+                    $found = true;
+                    break;
+                }
+            }
+            if($found == true) break;
+        }
+        return $thread;
     }
 }

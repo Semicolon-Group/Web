@@ -21,14 +21,14 @@
                     <div class="community_activity">
                         {% if threads %}
                             {% for thr in threads %}
-                                {{ render(controller('MessageBundle:Message:popup',{'threadId':thr.thread.id, 'userId':-1})) }}
-                                <div class="media{{ not fos_message_is_read(thr.thread) ? ' new-msg' : '' }}" id="{{ thr.thread.id }}" id="{{ thr.thread.id }}" onclick="popup({{ thr.thread.id }})">
+                                {{ render(controller('MessageBundle:Message:popup',{'userId':thr.participant.id})) }}
+                                <div class="media{{ not fos_message_is_read(thr.thread) ? ' new-msg' : '' }}" id="{{ thr.participant.id }}" onclick="popup({{ thr.participant.id }})">
                                     <div class="media-left">
                                         <img class="thread_pic" src="{{ thr.photo }}">
                                     </div>
                                     <div class="media-body">
                                         <span class="name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
-                                        <div id="{{ thr.thread.id }}-body" class="msg{{ fos_message_is_read(thr.thread) ? ' read-msg' : '' }}">
+                                        <div id="{{ thr.participant.id }}-body" class="msg{{ fos_message_is_read(thr.thread) ? ' read-msg' : '' }}">
                                             {{ thr.thread.lastmessage.body }}
                                         </div>
                                     </div>

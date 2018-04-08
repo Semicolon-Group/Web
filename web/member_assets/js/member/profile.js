@@ -74,7 +74,3 @@ $("#photo-form").submit(function(event) {
         }
     });
 });
-
-$(function () {
-   $('#basebundle_photo_imageFile_file').attr('accept', '.png, .jpg, .jpeg');
-});

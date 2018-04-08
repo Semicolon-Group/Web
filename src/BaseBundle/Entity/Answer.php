@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Answer
  *
  * @ORM\Table(name="answer", indexes={@ORM\Index(name="question_id", columns={"question_id"}), @ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="choice_id", columns={"selected_choice_id"}), @ORM\Index(name="fk_answer_choice_id", columns={"selected_choice_id", "question_id"})})
- * @ORM\Entity
+ * @ORM\Entity("BaseBundle\Repository\AnswerRepository")
  */
 class Answer
 {

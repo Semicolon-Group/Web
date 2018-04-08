@@ -68,13 +68,13 @@
         <div class="modal-dialog" style="width: 70%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" id="answer-modal-close" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">New Answer</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row card-container" style="width: 100%;">
                         <div class="col-md-12">
-                            <div class="card horizontal" style="height: 60vh;">
+                            <div class="card horizontal" style="">
                                 <div class="card-stacked">
                                     <form id="new_answer_form">
                                         <div class="card-content" style="max-height: 100%;">
@@ -109,7 +109,9 @@
                                             </div>
                                         </div>
                                         <div class="card-action">
-                                            <button id="answer-add-btn" type="submit" style="float: right;" class="btn btn-default">Add</button>
+                                            <div class="row">
+                                                <button id="answer-add-btn" type="submit" style="float: right;" class="btn btn-default">Add</button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -343,6 +345,60 @@
 {% block scripts %}
     <script src="{{ asset('member_assets/vendors/bootstrap-datepicker/js/moment-with-locales.js') }}"></script>
     <script>
+        var topics;
+        var importances;
+
+        $(function () {
+            $('#basebundle_photo_imageFile_file').attr('accept', '.png, .jpg, .jpeg');
+            topics = JSON.parse('{{ topics|json_encode|raw }}');
+            importances = JSON.parse('{{ importances|json_encode|raw }}');
+            generateMandatory();
+        });
+
+        function generateMandatory() {
+            $.ajax({
+                type: "POST",
+                url: "{{ path('generate_mandatory_answer') }}",
+                success: function (data) {
+                    if(data.question != undefined){
+                        $('#answer-form').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                        $('#answer-modal-close').hide();
+
+                        var topic;
+                        $.each(topics, function (k, el) {
+                            if(el == data.question.topic){
+                                topic = k;
+                                return false;
+                            }
+                        });
+                        $('#topic').html(topic);
+                        $('#question').html(data.question.question);
+                        document.getElementById('question').dataset.id = data.question.id;
+                        $('#choices').html("<option value=\"null\" disabled selected>Select an answer</option>");
+                        $('#acceptableChoices').html('');
+                        $.each(data.choices, function (k, el) {
+                            $('#choices').append("<option value='"+el.id+"'>"+el.choice+"</option>");
+                            $('#acceptableChoices').append("<input style='margin-left: 5%;' type='checkbox' class='form-check-input accepted_choices' id='"+el.id+"'/><label for='"+el.id+"'>"+el.choice+"</label>");
+                        });
+                        $('#importances').html('<option value="null" disabled selected>Select an importance for this answer</option>');
+                        $.each(importances, function (k, el) {
+                            $('#importances').append('<option value="'+el+'">'+k+'</option>');
+                        });
+                        $('#choice_error').html('');
+                        $("#answer-form").modal('show');
+                    }else{
+                        $('#answer-form').data('bs.modal').options.backdrop = true;
+                        $('#answer-form').data('bs.modal').options.keyboard = true;
+                        $('#answer-modal-close').show();
+                        generateAnswer();
+                    }
+                }
+            });
+        }
+
         function updateAbout() {
             var aboutVal = $('#about-input').val();
             $.ajax({
@@ -466,8 +522,13 @@
                 success: function (data) {
                     console.log(data);
                     if(data.question != undefined){
-                        var topic = "{% for key, value in topics %}{% if value == "+data.question.topic+" %}{{ key }}{% endif %}{% endfor %}";
-                        var importances = JSON.parse('{{ importances|json_encode|raw }}');
+                        var topic;
+                        $.each(topics, function (k, el) {
+                            if(el == data.question.topic){
+                                topic = k;
+                                return false;
+                            }
+                        });
                         console.log(importances);
                         $('#topic').html(topic);
                         $('#question').html(data.question.question);
@@ -501,7 +562,6 @@
                 $('#choice_error').html('');
                 $("#answer-form").modal('hide');
                 addAnswer();
-                updateAnswerView();
             }
         });
 
@@ -519,7 +579,7 @@
                 url: "{{ path('add_answer') }}",
                 data: { answer : toSend},
                 success: function (data) {
-                    generateAnswer();
+                    generateMandatory();
                     updateAnswerView();
                 }
             });
@@ -549,8 +609,20 @@
                             '');
                     }
                     $.each(data.answers, function (k, el) {
-                        var topic = "{% for key, value in topics %}{% if value == "+el.question.topic+" %}{{ key }}{% endif %}{% endfor %}";
-                        var importance = "{% for key, value in importances %}{% if value == "+el.importance+" %}{{ key }}{% endif %}{% endfor %}";
+                        var topic;
+                        $.each(topics, function (key, ele) {
+                            if(ele == el.question.topic){
+                                topic = key;
+                                return false;
+                            }
+                        });
+                        var importance;
+                        $.each(importances, function (key, ele) {
+                            if(ele == el.importance){
+                                importance = key;
+                                return false;
+                            }
+                        })
                         var acceptedChoices = el.choice;
                         var acceptedString = '';
                         $.each(acceptedChoices, function (k, el) {

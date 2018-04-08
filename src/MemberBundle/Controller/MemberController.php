@@ -68,6 +68,46 @@ class MemberController extends Controller
         ));
     }
 
+    /**
+     * @Route("/answer/generate_mandatory", name="generate_mandatory_answer");
+     */
+    public function getMandatoryQuestions(Request $request){
+        if($request->isXmlHttpRequest()){
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $data=null;
+            if(sizeof($this->getDoctrine()->getRepository(Answer::class)->getMandatoryAnswers($user))<10){
+                $normalizer = new ObjectNormalizer();
+                $normalizer->setCircularReferenceLimit(2);
+                // Add Circular reference handler
+                $normalizer->setCircularReferenceHandler(function ($object) {
+                    return $object->getId();
+                });
+                $serializer = new Serializer(array($normalizer));
+                $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user' => $user));
+                $answeredQuestions = array_map(function ($an){
+                    return $an->getQuestion();
+                }, $answers);
+                $questions = $this->getDoctrine()->getRepository(Question::class)->findBy(array("topic" => Topic::Mandatory));
+
+                if(sizeof($answeredQuestions) != sizeof($questions)){
+                    $diffQuestions = array_udiff($questions, $answeredQuestions,
+                        function ($obj_a, $obj_b) {
+                            return $obj_a->getId() - $obj_b->getId();
+                        }
+                    );
+                    $diffQuestions = array_values($diffQuestions);
+                    $questionIndex = rand ( 0 , sizeof($diffQuestions)-1 );
+                    $question = $diffQuestions[$questionIndex];
+                    $choices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
+                    $toSend = array('question' => $question, 'choices' => $choices);
+                    $data = $serializer->normalize($toSend);
+                }
+            }
+            return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
     public function getAvailableQuestionCount(){
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user' => $user));

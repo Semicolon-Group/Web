@@ -42,18 +42,6 @@ class AnswerController extends Controller
                         return $obj_a->getId() - $obj_b->getId();
                     }
                 );
-                /*foreach ($answeredQuestions as $aq){
-                    for($i=0; $i<sizeof($questions); $i++){
-                        if($questions[$i]->getId() == $aq->getId()){
-                            unset($questions[$i]);
-                            $questions = array_values($questions);
-                            break;
-                        }
-                    }
-                }*/
-
-
-                //$questions = array_values($questions);
                 $diffQuestions = array_values($diffQuestions);
                 $questionIndex = rand ( 0 , sizeof($diffQuestions)-1 );
                 $question = $diffQuestions[$questionIndex];

@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block scripts %}
-
+    <script src="{{ asset('member_assets/js/message/message.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -22,41 +22,13 @@
                         {% if threads %}
                             {% for thr in threads %}
                                 {{ render(controller('MessageBundle:Message:popup',{'threadId':thr.thread.id})) }}
-                                <div class="media" id="{{ thr.thread.id }}">
+                                <div class="media{{ not fos_message_is_read(thr.thread) ? ' new-msg' : '' }}" id="{{ thr.thread.id }}" id="{{ thr.thread.id }}" onclick="popup({{ thr.thread.id }})">
                                     <div class="media-left">
                                         <img class="thread_pic" src="{{ thr.photo }}">
                                     </div>
                                     <div class="media-body">
                                         <span class="name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
-                                        <div class="msg read-msg">
-                                            {{ thr.thread.lastmessage.body }}
-                                        </div>
-                                    </div>
-                                    <span class="time">{{ thr.thread.lastMessage.createdAt|date('d-m-Y') }}</span>
-                                </div>
-                            {% endfor %}
-                            {% for thr in threads %}
-                                <div class="media{{ not fos_message_is_read(thr.thread) ? ' new-msg' : '' }}" id="{{ thr.thread.id }}">
-                                    <div class="media-left">
-                                        <img class="thread_pic" src="{{ thr.photo }}">
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
-                                        <div class="msg{{ fos_message_is_read(thr.thread) ? ' read-msg' : '' }}">
-                                            {{ thr.thread.lastmessage.body }}
-                                        </div>
-                                    </div>
-                                    <span class="time">{{ thr.thread.lastMessage.createdAt|date('d-m-Y') }}</span>
-                                </div>
-                            {% endfor %}
-                            {% for thr in threads %}
-                                <div class="media" id="{{ thr.thread.id }}">
-                                    <div class="media-left">
-                                        <img class="thread_pic" src="{{ thr.photo }}">
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
-                                        <div class="msg read-msg">
+                                        <div id="{{ thr.thread.id }}-body" class="msg{{ fos_message_is_read(thr.thread) ? ' read-msg' : '' }}">
                                             {{ thr.thread.lastmessage.body }}
                                         </div>
                                     </div>

@@ -53,6 +53,10 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        <!--Data Divs-->
+        <div id="send_msg_path" data-path="{{ path('send_msg') }}"></div>
+        <div id="read_thread_path" data-path="{{ path('read_thread') }}"></div>
+
        <!--================Frist Main hader Area =================-->
        <header class="header_menu_area">
            <nav class="navbar navbar-default">
@@ -253,6 +257,8 @@
 
         <script src="{{ asset('member_assets/js/video_player.js') }}"></script>
         <script src="{{ asset('member_assets/js/theme.js') }}"></script>
+
+        <script src="{{ asset('member_assets/js/message/message-popup.js') }}"></script>
         {% block scripts %}{% endblock %}
     </body>
 

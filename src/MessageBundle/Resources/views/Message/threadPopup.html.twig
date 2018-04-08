@@ -5,8 +5,8 @@
             <span class="popup-name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
         </div>
         <div class="popup-action">
-            <span class="fas fa-window-minimize popup-icon"></span>
-            <span class="fas fa-times popup-icon"></span>
+            <span class="fas fa-window-minimize popup-icon popup-mini"></span>
+            <span class="fas fa-times popup-icon popup-close"></span>
         </div>
     </div>
     <hr class="popup-hr">
@@ -20,7 +20,7 @@
         {% endfor %}
     </ul>
     <div class="compose-msg">
-        <textarea class="popup-textarea" placeholder="Write your message"></textarea>
-        <button class="btn btn-primary compose-btn">Send</button>
+        <textarea id="{{ thr.thread.id }}-popup-textarea" class="popup-textarea" placeholder="Write your message"></textarea>
+        <button class="btn btn-primary compose-btn" onclick="send({{ thr.thread.id }})">Send</button>
     </div>
 </div>

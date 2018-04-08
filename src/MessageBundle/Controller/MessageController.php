@@ -7,8 +7,10 @@ use BaseBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\MessageBundle\Provider\ProviderInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MessageController extends Controller implements ContainerAwareInterface
@@ -55,6 +57,10 @@ class MessageController extends Controller implements ContainerAwareInterface
         $thread->photo = $this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($participant);
         $thread->participant = $participant;
         $thread->thread = $StdThread;
+        $em = $this->getDoctrine()->getManager();
+        $StdThread->setIsReadByParticipant($this->getUser(), $StdThread->isReadByParticipant($this->getUser()));
+        $em->persist($StdThread);
+        $em->flush();
         return $this->render('MessageBundle:Message:threadPopup.html.twig', array(
             'thr' => $thread,
             'online' => $this->getUser(),
@@ -62,59 +68,38 @@ class MessageController extends Controller implements ContainerAwareInterface
     }
 
     /**
-     * Displays the authenticated participant messages sent.
-     *
-     * @return Response
-     * @throws \Twig\Error\Error
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function sentAction()
-    {
-        $threads = $this->getProvider()->getSentThreads();
-
-        return $this->container->get('templating')->renderResponse('MessageBundle:Message:sent.html.twig', array(
-            'threads' => $threads,
-        ));
-    }
-
-    /**
-     * Displays the authenticated participant deleted threads.
-     *
-     * @return Response
-     * @throws \Twig\Error\Error
-     */
-    public function deletedAction()
-    {
-        $threads = $this->getProvider()->getDeletedThreads();
-
-        return $this->container->get('templating')->renderResponse('MessageBundle:Message:deleted.html.twig', array(
-            'threads' => $threads,
-        ));
-    }
-
-    /**
-     * Displays a thread, also allows to reply to it.
-     *
-     * @param string $threadId the thread id
-     *
-     * @return Response
-     * @throws \Twig\Error\Error
-     */
-    public function threadAction($threadId)
-    {
-        $thread = $this->getProvider()->getThread($threadId);
-        $form = $this->container->get('fos_message.reply_form.factory')->create($thread);
-        $formHandler = $this->container->get('fos_message.reply_form.handler');
-
-        if ($message = $formHandler->process($form)) {
-            return new RedirectResponse($this->container->get('router')->generate('_message_thread_view', array(
-                'threadId' => $message->getThread()->getId(),
-            )));
+    public function sendAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $text = $request->get('text');
+            $thread = $this->getProvider()->getThread($request->get('threadId'));
+            $composer = $this->container->get('fos_message.composer');
+            $message = $composer->reply($thread)->setBody($text)->setSender($this->getUser())->getMessage();
+            $sender = $this->container->get('fos_message.sender');
+            $sender->send($message);
+            $thread->setIsReadByParticipant($this->getUser(), true);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($thread);
+            $em->flush();
+            return new JsonResponse();
         }
+    }
 
-        return $this->container->get('templating')->renderResponse('MessageBundle:Message:thread.html.twig', array(
-            'form' => $form->createView(),
-            'thread' => $thread,
-        ));
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function readThreadAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $thread = $this->getProvider()->getThread($request->get('threadId'));
+            $thread->setIsReadByParticipant($this->getUser(), true);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($thread);
+            $em->flush();
+            return new JsonResponse();
+        }
     }
 
     /**
@@ -138,38 +123,6 @@ class MessageController extends Controller implements ContainerAwareInterface
             'form' => $form->createView(),
             'data' => $form->getData(),
         ));
-    }
-
-    /**
-     * Deletes a thread.
-     *
-     * @param string $threadId the thread id
-     *
-     * @return RedirectResponse
-     */
-    public function deleteAction($threadId)
-    {
-        $thread = $this->getProvider()->getThread($threadId);
-        $this->container->get('fos_message.deleter')->markAsDeleted($thread);
-        $this->container->get('fos_message.thread_manager')->saveThread($thread);
-
-        return new RedirectResponse($this->container->get('router')->generate('_message_inbox'));
-    }
-
-    /**
-     * Undeletes a thread.
-     *
-     * @param string $threadId
-     *
-     * @return RedirectResponse
-     */
-    public function undeleteAction($threadId)
-    {
-        $thread = $this->getProvider()->getThread($threadId);
-        $this->container->get('fos_message.deleter')->markAsUndeleted($thread);
-        $this->container->get('fos_message.thread_manager')->saveThread($thread);
-
-        return new RedirectResponse($this->container->get('router')->generate('_message_inbox'));
     }
 
     /**

@@ -8,14 +8,6 @@
         <default key="_controller">MessageBundle:Message:inbox</default>
     </route>
 
-    <route id="_message_sent" path="/sent">
-        <default key="_controller">MessageBundle:Message:sent</default>
-    </route>
-
-    <route id="_message_deleted" path="/deleted">
-        <default key="_controller">MessageBundle:Message:deleted</default>
-    </route>
-
     <route id="_message_search" path="/search">
         <default key="_controller">MessageBundle:Message:search</default>
     </route>
@@ -24,16 +16,12 @@
         <default key="_controller">MessageBundle:Message:newThread</default>
     </route>
 
-    <route id="_message_thread_delete" path="/{threadId}/delete" methods="POST|DELETE">
-        <default key="_controller">MessageBundle:Message:delete</default>
+    <route id="send_msg" path="/send_msg">
+        <default key="_controller">MessageBundle:Message:send</default>
     </route>
 
-    <route id="_message_thread_undelete" path="/{threadId}/undelete" methods="POST">
-        <default key="_controller">MessageBundle:Message:undelete</default>
-    </route>
-
-    <route id="_message_thread_view" path="/{threadId}">
-        <default key="_controller">MessageBundle:Message:thread</default>
+    <route id="read_thread" path="/read_thread">
+        <default key="_controller">MessageBundle:Message:readThread</default>
     </route>
     
 </routes>

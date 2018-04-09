@@ -20,6 +20,7 @@ use BaseBundle\Repository\PhotoRepository;
 use BaseBundle\Repository\PostReactionRepository;
 use BaseBundle\Repository\PostRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use MatchBundle\Service\MatchCardService;
 
 class PostService
 {
@@ -83,6 +84,7 @@ class PostService
         $posts = $postRepo->getPosts($user);
         $posts = array_merge($posts, $postRepo->findBy(['user' => $user]));
         foreach($posts as $post){
+            $post->setTime(MatchCardService::getTimeDiffString($post->getDate()));
             $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($post->getUser()));
             $post->setType(PostType::Status);
             $post->setReactions($reactRepo->findBy(['postId' => $post->getId()]));
@@ -107,6 +109,7 @@ class PostService
             $post->setId($photo->getId());
             $post->setUser($photo->getUser());
             $post->setType(PostType::Picture);
+            $post->setTime(MatchCardService::getTimeDiffString($photo->getDate()));
             $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($photo->getUser()));
             $post->setDate($photo->getDate());
             $post->setContent('/mysoulmateuploads/images/' . $photo->getUrl());

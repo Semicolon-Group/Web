@@ -6,6 +6,7 @@ use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Thread;
 use BaseBundle\Entity\ThreadMetadata;
 use BaseBundle\Entity\User;
+use MatchBundle\Service\MatchCardService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,6 +42,7 @@ class MessageController extends Controller implements ContainerAwareInterface
             $thread->photo = $this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($participant);
             $thread->participant = $participant;
             $thread->thread = $StdThread;
+            $thread->time = MatchCardService::getTimeDiffString($StdThread->getLastMessage()->getCreatedAt());
             $threads [] = $thread;
         }
 

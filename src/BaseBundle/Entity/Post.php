@@ -76,6 +76,27 @@ class Post
     private $comments;
 
     /**
+     * @var string
+     */
+    private $time;
+
+    /**
+     * @return string
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param string $time
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
+
+    /**
      * Get id
      *
      * @return integer

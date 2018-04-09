@@ -123,7 +123,7 @@
                                 </div>
                                 <div class="media-body">
                                     <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
-                                    <p>{{ post.date | date('d-m-Y') }}</p><br>
+                                    <p>{{ post.time }}</p><br>
                                     {% if post.type == StatusType %}
                                         <p id="{{ post.id }}">{{ post.content | raw }}</p>
                                     {% elseif post.type == PictureType %}

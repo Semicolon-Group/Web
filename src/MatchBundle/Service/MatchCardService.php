@@ -165,11 +165,50 @@ class MatchCardService
      * @return \stdClass
      */
     static function getTimeDiff($date){
+        date_default_timezone_set('Europe/Paris');
         $diff = new \stdClass();
         $diff->year = $date->diff(new DateTime('now'))->y;
         $diff->month = $date->diff(new DateTime('now'))->m;
         $diff->day = $date->diff(new DateTime('now'))->d;
         $diff->week = $diff->day / 7;
+        $diff->minute = $date->diff(new DateTime('now'))->i;
+        $diff->second = $date->diff(new DateTime('now'))->s;
+        $diff->hour = $date->diff(new DateTime('now'))->h;
         return $diff;
+    }
+
+    /**
+     * @param DateTime $date
+     * @return string
+     */
+    static function getTimeDiffString($date){
+        $diff = MatchCardService::getTimeDiff($date);
+        if($diff->year == 1)
+            return "1 year ago";
+        if($diff->year > 1)
+            return floor($diff->year) . " years ago";
+        if($diff->month == 1)
+            return "1 month ago";
+        if($diff->month < 12 && floor($diff->month) > 0)
+            return floor($diff->month) . " months ago";
+        if($diff->week == 1)
+            return "1 week ago";
+        if($diff->week < 4 && floor($diff->week) > 0)
+            return floor($diff->week) . " weeks ago";
+        if($diff->day == 1)
+            return "1 day ago";
+        if($diff->day < 7 && floor($diff->day) > 0)
+            return floor($diff->day) . " days ago";
+        if($diff->hour == 1)
+            return "1 hour ago";
+        if($diff->hour < 24 && floor($diff->hour) > 0)
+            return floor($diff->hour) . " hours ago";
+        if($diff->minute == 1)
+            return "1 minute ago";
+        if($diff->minute < 60 && floor($diff->minute) > 0)
+            return $diff->minute . " minutes ago";
+        if($diff->second == 1)
+            return "1 second ago";
+        return $diff->second . " seconds ago";
     }
 }

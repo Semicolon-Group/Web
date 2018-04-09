@@ -16,7 +16,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         if (($this->container->get('security.authorization_checker')->isGranted('ROLE_USER')))
-            return $this->redirectToRoute('news_feed');
+            return $this->redirectToRoute('member_profile');
         if (($this->container->get('security.authorization_checker')->isGranted('ROLE_BUSINESS')))
             return $this->redirectToRoute('business_home');
         if (($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')))

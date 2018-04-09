@@ -8,140 +8,599 @@
 
 {% block banner_title %}Experiences{% endblock %}
 
-
+{% block stylesheets %}
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+    <style>
+        .pac-container {
+            z-index: 10000 !important;
+        }
+    </style>
+{% endblock %}
 {% block body %}
-    <section class="blog_grid_area author_posts">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9">
-                    <div class="author_posts_inners">
-                        <ul class="nav navbar-nav">
-                            <li><a href="#">Author</a></li>
-                            <li><a href="#">Posts</a></li>
-                        </ul>
-                        <div class="media">
-                            <div class="media-left">
-                                <img src="{{ asset('member_assets/') }}img/members/w-members/w-m-5.png" alt="">
-                                <h3>Dx Davis</h3>
-                            </div>
-                            <div class="media-body">
-                                <h4>Nov 2, 2016 at 11:16 am</h4>
-                                <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure.</p>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <img src="{{ asset('member_assets/') }}img/members/w-members/w-m-6.png" alt="">
-                                <h3>Lena Doe</h3>
-                            </div>
-                            <div class="media-body">
-                                <h4>Nov 2, 2016 at 11:16 am</h4>
-                                <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure.</p>
+    <div id="photo-display" class="modal fade centered-modal" role="dialog">
+        <div class="modal-dialog" style="width: 70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Photo</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row card-container" style="width: 100%;">
+                        <div class="col-md-12">
+                            <div class="card horizontal" style=" height: 70vh;">
+                                <div class="card-stacked" style="height: 100%;">
+                                    <div class="card-content" style="width: 100%; max-height: 90%;">
+                                        <img data-id="0" style="max-width: 100%; max-height: 100%;" src="" id="img-canvas"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="right_sidebar_area">
-                        <aside class="s_widget search_widget">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search Here">
-                                <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                    </span>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="experience-modal" class="modal fade centered-modal" role="dialog" style="margin-top: 10vh;">
+        <div class="modal-dialog" style="width: 70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Experience</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row card-container" style="width: 100%;">
+                        <div class="col-md-12">
+                            <div class="card horizontal" style="">
+                                <div class="card-stacked">
+                                    <form id="experience_form" action="add">
+                                        <div class="card-content" style="max-height: 100%;">
+                                            <div class="row"  style="height: 100%; max-height: 100%;">
+                                                <div class="col-md-8 col-md-offset-2">
+                                                    <div class="form-group" style="width: 100%;">
+                                                        <label for="place_name" style="display: inline-block;">Place name:</label>
+                                                        <input id="place_name" class="form-control" placeholder="Place name" required/>
+                                                    </div>
+                                                    <div class="form-group" style="width: 100%;">
+                                                        <label style="display: inline-block;">Address:</label>
+                                                        <div>
+                                                            <input id="city" class="form-control" style="display: inline-block; width: 30%;" placeholder="City" required/>
+                                                            <input id="country" class="form-control" style="display: inline-block; width: 25%; margin-left: 10%;" placeholder="Country" required readonly/>
+                                                            <button type="button" class="btn btn-default btn-sm" style="display: inline-block; width: 15%; margin-left: 5%;" id="locate"><span class="glyphicon glyphicon-screenshot"></span> Locate me</button>
+                                                            <input id="lat" class="hide"/>
+                                                            <input id="lng" class="hide"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="width: 100%; margin-left: 0px;">
+                                                        <div class=''>
+                                                            <div class="form-group" >
+                                                                <label for="date">Date of visit:</label>
+                                                                <div class='input-group date' id='datetimepicker1'>
+                                                                    <input id="date" type='text' class="form-control" required/>
+                                                                    <span class="input-group-addon">
+                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" style="width: 100%;">
+                                                        <label for="content" style="display: inline-block;">Content:</label>
+                                                        <textarea id="content" class="form-control textarea" placeholder="Describe your experience..." required></textarea>
+                                                    </div>
+                                                    <div id="photo_uploader" class="form-group" style="width: 100%;">
+                                                        <label for="photo_url" style="display: inline-block;">Photo:</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-btn">
+                                                                <span class="btn btn-primary btn-file">
+                                                                    Browse&hellip;
+                                                                    <input id="basebundle_experience_imageFile_file" name="basebundle_experience[imageFile][file]" required="required" type="file">
+                                                                </span>
+                                                            </span>
+                                                            <input id="url_display" type="text" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-action">
+                                            <div class="row">
+                                                <button id="experience-add-btn" type="submit" style="float: right;" class="btn btn-default">Confirm</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </aside>
-                        <aside class="s_widget recent_post_widget">
-                            <div class="s_title">
-                                <h4>Members</h4>
-                                <img src="{{ asset('member_assets/') }}img/widget-title-border.png" alt="">
-                            </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-1.png" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Maria Doe</h4>
-                                    <a href="#">Active 16 hours ago</a>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-2.png" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Alex Jones</h4>
-                                    <a href="#">Active 16 hours ago</a>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-3.png" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Nancy Martin</h4>
-                                    <a href="#">Active 16 hours ago</a>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/') }}img/members/w-members/w-m-4.png" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Kavin Smith</h4>
-                                    <a href="#">Active 16 hours ago</a>
-                                </div>
-                            </div>
-                        </aside>
-                        <aside class="s_widget group_widget">
-                            <div class="s_title">
-                                <h4>Groups</h4>
-                                <img src="{{ asset('member_assets/') }}img/widget-title-border.png" alt="">
-                            </div>
-                            <div class="group_list">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <img class="img-circle" src="{{ asset('member_assets/') }}img/photo/group/group-1.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="blog_grid_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="members_profile_inners">
+                        <ul class="nav nav-tabs profile_menu" role="tablist" style="text-align: center; border: none; border-bottom: 1px solid #ddd;">
+                            <li role="presentation" class="{% if place_id is empty %}active{% endif %} col-md-6">
+                                <a href="#activity" aria-controls="activity" role="tab" data-toggle="tab"><h1>Others experiences</h1></a>
+                            </li>
+                            <li role="presentation" class="{% if place_id is not empty %}active{% endif %} col-md-6">
+                                <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><h1>My experiences</h1></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane {% if place_id is empty %}active{% endif %} fade {% if place_id is empty %}in{% endif %}" id="activity">
+                                <div class="profile_list">
+                                    <div class="author_posts_inners">
+                                        {% if others_experiences is empty %}
+                                            <h1 class='pressed'>You still don't have any experience :(</h1>
+                                        {% endif %}
+                                        {% for other_experience in others_experiences %}
+                                            <div class="row card-container margins" style="width: 100%;">
+                                                <div class="col-md-12">
+                                                    <div class="card horizontal">
+                                                        <div class="card-stacked">
+                                                            <div class="card-content">
+                                                                <div class="media" style="border-bottom: none;">
+                                                                    <div class="media-left" style="text-align: center; width: 150px;">
+                                                                        <div style="height: 100px; overflow: hidden; border-radius: 50%; border: solid 4px lightgrey;">
+                                                                            <img class=" photo" style="width: 100%; height: 100%;" src='
+                                                                                {% if other_experience.user.profilePhoto is null %}
+                                                                                    {{ asset('member_assets/img/member.jpg') }}
+                                                                                {% else %}
+                                                                                    {{ asset(vich_uploader_asset(other_experience.user.profilePhoto, 'imageFile',  'BaseBundle\\Entity\\Photo')) }}
+                                                                                {% endif %}
+                                                                            ' alt="">
+                                                                        </div>
+                                                                        <h3 style="width: 100%;">{{ other_experience.user.firstname|capitalize }} {{ other_experience.user.lastname|capitalize }}</h3>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <h4>{{ other_experience.placeName }}<span> - {{ other_experience.address.city }}, {{ other_experience.address.country }}</span></h4>
+                                                                        <h5 style="margin-left: 2%;"></h5><br/>
+                                                                        <p>{{ other_experience.content }}</p><br/>
+                                                                        {% if vich_uploader_asset(other_experience, 'imageFile',  'BaseBundle\\Entity\\Experience') is not empty %}
+                                                                        <img style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="{{ asset(vich_uploader_asset(other_experience, 'imageFile',  'BaseBundle\\Entity\\Experience')) }}"/>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-action">
+                                                                <span><b>Since: </b>{{ other_experience.date|date('F j, Y g:i A') }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                    <div class="media-body">
-                                        <h4>VeroDate Lovers</h4>
-                                    </div>
                                 </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <img class="img-circle" src="{{ asset('member_assets/') }}img/photo/group/group-2.png" alt="">
+                            </div>
+                            <div role="tabpanel" class="tab-pane  {% if place_id is not empty %}active{% endif %} fade {% if place_id is not empty %}in{% endif %}" id="profile">
+                                <div class="profile_list">
+                                    <div class="row card-container margins" style="width: 100%;">
+                                        <div class="col-md-12">
+                                            <div id='experience-add' class="card horizontal clickable">
+                                                <div class="card-stacked">
+                                                    <div class="card-content">
+                                                        <h1 style="text-align: center" class="hoverable"><span class="glyphicon glyphicon-plus-sign"></span></h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="media-body">
-                                        <h4>VeroDate Lovers</h4>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <img class="img-circle" src="{{ asset('member_assets/') }}img/photo/group/group-3.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>VeroDate Lovers</h4>
+                                    <div id="my_experiences">
+                                        {% if my_experiences is empty %}
+                                            <h1 class='pressed'>You still don't have any experience :(</h1>
+                                        {% endif %}
+                                        {% for my_experience in my_experiences %}
+                                            <div class="row card-container margins" style="width: 100%;">
+                                                <div class="col-md-12">
+                                                    <div class="card horizontal">
+                                                        <div class="card-stacked">
+                                                            <div class="card-content">
+                                                                <div class="media" style="background-color: white;">
+                                                                    <div style="float: right;">
+                                                                        <span data-id="{{ my_experience.id }}" class="glyphicon glyphicon-remove hoverable delete" style="margin-left: 20px; float: right; font-size: 20px;"></span>
+                                                                        <span data-id="{{ my_experience.id }}" class="glyphicon glyphicon-edit hoverable edit" style="float: right; font-size: 20px;"></span>
+                                                                    </div>
+                                                                    <div class="media-body">
+                                                                        <h4>{{ my_experience.placeName }}<span> - {{ my_experience.address.city }}, {{ my_experience.address.country }}</span></h4>
+                                                                        <h5 style="margin-left: 2%;"></h5><br/>
+                                                                        <p>{{ my_experience.content }}</p><br/>
+                                                                        {% if vich_uploader_asset(my_experience, 'imageFile',  'BaseBundle\\Entity\\Experience') is not empty %}
+                                                                        <img style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="{{ asset(vich_uploader_asset(my_experience, 'imageFile',  'BaseBundle\\Entity\\Experience')) }}"/>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-action">
+                                                                <span><b>Since: </b>{{ my_experience.date|date('F j, Y g:i A') }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
-                        </aside>
-                        <aside class="s_widget replies_widget">
-                            <div class="s_title">
-                                <h4>Recent Replies</h4>
-                                <img src="{{ asset('member_assets/') }}img/widget-title-border.png" alt="">
-                            </div>
-                            <ul>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Lorem ipsum dolor sit amet.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Ut sed massa eget tellus.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Integer non odio ullamcorper.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Vestibulum facilisis lacus in nunc.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i> Morbi euismod turpis finibus.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Nunc quis sapien a nunc luctus</a></li>
-                            </ul>
-                        </aside>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <div id="maps"></div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
+    <script>
+        $(document).on('change', '.btn-file :file', function() {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        $(document).ready( function() {
+            $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if( input.length ) {
+                    input.val(log);
+                } else {
+                    if( log ) alert(log);
+                }
+
+            });
+        });
+
+        $(function () {
+            $('#datetimepicker1').datetimepicker({
+                format: 'LLL',
+                maxDate: moment(),
+                minDate: moment().subtract(3, 'year')
+            });
+            activateAutoComplete();
+            var placeId = "{{ place_id }}";
+            if(placeId != ""){
+                showAddModal(placeId);
+            }
+        });
+
+        function showAddModal(placeId) {
+            getPlaceDetails(placeId);
+        }
+
+        function getPlaceDetails(placeId) {
+            var defLatLng = new google.maps.LatLng(0, 0);
+            var mapOptions = {
+                center: defLatLng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                disableDefaultUI: true,
+                panControl: false
+            };
+            map = new google.maps.Map(document.getElementById("maps"), mapOptions);
+            var service = new google.maps.places.PlacesService(map);
+
+            service.getDetails({
+                placeId: placeId
+            }, function(place, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    var components={};
+                    jQuery.each(place.address_components, function(k,v1) {jQuery.each(v1.types, function(k2, v2){components[v2]=v1.long_name});});
+                    $('#place_name').val(place.name);
+                    $('#lat').val(place.geometry.location.lat());
+                    $('#lng').val(place.geometry.location.lng());
+                    $('#city').val(components.locality);
+                    $('#country').val(components.country);
+                    $('#experience-modal').modal('show');
+                }
+            });
+        }
+
+        $('#city').on('input', function () {
+            $('#country').val('');
+        });
+
+        $('#city').blur(function () {
+            if($('#city').val() != '' && $('#country').val() == ''){
+                document.getElementById("city").setCustomValidity("Please provide a valid address or let us get your location!");
+            }else{
+                document.getElementById("city").setCustomValidity("");
+            }
+        });
+
+        $('#experience-add-btn').click(function () {
+
+        })
+
+        function activateAutoComplete() {
+            var input = document.getElementById('city');
+            var options = {
+                types: ['(cities)'],
+                componentRestrictions: {country: 'tn'}
+            };
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                $('#lat').val(place.geometry.location.lat());
+                $('#lng').val(place.geometry.location.lng());
+                var results = place.formatted_address.split(',');
+                var country = results[results.length-1].trim();
+                var city = place.formatted_address.replace(', '+country, '');
+                $('#city').val(city);
+                $('#country').val(country);
+                $('#city').blur();
+            });
+        }
+
+        $('#locate').click(function () {
+            locate();
+        });
+
+        function locate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser, please provide your address");
+            }
+        }
+
+        function showPosition(position) {
+            $('#lat').val(position.coords.latitude);
+            $('#lng').val(position.coords.longitude);
+            document.getElementById("city").setCustomValidity("");
+            geocodeLatLng(position.coords.latitude, position.coords.longitude);
+        }
+
+        function geocodeLatLng(lt, lg) {
+            var geocoder = new google.maps.Geocoder;
+            var latlng = {lat: lt, lng: lg};
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        component = results[0].formatted_address.split(',');
+                        var country = component[component.length-1].trim();
+                        $('#country').val(country);
+                        $('#city').val(results[0].formatted_address.replace(', '+country,''));
+                    } else {
+                        window.alert('No results found');
+                    }
+                } else {
+                    window.alert('Geocoder failed due to: ' + status);
+                }
+            });
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Please provide your address");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location unavailable, , please provide your address");
+                    break;
+                case error.TIMEOUT:
+                    alert("Location request timed out, please provide your address");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error has occurred, please provide your address");
+                    break;
+            }
+        }
+
+        $('#experience-add').click(function () {
+            prepareForAdd();
+        });
+
+        $('.photo').click(function () {
+            displayPhoto(this);
+        });
+
+        function displayPhoto(node) {
+            $('#img-canvas').attr('src', $(node).attr('src'));
+            $('#photo-display').modal('show');
+        }
+
+        $('.delete').click(function () {
+            deleteExperience(this);
+        });
+
+        $('.edit').click(function () {
+            prepareForEdit(this);
+        });
+
+        $('#experience_form').submit(function (event) {
+            event.preventDefault();
+            if($(this).attr('action') === 'edit'){
+                editExperience();
+            }else{
+                addExperience();
+            }
+        });
+
+        function editExperience() {
+            var content = $('#content').val();
+            var placeName = $('#place_name').val();
+            var country = $('#country').val();
+            var city = $('#city').val();
+            var lat = $('#lat').val();
+            var lng = $('#lng').val();
+            var date = $('#datetimepicker1').data('date');
+            var expId = document.getElementById('experience-add-btn').dataset.id;
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('edit_experience') }}",
+                data: {
+                    id : expId,
+                    content: content,
+                    placeName: placeName,
+                    country: country,
+                    city: city,
+                    lat: lat,
+                    lng: lng,
+                    date: date
+                },
+                success: function (data) {
+                    $('#experience-modal').modal('hide');
+                    updateView();
+                }
+            });
+        }
+
+        function addExperience() {
+            var date = moment.utc($("#datetimepicker1").data('date'), 'LLL').toDate();
+            var form = new FormData();
+            form.append('basebundle_experience[placeName]', $('#place_name').val());
+            form.append('basebundle_experience[imageFile][file]', document.getElementById('basebundle_experience_imageFile_file').files[0]);
+            form.append('basebundle_experience[content]', $('#content').val());
+            form.append('basebundle_experience[date][date][month]', moment.utc(date).format('M'));
+            form.append('basebundle_experience[date][date][day]', moment.utc(date).format('D'));
+            form.append('basebundle_experience[date][date][year]', moment.utc(date).format('YYYY'));
+            form.append('basebundle_experience[date][time][hour]', moment.utc(date).format('H'));
+            form.append('basebundle_experience[date][time][minute]', moment.utc(date).format('m'));
+            form.append('basebundle_experience[address][country]', $('#country').val());
+            form.append('basebundle_experience[address][city]', $('#city').val());
+            form.append('basebundle_experience[address][latitude]', $('#lat').val());
+            form.append('basebundle_experience[address][longitude]', $('#lng').val());
+            form.append('basebundle_experience[user]', 0);
+
+            console.log(moment.utc(date).format('D'));
+            console.log(moment.utc(date).format('M'));
+            console.log(moment.utc(date).format('YYYY'));
+            console.log(moment.utc(date).format('H'));
+            console.log(moment.utc(date).format('m'));
+            //return;
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('add_experience') }}",
+                data: form,
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function (data) {
+                    $('#experience-modal').modal('hide');
+                    updateView();
+                }
+            });
+        }
+
+        function deleteExperience(node) {
+            if(confirm('Do you want to delete this experience?')){
+                var expId = $(node).data('id');
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('remove_experience') }}",
+                    data: { id : expId},
+                    success: function (data) {
+                        updateView();
+                    }
+                });
+            }
+        }
+
+        function prepareForEdit(node) {
+            var expId = $(node).data('id');
+            $.ajax({
+                type: "POST",
+                url: "{{ path('get_experience') }}",
+                data: { id : expId},
+                success: function (data) {
+                    document.getElementById('experience-add-btn').dataset.id = expId;
+                    $('#place_name').val(data.placeName);
+                    $('#city').val(data.address.city);
+                    $('#country').val(data.address.country);
+                    $('#lat').val(data.address.latitude);
+                    $('#lng').val(data.address.longitude);
+                    $('#content').val(data.content);
+                    $('#basebundle_photo_imageFile_file').val('');
+                    $('#photo_uploader').hide();
+                    $('#url_display').val('');
+                    $('#experience_form').attr('action', 'edit');
+                    var dateObj = new Date(data.date.timestamp*1000);
+                    dateObj.setTime( dateObj.getTime() + new Date().getTimezoneOffset()*60*1000 );
+                    $('#datetimepicker1').data("DateTimePicker").date(moment(dateObj).format('LLL'));
+                    $('#experience-modal').modal('show');
+                }
+            });
+        }
+
+        function prepareForAdd() {
+            document.getElementById('experience-add-btn').dataset.id = '';
+            $('#place_name').val('');
+            $('#city').val('');
+            $('#country').val('');
+            $('#lat').val('');
+            $('#lng').val('');
+            $('#content').val('');
+            $('#basebundle_photo_imageFile_file').val('');
+            $('#photo_uploader').show();
+            $('#url_display').val('');
+            $('#experience_form').attr('action', 'add');
+            var dateObj = new Date();
+            $('#datetimepicker1').data("DateTimePicker").date(moment(dateObj).format('LLL'));
+            $('#experience-modal').modal('show');
+        }
+
+        function updateView() {
+            $.ajax({
+                type: "POST",
+                url: "{{ path('get_my_experiences') }}",
+                success: function (data) {
+                    if(data.length === undefined){
+                        $('#my_experiences').html("<h1 class='pressed'>You still don't have any experience :(</h1>");
+                    }else{
+                        $('#my_experiences').html('');
+                        $.each(data, function (k, el) {
+                            var dateObj = new Date(el.date.timestamp*1000);
+                            dateObj.setTime( dateObj.getTime() + new Date().getTimezoneOffset()*60*1000 );
+                            var photo ="";
+                            if(el.image!==""){
+                                photo = "{{ asset('uploads/images/') }}"+el.image;
+                                photo='<img onclick="displayPhoto(this);" style="margin-left: 50%; transform: translate(-50%);" class="img-fluid img-thumbnail rounded photo hoverable" src="'+photo+'"/>'
+                            }
+                           $('#my_experiences').append('' +
+                                '<div class="row card-container margins" style="width: 100%;">' +
+                                '   <div class="col-md-12">' +
+                                '       <div class="card horizontal">' +
+                                '           <div class="card-stacked">' +
+                                '               <div class="card-content">' +
+                                '                   <div class="media" style="background-color: white;">' +
+                                '                       <div style="float: right;">' +
+                                '                           <span onclick="deleteExperience(this);" data-id="'+el.id+'" class="glyphicon glyphicon-remove hoverable delete" style="margin-left: 20px; float: right; font-size: 20px;"></span>' +
+                                '                           <span onclick="prepareForEdit(this);" data-id="'+el.id+'" class="glyphicon glyphicon-edit hoverable edit" style="float: right; font-size: 20px;"></span>' +
+                                '                       </div>' +
+                                '                       <div class="media-body">' +
+                                '                           <h4>'+el.placeName+'<span> - '+el.address.city+', '+el.address.country+'</span></h4>' +
+                                '                           <h5 style="margin-left: 2%;"></h5><br/>' +
+                                '                           <p>'+el.content+'</p><br/>' +
+                                '                           '+photo+
+                                '                       </div>' +
+                                '                   </div>' +
+                                '               </div>' +
+                                '               <div class="card-action">' +
+                                '                   <span><b>Since: </b>'+moment(dateObj.toString()).format('LLL')+'</span>' +
+                                '               </div>' +
+                                '           </div>' +
+                                '       </div>' +
+                                '   </div>' +
+                                '</div>' +
+                           '');
+                        });
+                    }
+                }
+            });
+        }
+    </script>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace BaseBundle\Entity;
 
+use BaseBundle\Entity\Choice as Choice;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,6 +36,47 @@ class Question
      */
     private $topic;
 
+    /**
+     * @var Choice
+     */
+    private $choices;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->choices = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add choice
+     *
+     * @param Choice $choice
+     *
+     * @return void
+     */
+    public function addChoice($choice){
+        $this->choices[] = $choice;
+    }
+
+    /**
+     * Remove choice
+     *
+     * @param choice $choice
+     */
+    public function removeChoice($choice){
+        $this->choices->removeElement($choice);
+    }
+
+    /**
+     * Get choices
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChoices(){
+        return $this->choices;
+    }
 
 
     /**

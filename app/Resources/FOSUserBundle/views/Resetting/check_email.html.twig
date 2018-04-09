@@ -1,0 +1,31 @@
+<html>
+<head>
+    <title>Check Email</title>
+    <link rel="icon" href="{{ asset('member_assets/img/fav-icon.png') }}" type="image/x-icon" />
+    <link href="{{ asset('member_assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+    {% trans_default_domain 'FOSUserBundle' %}
+</head>
+<body>
+<div class="row" style="margin: unset; height: 100%; display: flex; align-items: center; background-image: url({{ asset('member_assets/img/back_pattern.png') }}); background-repeat: repeat;">
+    <div class="col-sm-offset-3 col-md-6">
+        <div class="card horizontal">
+            <div class="card-stacked">
+                <div class="card-content">
+                    <span class="card-title">Check Mail</span>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <p class="text-justify" style="font-size: medium">
+                                {{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime})|nl2br }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

@@ -53,7 +53,7 @@ class DefaultController extends Controller
     public function getQuestionsAction(Request $request){
         if($request->isXmlHttpRequest()){
             $normalizer = new ObjectNormalizer();
-            $normalizer->setCircularReferenceLimit(2);
+            $normalizer->setCircularReferenceLimit(1);
             // Add Circular reference handler
             $normalizer->setCircularReferenceHandler(function ($object) {
                 return $object->getId();

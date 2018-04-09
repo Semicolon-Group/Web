@@ -40,7 +40,13 @@ class PhotoController extends Controller
      */
     public function getPhotosAction(Request $request){
         if($request->isXmlHttpRequest()){
-            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(2);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $photos = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Regular));
             $data = $serializer->normalize($photos);
@@ -113,7 +119,13 @@ class PhotoController extends Controller
      */
     public function getCoverPhotoAction(Request $request){
         if($request->isXmlHttpRequest()){
-            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(2);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $coverList = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Cover));
             if(sizeof($coverList)==0){
@@ -131,7 +143,13 @@ class PhotoController extends Controller
      */
     public function getProfilePhotoAction(Request $request){
         if($request->isXmlHttpRequest()){
-            $serializer = new Serializer(array(new ObjectNormalizer()));
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(2);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $profileList = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Profile));
             if(sizeof($profileList)==0){

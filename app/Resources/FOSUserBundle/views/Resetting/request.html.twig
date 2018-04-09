@@ -1,6 +1,11 @@
 <html>
     <head>
         <title>Resetting Password</title>
+        {% if app.user %}
+            <script>
+                window.location = "{{ path('member_profile') }}";
+            </script>
+        {% endif %}
         <link rel="icon" href="{{ asset('member_assets/img/fav-icon.png') }}" type="image/x-icon" />
         <link href="{{ asset('member_assets/css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">

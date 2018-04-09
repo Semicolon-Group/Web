@@ -3,6 +3,15 @@
     
     <!-- Mirrored from demo.verodate.com/html/verodate/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 24 Jan 2018 12:29:26 GMT -->
     <head>
+        {% if is_granted("ROLE_ADMIN") %}
+            <script>
+                window.location = "{{ path('admin_home') }}";
+            </script>
+            {% elseif is_granted("ROLE_BUSINESS") %}
+            <script>
+                window.location = "{{ path('business_home') }}";
+            </script>
+        {% endif %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -213,8 +222,6 @@
             </div>
         </footer>
         <!--================End Footer Area =================-->
-
-
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="{{ asset('member_assets/js/jquery-2.1.4.min.js') }}"></script>

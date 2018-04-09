@@ -27,11 +27,6 @@ class AnswerType extends AbstractType
                 'choice_label' => 'question',
                 'multiple' => false
             ])
-            ->add('user', EntityType::class, [
-                'class' => 'BaseBundle\Entity\User',
-                'choice_label' => 'firstname',
-                'multiple' => false
-            ])
             ->add('choice', EntityType::class, [
                 'class' => 'BaseBundle\Entity\Choice',
                 'choice_label' => 'choice',

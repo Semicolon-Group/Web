@@ -169,7 +169,7 @@
                                         <!-- Message -->
                                         {% block messages %}
                                             <a href="#">
-                                                <div class="user-img"> <img src="images/users/5.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
+                                                <div class="user-img"> <img src="{{ asset('business_assets/') }}images/users/5.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
                                                 <div class="mail-contnet">
                                                     <h5>Michael Qin</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:30 AM</span>
                                                 </div>
@@ -186,13 +186,11 @@
                     <!-- End Messages -->
                     <!-- Profile -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% block profile_pic %}{% endblock %}" alt="user" class="profile-pic" /></a>
+                        <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% block profile_pic %}{% endblock %}" alt="{{ app.user.username }}" class="profile-pic" /></a>
                         <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                             <ul class="dropdown-user">
-                                <li><a href="#"><i class="ti-user"></i> Profile</a></li>
-                                <li><a href="#"><i class="ti-wallet"></i> Feedback</a></li>
-                                <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
-                                <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                                <li><a href="{{ path('fos_user_change_password') }}"><i class="ti-settings"></i>ChangePassword</a></li>
+                                <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
                         </div>
                     </li>
@@ -255,7 +253,7 @@
         </div>
         <!-- End Bread crumb -->
         <!-- Container fluid  -->
-        <div class="container-fluid">
+        <div class="container-fluid" style="height: 77vh;">
             {% block body %}
             {% endblock %}
             <!-- End PAge Content -->

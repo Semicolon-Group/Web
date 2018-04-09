@@ -20,6 +20,7 @@ imports:
     - { resource: "@BusinessFOSSecurityBundle/Resources/config/services.yml" }
     - { resource: "@AdminFOSSecurityBundle/Resources/config/services.yml" }
     - { resource: "@MessageBundle/Resources/config/services.xml" }
+    - { resource: "@AdminQuestionBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -94,9 +95,19 @@ fos_user:
     registration:
            form:
                type: BaseBundle\Form\UserType
+    profile:
+           form:
+               type: BaseBundle\Form\EditUserType
     from_email:
             address: "yourapp@yourapp.com"
             sender_name: "Demo String"
+vich_uploader:
+    db_driver: orm
+    mappings:
+        photos:
+            uri_prefix: uploads/images
+            upload_destination: '%kernel.root_dir%/../web/uploads/images/'
+            namer: vich_uploader.namer_uniqid
 fos_message:
     db_driver: orm
     thread_class: BaseBundle\Entity\Thread

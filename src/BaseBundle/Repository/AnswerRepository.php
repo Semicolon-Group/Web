@@ -10,6 +10,7 @@ namespace BaseBundle\Repository;
 
 
 use BaseBundle\Entity\User;
+use BaseBundle\Entity\Enumerations\Topic;
 use Doctrine\ORM\EntityRepository;
 
 class AnswerRepository extends EntityRepository
@@ -32,5 +33,14 @@ class AnswerRepository extends EntityRepository
             ->setParameter('a', $a)
             ->setParameter('b', $b)
             ->getResult();
+    }
+    public function getMandatoryAnswers($user){
+        $query = $this->getEntityManager()
+            ->createQuery("
+                SELECT a 
+                FROM BaseBundle:Answer a INNER JOIN a.question q
+                WHERE a.user = :user AND q.topic = :topic")
+            ->setParameter('user', $user)->setParameter('topic', Topic::Mandatory);
+        return $query->getResult();
     }
 }

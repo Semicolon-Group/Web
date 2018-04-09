@@ -247,6 +247,7 @@ class User extends BaseUser implements ParticipantInterface
     public function __construct()
     {
         $this->event = new \Doctrine\Common\Collections\ArrayCollection();
+        parent::__construct();
     }
 
     /**
@@ -987,4 +988,30 @@ class User extends BaseUser implements ParticipantInterface
         $age = $this->birthDate->diff($curDate)->y;
         return $age;
     }
+
+    /**
+     * @var \BaseBundle\Entity\Photo
+     */
+    private $profilePhoto;
+
+    /**
+     * Set profilePhoto
+     *
+     * @param \BaseBundle\Entity\Photo $photo
+     *
+     * @return void
+     */
+    public function setProfilePhoto($photo){
+        $this->profilePhoto = $photo;
+    }
+
+    /**
+     * Get profilePhoto
+     *
+     * @return \BaseBundle\Entity\Photo
+     */
+    public function getProfilePhoto(){
+        return $this->profilePhoto;
+    }
+
 }

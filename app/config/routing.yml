@@ -1,3 +1,8 @@
+admin_question:
+    resource: "@AdminQuestionBundle/Controller/"
+    type:     annotation
+    prefix:   /admin/questions
+
 admin_chart:
     resource: "@AdminChartBundle/Controller/"
     type:     annotation
@@ -65,7 +70,7 @@ news_feed:
     prefix:   /member/home
 
 member:
-    resource: "@MemberBundle/Controller/MemberController.php"
+    resource: "@MemberBundle/Controller/"
     type:     annotation
     prefix:   /member
 
@@ -83,11 +88,12 @@ fos_user_security:
 
 fos_user_profile:
     resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
-    prefix: /profile
+    prefix: /member
 
 fos_user_register:
     resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
-    prefix: /register
+    prefix: /register/{type}
+    defaults: {type: 1}
 
 fos_user_resetting:
     resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
@@ -96,27 +102,3 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
-
-business_login:
-    path:  /business/login
-    defaults: { _controller: BusinessFOSSecurityBundle:Security:login }
-
-business_login_check:
-    path:  /business/login_check
-    defaults: { _controller: FOSUserBundle:Security:check }
-
-business_logout:
-    path:  /business/logout
-    defaults: { _controller: FOSUserBundle:Security:logout }
-
-admin_login:
-    path:  /admin/login
-    defaults: { _controller: AdminFOSSecurityBundle:Security:login }
-
-admin_login_check:
-    path:  /admin/login_check
-    defaults: { _controller: FOSUserBundle:Security:check }
-
-admin_logout:
-    path:  /admin/logout
-    defaults: { _controller: FOSUserBundle:Security:logout }

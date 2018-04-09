@@ -4,6 +4,50 @@
 
 {% block stylesheets %}
     <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
+    <style>
+        .loader1 {
+            border: 10px solid #cce6f4; /* Light grey */
+            border-top: 10px solid transparent; /* Blue */
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            animation: spin 2s linear infinite;
+            position: absolute;
+        }
+        .loader2 {
+            border: 7px solid #175676; /* Light grey */
+            border-top: 7px solid transparent; /* Blue */
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            animation: spin 1.2s linear infinite;
+            position: absolute;
+        }
+        .loader3 {
+            border: 5px solid #4ba3c3; /* Light grey */
+            border-top: 5px solid transparent; /* Blue */
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            animation: spin 0.8s linear infinite;
+            position: absolute;
+        }
+        .loader4 {
+            border: 5px solid #e14b3b; /* Light grey */
+            border-top: 5px solid transparent; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 0.5s linear infinite;
+            position: absolute;
+        }
+
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 {% endblock %}
 
 {% block banner %}
@@ -64,6 +108,13 @@
 {% endblock %}
 
 {% block body %}
+    <div id="loading-modal" class="modal fade centered-modal" role="dialog" style="display: flex; align-items: center; justify-content: center;">
+        <div class="loader1"></div>
+        <div class="loader2"></div>
+        <div class="loader3"></div>
+        <div class="loader4"></div>
+    </div>
+
     <div id="answer-form" class="modal fade centered-modal" role="dialog" style="margin-top: 10vh;">
         <div class="modal-dialog" style="width: 70%;">
             <div class="modal-content">
@@ -356,17 +407,12 @@
         });
 
         function generateMandatory() {
+            $('#loading-modal').modal('show');
             $.ajax({
                 type: "POST",
                 url: "{{ path('generate_mandatory_answer') }}",
                 success: function (data) {
-                    $('#answer-form').modal({
-                        backdrop: true,
-                        keyboard: true
-                    });
                     if(data.question != undefined){
-                        $('#answer-form').data('bs.modal').options.backdrop = 'static';
-                        $('#answer-form').data('bs.modal').options.keyboard = false;
                         $('#answer-modal-close').hide();
 
                         var topic;
@@ -390,11 +436,14 @@
                             $('#importances').append('<option value="'+el+'">'+k+'</option>');
                         });
                         $('#choice_error').html('');
-                        $("#answer-form").modal('show');
+                        $('#answer-form').modal({
+                            backdrop: 'static',
+                            keyboard: false,
+                        });
+                        $('#answer-form').data('bs.modal').options.backdrop = 'static';
+                        $('#answer-form').data('bs.modal').options.keyboard = false;
+                        $('#loading-modal').modal('hide');
                     }else{
-                        $('#answer-form').data('bs.modal').options.backdrop = true;
-                        $('#answer-form').data('bs.modal').options.keyboard = true;
-                        $('#answer-modal-close').show();
                         generateAnswer();
                     }
                 }
@@ -518,6 +567,7 @@
         }
 
         function generateAnswer() {
+            $('#loading-modal').modal('show');
             $.ajax({
                 type: "POST",
                 url: "{{ path('generate_answer') }}",
@@ -546,7 +596,14 @@
                             $('#importances').append('<option value="'+el+'">'+k+'</option>');
                         });
                         $('#choice_error').html('');
-                        $("#answer-form").modal('show');
+                        $('#loading-modal').modal('hide');
+                        $('#answer-modal-close').show();
+                        $('#answer-form').modal({
+                            backdrop: true,
+                            keyboard: true,
+                        });
+                        $('#answer-form').data('bs.modal').options.backdrop = true;
+                        $('#answer-form').data('bs.modal').options.keyboard = true;
                     }else{
                         $("#answer-form").modal('hide');
                         alert("No more question to answer");

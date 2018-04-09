@@ -3,14 +3,18 @@
 namespace BaseBundle\Form;
 
 use BaseBundle\Entity\Enumerations\BodyType;
+use BaseBundle\Entity\Enumerations\Categorie;
 use BaseBundle\Entity\Enumerations\CivilStatus;
 use BaseBundle\Entity\Enumerations\Gender;
 use BaseBundle\Entity\Enumerations\Importance;
+use BaseBundle\Entity\Enumerations\PriceRange;
 use BaseBundle\Entity\Enumerations\RelationType;
 use BaseBundle\Entity\Enumerations\Religion;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -91,7 +95,21 @@ class UserType extends AbstractType
                 'choices' => RelationType::getEnumAsArray(),
                 'multiple' => true,
                 'expanded' => true)
-            );
+            )
+            ->add('category', ChoiceType::class, array(
+                    'choices' => array('Category' => null) + Categorie::getEnumAsArray(),
+                    'choice_attr' => array(
+                        'Category' => array('selected' => 'selected', 'disabled' => true)
+                    ))
+                )
+            ->add('priceRange', ChoiceType::class, array(
+                    'choices' => array('Price Range' => null) + PriceRange::getEnumAsArray(),
+                    'choice_attr' => array(
+                        'Price Range' => array('selected' => 'selected', 'disabled' => true)
+                    ))
+                )
+            ->add('link')
+            ->add('roles');
     }
 
     public function getParent()

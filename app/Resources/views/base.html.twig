@@ -70,7 +70,7 @@
                 <div class="col-md-6">
                     <div class="registration_form_s">
                         <h4>Registration</h4>
-                        {{ render(url('fos_user_registration_register')) }}
+                        {{ render(url('fos_user_registration_register', {'type': 'member'})) }}
                         <img class="mfp-close" src="{{ asset('member_assets/img/close-btn.png') }}" alt="">
                     </div>
                 </div>

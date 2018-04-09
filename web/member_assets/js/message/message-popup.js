@@ -75,6 +75,7 @@ function send(partId) {
 function readThread(partId) {
     var path = $("#read_thread_path").data('path');
     var DATA =  {'partId':partId};
+    globalVar = partId;
     $.ajax({
         url: path,
         method: 'post',
@@ -154,8 +155,12 @@ function global() {
     }, 500);
 }
 function closeThread(partId) {
+    partId = partId.substr(0, partId.length - 6);
+    if(globalVar != 0 && globalVar != partId)
+        return;
     var path = $("#close_thread_path").data('path');
     var DATA =  {'partId':partId};
+    globalVar = 0;
     $.ajax({
         url: path,
         method: 'post',

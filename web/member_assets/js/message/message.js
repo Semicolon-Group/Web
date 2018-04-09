@@ -11,6 +11,7 @@ function popup(partId) {
 function readThread(partId) {
     var path = $("#read_thread_path").data('path');
     var DATA =  {'partId':partId};
+    globalVar = partId;
     $.ajax({
         url: path,
         method: 'post',

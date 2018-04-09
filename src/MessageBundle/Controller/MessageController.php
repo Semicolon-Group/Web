@@ -148,6 +148,22 @@ class MessageController extends Controller implements ContainerAwareInterface
     }
 
     /**
+     * @return Response
+     */
+    public function messageIconAction(){
+        $threads = $this->getProvider()->getInboxThreads();
+        $nbr = 0;
+        foreach ($threads as $thread){
+            if(!$thread->isReadByParticipant($this->getUser()))
+                $nbr++;
+        }
+        return $this->render('@Message/Message/msg_icon.html.twig',[
+            'nbr' => $nbr
+        ]);
+    }
+
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */

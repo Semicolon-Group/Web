@@ -12,10 +12,6 @@
         <default key="_controller">MessageBundle:Message:search</default>
     </route>
 
-    <route id="_message_thread_new" path="/new">
-        <default key="_controller">MessageBundle:Message:newThread</default>
-    </route>
-
     <route id="send_msg" path="/send_msg">
         <default key="_controller">MessageBundle:Message:send</default>
     </route>
@@ -30,6 +26,10 @@
 
     <route id="close_thread" path="/close_thread">
         <default key="_controller">MessageBundle:Message:closeThread</default>
+    </route>
+
+    <route id="msg_icon" path="/msg_icon">
+        <default key="_controller">MessageBundle:Message:messageIcon</default>
     </route>
     
 </routes>

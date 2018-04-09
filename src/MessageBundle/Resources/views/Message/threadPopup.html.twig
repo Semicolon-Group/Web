@@ -24,3 +24,6 @@
         <button class="btn btn-primary compose-btn" onclick="send({{ thr.participant.id }})">Send</button>
     </div>
 </div>
+{% if type == 'global' %}
+    <div id="global" data-id="{{ thr.participant.id }}" hidden></div>
+{% endif %}

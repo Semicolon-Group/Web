@@ -1,7 +1,9 @@
 var time;
-var updatingId = 0;
+var blinkTime = 0;
+var globalVar = 0;
 $(function () {
     scrollDownAll();
+    global();
 });
 function closePopup(partId) {
     var popup = $("#" + partId);
@@ -9,6 +11,8 @@ function closePopup(partId) {
     popup.css('height', '0');
     popup.css('padding', '0');
     stopUpdate();
+    stopBlink();
+    closeThread(partId);
     setTimeout(function () {
         popup.show();
     }, 500);
@@ -25,10 +29,12 @@ function miniPopup(event, partId) {
         }, 500);
     }
     else{
+        stopBlink();
         $("#" + partId + "-popup").css('height', '430px');
         setTimeout(function () {
             $("#" + partId + "-popup-mini").show();
         }, 500);
+        readThread(partId);
     }
 }
 function scrollDown(partId) {
@@ -96,18 +102,8 @@ function append(partId, text) {
         "<div class=\"message-text text-yours\">" + text + "</div>" +
         "</li>"
     );
-}/*
-function refresh() {
-    var list = document.getElementsByClassName('popup');
-    for(var i=0; i < list.length; i++){
-        console.log(list[i]);
-        if(list[i].height > 0)
-            update(list[i].id);
-    }
-}*/
+}
 function update(id) {
-    //updatingId = id;
-    //id = id.substr(0, id.length - 6);
     time = setInterval(function () {
         var nbr = $("#" + id + "-list > li").length;
         var path = $("#update_thread_path").data('path');
@@ -121,11 +117,48 @@ function update(id) {
                     appendOther(id, text);
                 });
                 scrollDownAll();
+                if($("#" + id + "-popup").css('height') == '60px' && blinkTime == 0 && data.length > 0)
+                    blink(id);
             }
         });
     }, 10000);
 }
 function stopUpdate() {
     clearInterval(time);
-    //updatingId = 0;
+}
+function blink(partId){
+    blinkTime = setInterval(function () {
+        var popup = $("#" + partId + "-popup");
+        if(popup.css('background-color') == 'rgb(75, 163, 195)'){
+            popup.css('background-color', 'white');
+        }
+        else{
+            popup.css('background-color', '#4ba3c3');
+        }
+    }, 500);
+}
+function stopBlink(){
+    clearInterval(blinkTime);
+    $(".popup").css('background-color', 'white');
+    blinkTime = 0;
+}
+function global() {
+    var global = document.getElementById('global');
+    if(!global)
+        return;
+    var partId = $("#global").data('id');
+    globalVar = partId;
+    $("#" + partId + "-popup").css('height', '60px').css('padding', '10px 20px 20px 20px');
+    setTimeout(function () {
+        update(partId);
+    }, 500);
+}
+function closeThread(partId) {
+    var path = $("#close_thread_path").data('path');
+    var DATA =  {'partId':partId};
+    $.ajax({
+        url: path,
+        method: 'post',
+        data: DATA
+    });
 }

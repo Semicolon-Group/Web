@@ -27,5 +27,9 @@
     <route id="update_thread" path="/update_thread">
         <default key="_controller">MessageBundle:Message:updateThread</default>
     </route>
+
+    <route id="close_thread" path="/close_thread">
+        <default key="_controller">MessageBundle:Message:closeThread</default>
+    </route>
     
 </routes>

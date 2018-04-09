@@ -54,12 +54,21 @@ class MessageController extends Controller implements ContainerAwareInterface
      * @return Response
      */
     public function popupAction($userId){
+        $type = 'local';
+        if($userId == -1){
+            if(isset($_SESSION['partId'])){
+                $userId = $_SESSION['partId'];
+                $type = 'global';
+            }
+            else{
+                return new Response();
+            }
+        }
         $participant = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $thread = $this->getThread($this->getUser(), $participant);
         /* if thread doesn't exist */
         if($thread == null){
             $StdThread = new Thread();
-            //$participant = $this->getDoctrine()->getRepository(User::class)->find($userId);
         }
         /* if thread exists */
         else{
@@ -68,7 +77,6 @@ class MessageController extends Controller implements ContainerAwareInterface
             $StdThread->setIsReadByParticipant($this->getUser(), $StdThread->isReadByParticipant($this->getUser()));
             $em->persist($StdThread);
             $em->flush();
-            /*$participant = $StdThread->getParticipants()[0]->getId() == $this->getUser()->getId() ? $StdThread->getParticipants()[1] : $StdThread->getParticipants()[0];*/
         }
         $thread = new \stdClass();
         $participant = $this->getDoctrine()->getRepository(User::class)->find($participant->getId());
@@ -78,6 +86,7 @@ class MessageController extends Controller implements ContainerAwareInterface
         return $this->render('MessageBundle:Message:threadPopup.html.twig', array(
             'thr' => $thread,
             'online' => $this->getUser(),
+            'type' => $type,
         ));
     }
 
@@ -114,6 +123,7 @@ class MessageController extends Controller implements ContainerAwareInterface
         if($request->isXmlHttpRequest()){
             $participant = $this->getDoctrine()->getRepository(User::class)->find($request->get('partId'));
             $thread = $this->getThread($participant, $this->getUser());
+            $_SESSION['partId'] = $participant->getId();
             if($thread != null){
                 $thread = $this->getProvider()->getThread($thread->getId());
                 $thread->setIsReadByParticipant($this->getUser(), true);
@@ -121,6 +131,18 @@ class MessageController extends Controller implements ContainerAwareInterface
                 $em->persist($thread);
                 $em->flush();
             }
+            return new JsonResponse();
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function closeThreadAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            if(isset($_SESSION['partId']) && $_SESSION['partId'] == $request->get('partId'))
+                unset($_SESSION['partId']);
             return new JsonResponse();
         }
     }

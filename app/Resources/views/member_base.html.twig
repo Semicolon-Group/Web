@@ -53,10 +53,14 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        <!--global chat-->
+        {{ render(controller('MessageBundle:Message:popup', {userId:-1})) }}
+
         <!--Data Divs-->
         <div id="send_msg_path" data-path="{{ path('send_msg') }}"></div>
         <div id="read_thread_path" data-path="{{ path('read_thread') }}"></div>
         <div id="update_thread_path" data-path="{{ path('update_thread') }}"></div>
+        <div id="close_thread_path" data-path="{{ path('close_thread') }}"></div>
 
        <!--================Frist Main hader Area =================-->
        <header class="header_menu_area">

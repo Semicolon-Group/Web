@@ -1,6 +1,4 @@
-
-{% block body %}
-    <h1>Feedback creation</h1>
+<h1>Feedback creation</h1>
 
     {{ form_start(form) }}
     {{ form_widget(form.state) }}
@@ -8,10 +6,9 @@
     {{ form_widget(form.sender) }}
     <input type="submit" value="Create" />
     {{ form_end(form) }}
-
     <ul>
         <li>
             <a href="{{ path('feedback_index') }}">Back to the list</a>
         </li>
     </ul>
-{% endblock %}
+

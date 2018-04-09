@@ -1,19 +1,30 @@
-<html>
-<header>
-    <link href="{{ asset('member_assets/css/bootstrap.min.css') }}" rel="stylesheet">
-</header>
-<body>
+{% extends "admin_base.html.twig" %}
+
+{% block title %}Feedbacks list{% endblock %}
+
+{% block banner_img %}
+    <link href="{{ absolute_url (asset('member_assets/css/bootstrap.min.css')) }}" rel="stylesheet">
+{% endblock %}
+
+{% block banner_title %}Feedbacks list{% endblock %}
+
+
 {% block body %}
-    <h1>Feedbacks list</h1>
+
+    <section >
+        <img src="{{ absolute_url ( asset('admin_assets/img/3.png')) }}" alt="rien" align="center" style="margin-left: 10cm;width: 8cm; height: 2.5cm; margin-top: -1cm;"/><br><br><br>
+        <div id="informations">
+            <b><p style="color: #384659"> Feedbacks  <span style="color: #00aa00" > "Treated" </span>: {{ nb1 }}</p></b>
+            <b><p style="color: #384659"> Feedbacks  <span style="color: #FF2733">  "Non Treated" </span>: {{ nb  }}</p></b>
+        </div>
     <table id="dynamic-table" class="table table-striped table-bordered table-hover">
         <thead>
-            <tr>
-                <th>Sender</th>
-                <th>Date</th>
-                <th>Content</th>
-                <th>State</th>
-                <th>id</th>
-                <th>Actions</th>
+            <tr style="background-color: #384659;">
+                <th style="color: white">Sender</th>
+                <th style="color: white">Date</th>
+                <th style="color: white">Content</th>
+                <th style="color: white">State</th>
+                <th style="color: white">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -23,16 +34,13 @@
                 <td>{% if feedback.date %}{{ feedback.date|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ feedback.content }}</td>
                 <td>{% if feedback.state %}Treated{% else %}Non_Treated{% endif %}</td>
-                <td><a href="{{ path('feedback_show', { 'id': feedback.id }) }}">{{ feedback.id }}</a></td>
                 <td>
                     <ul>
-                        <li>
-                            <a href="{{ path('feedback_show', { 'id': feedback.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('feedback_edit', { 'id': feedback.id }) }}">edit</a>
-                        </li>
-                    </ul>
+                            <a href="{{ path('feedback_state', { 'id': feedback.id }) }}">   <button type="button" style="width: 125px" class="btn btn-danger" /><span class="glyphicon glyphicon-edit"></span> Make Treated </button>
+                            </a>
+                            <a href="{{ path('feedback_deletee', { 'id': feedback.id }) }}">   <button type="button "  style="background-color: #ffa700" class="btn btn-warning"  /><span class="glyphicon glyphicon-trash"></span></span> Delete </button>
+                            </a>
+                     </ul>
                 </td>
             </tr>
         {% endfor %}
@@ -43,15 +51,17 @@
             <th>Date</th>
             <th>Content</th>
             <th>State</th>
-            <th>id</th>
             <th>Actions</th>
         </tr>
         </tfoot>
     </table>
-    <script src="{{ asset('member_assets/js/jquery-2.1.4.min.js') }}"></script>
+        <a href="{{ path('feedback_pdf') }}">   <button type="button" style="background-color: #0b5b97" class="btn btn-warning" /><span style="background-color: #0b5b97" class="glyphicon glyphicon-edit"></span> Export </button>
+        </a>
 
-    <script src="{{asset('datatable_assets/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('datatable_assets/js/jquery.dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{ absolute_url (asset('member_assets/js/jquery-2.1.4.min.js')) }}"></script>
+
+    <script src="{{absolute_url (asset('datatable_assets/js/jquery.dataTables.min.js')) }}"></script>
+    <script src="{{absolute_url (asset('datatable_assets/js/jquery.dataTables.bootstrap.min.js'))}}"></script>
 
     <script type="text/javascript">
 
@@ -77,19 +87,13 @@
                                                 $(this).css('padding', 8);
                                             });
                                             $('#dynamic-table thead').append(r);
-                                            $('#search_0').css('text-align', 'center');
+                                            $('#search_0').css('text-align', 'left');
                                         },
 
                                         bAutoWidth: false,
-                                        "aoColumns": [
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null
-                                        ],
+                                        "aoColumns" : [ null, null, null, null, null ],
                                         "aaSorting": [],
+                                        "bPaginate":false,
 
                                     } );
 
@@ -109,12 +113,6 @@
         } );
 
     </script>
-
-    <ul>
-        <li>
-            <a href="{{ path('feedback_new') }}">Create a new feedback</a>
-        </li>
-    </ul>
+        </section>
 {% endblock %}
-</body>
-</html>
+

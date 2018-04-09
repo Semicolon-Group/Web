@@ -3,9 +3,11 @@
 namespace FeedbacksBundle\Controller;
 
 use BaseBundle\Entity\Feedback;
+use BaseBundle\Repository\FeedbacksRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Feedback controller.
@@ -22,12 +24,16 @@ class FeedbackController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
 
-        $feedbacks = $em->getRepository('BaseBundle:Feedback')->findAll();
+        $em = $this->getDoctrine()->getManager();
+        $feedbacks =$em->getRepository('BaseBundle:Feedback')->findAll();
+        $state = $em->getRepository('BaseBundle:Feedback')->findBy(['state' => '0']);
+        $state1 = $em->getRepository('BaseBundle:Feedback')->findBy(['state' => '1']);
+        $tot= count($state);
+        $tot1= count($state1);
 
         return $this->render('FeedbacksBundle:feedback:index.html.twig', array(
-            'feedbacks' => $feedbacks,
+            'feedbacks' => $feedbacks, 'nb'=>$tot , 'nb1'=>$tot1
         ));
     }
 
@@ -58,7 +64,7 @@ class FeedbackController extends Controller
             $em->persist($feedback);
             $em->flush();
 
-            return $this->redirectToRoute('feedback_show', array('id' => $feedback->getId()));
+            return $this->redirectToRoute('news_feed');
         }
 
         return $this->render('FeedbacksBundle:feedback:new.html.twig', array(
@@ -68,79 +74,92 @@ class FeedbackController extends Controller
     }
 
     /**
-     * Finds and displays a feedback entity.
+     * Creates a new feedback entity.
      *
-     * @Route("/{id}", name="feedback_show")
-     * @Method("GET")
+     * @Route("/newFeed", name="feedback_add")
      */
-    public function showAction(Feedback $feedback)
-    {
-        $deleteForm = $this->createDeleteForm($feedback);
-
-        return $this->render('FeedbacksBundle:feedback:show.html.twig', array(
-            'feedback' => $feedback,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing feedback entity.
-     *
-     * @Route("/{id}/edit", name="feedback_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, Feedback $feedback)
-    {
-        $deleteForm = $this->createDeleteForm($feedback);
-        $editForm = $this->createForm('BaseBundle\Form\FeedbackType', $feedback);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+    public function addFeedbackAction(Request $request){
+        if($request->isXmlHttpRequest()){
+            $feedback = new Feedback();
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $feedback->setContent($request->get('content'));
+            $feedback->setState(false);
+            $feedback->setSender($user);
+            $this->getDoctrine()->getManager()->persist($feedback);
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('feedback_edit', array('id' => $feedback->getId()));
+            return new Response(Response::HTTP_OK);
         }
-
-        return $this->render('FeedbacksBundle:feedback:edit.html.twig', array(
-            'feedback' => $feedback,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+
 
     /**
      * Deletes a feedback entity.
      *
-     * @Route("/{id}", name="feedback_delete")
-     * @Method("DELETE")
+     * @Route("index/{id}", name="feedback_deletee")
+     *
      */
-    public function deleteAction(Request $request, Feedback $feedback)
-    {
-        $form = $this->createDeleteForm($feedback);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($feedback);
-            $em->flush();
-        }
+    public function deleteFeedAction(Request $request)
+    {
+        $id=$request->get('id');
+        $em=$this->getDoctrine()->getManager();
+        $feedback = $em->getRepository('BaseBundle:Feedback')->find($id);
+        $em->remove($feedback);
+        $em->flush();
+        return $this->redirectToRoute('feedback_index');
+    }
+
+    /**
+     *  a feedback entity.
+     *
+     * @Route("index/edit/{id}", name="feedback_state")
+     *
+     */
+
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $feedback= $em->getRepository('BaseBundle:Feedback')->find($id);
+        $feedback->setState(true);
+        $em->persist($feedback);
+        $em->flush();
 
         return $this->redirectToRoute('feedback_index');
     }
 
     /**
-     * Creates a form to delete a feedback entity.
+     *  a feedback entity.
      *
-     * @param Feedback $feedback The feedback entity
+     * @Route("pdf", name="feedback_pdf")
      *
-     * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm(Feedback $feedback)
+
+    public function exportAction()
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('feedback_delete', array('id' => $feedback->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        $em = $this->getDoctrine()->getManager();
+
+        $feedbacks = $em->getRepository('BaseBundle:Feedback')->findAll();
+
+        $website  = $this->renderView('FeedbacksBundle:feedback:export.html.twig', array(
+            'feedbacks' => $feedbacks,
+        ));
+
+        $snapper = $this->get('knp_snappy.pdf');
+        // $snapper->setOption("encoding","UTF-8");
+
+        $filename="file";
+        /*$website  = $this->renderView('@OCPlatform/Sign/index.html.twig',array('signaux'=>$result,'form'=>$form_rech->createView()));*/
+
+        return new Response(
+            $snapper->getOutputFromHtml($website),
+            200,
+            array(
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$filename.'.pdf"'
+            )
+        );
     }
 }

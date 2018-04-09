@@ -9,14 +9,17 @@
 namespace BaseBundle\Repository;
 
 
-class FeedbacksRepository
+class FeedbacksRepository  extends \Doctrine\ORM\EntityRepository
 {
-    public function findStateDQL($state)
-    {
-        $query = $this->getEntityManager()->createQuery("
-        select v from BaseBundle:Feedback v where v.state Like :state AND v.date<=CURRENT_DATE () ORDER BY v.date ASC")
-            ->setParameter('state', '%' . $state . '%');
-        return $query->getResult();
-    }
+    public function bannedUsers(){
+            $qb=$this->getEntityManager()
+                ->createQuery("SELECT r 
+                            FROM BaseBundle:User r
+                            WHERE r.enabled==0
+                           ")
+            ;
+            return $qb->getResult();
+        }
+
 
 }

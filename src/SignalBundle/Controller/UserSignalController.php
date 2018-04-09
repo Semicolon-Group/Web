@@ -2,6 +2,7 @@
 
 namespace SignalBundle\Controller;
 
+use BaseBundle\Entity\User;
 use BaseBundle\Entity\UserSignal;
 use BaseBundle\Form\RechercheType;
 use BaseBundle\Form\UserSignalType;
@@ -9,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Usersignal controller.
@@ -29,24 +31,46 @@ class UserSignalController extends Controller
         $formRech = $this->createForm('BaseBundle\Form\RechercheType', $signal);
         $formRech->handleRequest($req);
 
+
         if ($formRech->isSubmitted() && $formRech->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
             $userSignals = $em->getRepository('BaseBundle:UserSignal')->findBy(array('reason' => $signal->getReason()));
-            $paginator  = $this->get('knp_paginator');
+            $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $userSignals, /* query NOT result */
                 $req->query->getInt('page', 1)/*page number*/,
-                5/*limit per page*/
-            );
-                    return $this->render('SignalBundle:usersignal:index.html.twig', array(
-                        'userSignals' => $pagination, 'form' => $formRech->createView()
-                    ));
+                5);/*limit per page*/
+            //for delete buttons
+            $deleteForms = array();
+            foreach ($pagination as $signal) {
+                $deleteForms[$signal->getId()] = $this->createDeleteForm($signal)->createView();
+            }
+
+            //for block buttons
+            $blockForms = array();
+            foreach ($pagination as $signal) {
+                $idReceiver = $signal->getReceiver()->getId();
+                $em = $this->getDoctrine()->getManager();
+                $receiver = $em->getRepository('BaseBundle:User')->find($idReceiver);
+                $blockForms[$idReceiver] = $this->createReceiverForm($receiver)->createView();
+            }
+            return $this->render('SignalBundle:usersignal:index.html.twig', array(
+                'userSignals' => $pagination, 'form' => $formRech->createView(),
+                'deleteForm' => $deleteForms,
+                'blockForms' => $blockForms,
+
+            ));
         }
 
 
         $em = $this->getDoctrine()->getManager();
         $userSignals = $em->getRepository('BaseBundle:UserSignal')->findAll();
+        $state = $em->getRepository('BaseBundle:UserSignal')->findBy(['state' => '0']);
+        $state1 = $em->getRepository('BaseBundle:UserSignal')->findBy(['state' => '1']);
+        $tot= count($state);
+        $tot1= count($state1);
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $userSignals, /* query NOT result */
@@ -54,9 +78,28 @@ class UserSignalController extends Controller
             5/*limit per page*/
         );
 
+        //for delete buttons
+        $deleteForms = array();
+        foreach ($pagination as $signal) {
+            $deleteForms[$signal->getId()] = $this->createDeleteForm($signal)->createView();
+        }
+
+        //for block buttons
+        $blockForms = array();
+        foreach ($pagination as $signal) {
+            $idReceiver = $signal->getReceiver()->getId();
+            $em = $this->getDoctrine()->getManager();
+            $receiver = $em->getRepository('BaseBundle:User')->find($idReceiver);
+            $blockForms[$idReceiver] = $this->createReceiverForm($receiver)->createView();
+        }
+
 
         return $this->render('SignalBundle:usersignal:index.html.twig', array(
-            'userSignals' => $pagination, 'form'=>$formRech->createView()
+            'userSignals' => $pagination,
+            'form'=>$formRech->createView(),
+            'deleteForm' => $deleteForms,
+            'blockForms' => $blockForms,
+            'nb'=>$tot , 'nb1'=>$tot1
         ));
 
     }
@@ -77,7 +120,7 @@ class UserSignalController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             //**
-            $receiverId = 1;
+            $receiverId = 2;
             $senderId = $this->getUser()->getId();
             $receiver = $em->getRepository('BaseBundle:User')->find($receiverId);
 
@@ -111,10 +154,11 @@ class UserSignalController extends Controller
             $number = count($listReceiver);
 
             if($number >= 3) {
+
                 $receiver->setEnabled(0);
                 $em->flush($receiver);
             }
-            return $this->redirectToRoute('Signal_index', array('id' => $userSignal->getId()));
+            return $this->redirectToRoute('Signal_new', array('id' => $userSignal->getId()));
         }
 
         return $this->render('SignalBundle:usersignal:new.html.twig', array(
@@ -173,10 +217,10 @@ class UserSignalController extends Controller
     /**
      * Deletes a userSignal entity.
      *
-     * @Route("{id}", name="Signal_delete")
+     * @Route("{id}", name="Signal_delete1")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, UserSignal $userSignal)
+    public function delete1Action(Request $request, UserSignal $userSignal)
     {
         $form = $this->createDeleteForm($userSignal);
         $form->handleRequest($request);
@@ -191,6 +235,79 @@ class UserSignalController extends Controller
     }
 
     /**
+     * Deletes a userSignal entity.
+     *
+     * @Route("{idSignal}", name="Signal_delete")
+     * @Method("POST")
+     *
+     * @param Request $request
+     * @param $idSignal
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteAction(Request $request, $idSignal)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository("BaseBundle:UserSignal");
+        $userSignal = $repository->find($idSignal);
+        $idReceiver = $userSignal->getReceiver()->getId();
+
+        if (null === $userSignal) {
+            throw new NotFoundHttpException("Signal with id ".$idSignal."does not exist.");
+        }
+
+        $form = $this->get('form.factory')->create();
+
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            //delete signal
+            $em->remove($userSignal);
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('info', "The signal has been deleted.");
+
+            //check signal number
+            $receiver = $em->getRepository('BaseBundle:User')->find($idReceiver);
+            $listReceiver = $em->getRepository('BaseBundle:UserSignal')->findByReceiver($receiver);
+            $number = count($listReceiver);
+
+            if($number < 3) {
+                $receiver->setEnabled(1);
+                $em->flush($receiver);
+            }
+        }
+        return $this->redirectToRoute('Signal_index', array(
+            'form'   => $form->createView(),
+        ));
+    }
+
+
+    /**
+     * Block a user entity.
+     *
+     * @Route("block/{idReceiver}", name="Signal_block")
+     * @Method("POST")
+     *
+     * @param $idReceiver
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function blockAction(Request $request, $idReceiver)
+    {
+        $form = $this->get('form.factory')->create();
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $repository = $em->getRepository("BaseBundle:User");
+            $receiver = $repository->find($idReceiver);
+
+            $receiver->setEnabled(0);
+            $em->flush();
+        }
+        return $this->redirectToRoute('Signal_index', array(
+            'form'   => $form->createView(),
+        ));
+    }
+
+    /**
      * Creates a form to delete a userSignal entity.
      *
      * @param UserSignal $userSignal The userSignal entity
@@ -200,9 +317,76 @@ class UserSignalController extends Controller
     private function createDeleteForm(UserSignal $userSignal)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('Signal_delete', array('id' => $userSignal->getId())))
+            ->setAction($this->generateUrl('Signal_delete', array('idSignal' => $userSignal->getId())))
             ->setMethod('DELETE')
             ->getForm()
-        ;
+            ;
+    }
+
+    private function createReceiverForm(User $user){
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('Signal_block', array('idReceiver' => $user->getId())))
+            ->setMethod('POST')
+            ->getForm()
+            ;
+    }
+
+    /**
+     *
+     *
+     * @Route("/index/bannedUsers", name="Bans")
+     *
+     */
+        public function ShowBannedAction(Request $req){
+
+        $em1 = $this->getDoctrine()->getManager();
+        $ban = $em1->getRepository('BaseBundle:User')->findBy(['enabled' => '0']);
+            $paginator = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $ban,
+                $req->query->getInt('page', 1)/*page number*/,
+                3);/*limit per page*/
+        return $this->render('SignalBundle:usersignal:bannedUsers.html.twig',  array(
+            'ban'=>$pagination));
+    }
+
+    /**
+     * Block a user entity.
+     *
+     * @Route("/index/bannedUsers{id}", name="Remove_ban")
+     *
+     *
+     *
+     */
+
+    public function RemoveBan ($id){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository("BaseBundle:User")->find($id);
+        $repository->setEnabled(1);
+        $em->persist($repository);
+        $em->flush();
+        return $this->redirectToRoute('Bans');
+    }
+
+    /**
+     * Block a user entity.
+     *
+     * @Route("/index/information", name="inform")
+     *
+     *
+     *
+     */
+
+    public function informAction(){
+        $em = $this->getDoctrine()->getManager();
+        $state = $em->getRepository('BaseBundle:UserSignal')->findBy(['state' => '0']);
+        $state1 = $em->getRepository('BaseBundle:UserSignal')->findBy(['state' => '1']);
+        $tot= count($state);
+        $tot1= count($state1);
+        return $this->render('SignalBundle:usersignal:information.html.twig', array(
+            'nb'=>$tot , 'nb1'=>$tot1
+        ));
     }
 }

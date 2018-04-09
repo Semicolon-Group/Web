@@ -54,6 +54,9 @@
     </section>
 {% endblock %}
 {% block body %}
+    {{ render(controller(
+    'SignalBundle:UserSignal:new', { 'request':app.request }
+    )) }}
     <section class="blog_grid_area">
         <div class="container">
             <div class="row">

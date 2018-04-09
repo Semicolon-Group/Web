@@ -1,48 +1,90 @@
-<html>
-<header>
-    <link href="{{ asset('member_assets/css/bootstrap.min.css') }}" rel="stylesheet">
-</header>
-<body>
+{% extends "admin_base.html.twig" %}
+
+{% block title %}UserSignals List{% endblock %}
+
+{% block banner_img %}
+    <link href="{{ asset('member_assets/css/bootstrap.min.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block banner_title %}UserSignals List{% endblock %}
+{% block  stylesheets %}
+<style>
+
+    #sect{
+        background-color: transparent;
+    }
+</style>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+{% endblock %}
 {% block body %}
-    <h1>Usersignals list</h1>
+<section id="sect">
+    <img src="{{ asset('admin_assets/img/2.png') }}" alt="rien" align="center" style="margin-left: 10cm;width: 8cm; height: 2.5cm; margin-top: -1cm;"/><br><br>
+    {{ render(controller(
+    'SignalBundle:UserSignal:inform'
+    )) }}
+
+    <div style="margin-left: 25cm; margin-top: -1.5cm;">
     {{ form_start(form) }}
     {{ form_widget(form) }}
-
-    <input type="submit" value="search" />
-    {{ form_end(form) }}
-
+    <button type="submit" class="btn btn-info">
+        <span class="glyphicon glyphicon-search"></span> Search
+    </button>
+    {{ form_end(form) }}</div>
+<div style="margin-bottom: -2.3cm; ;">
+    <a href="{{ path('Signal_index') }}" style="color:#384659;"><strong>Show all</strong> <i class="glyphicon glyphicon-refresh w3-spin"></i></a>
+    </div><br><br><br>
     <table id="dynamic-table" class="table table-striped table-bordered table-hover">
         <thead>
-            <tr>
-                <th>Receiver</th>
-                <th>Sender</th>
-                <th>Reason</th>
-                <th>Date</th>
-                <th>State</th>
-                <th>Content</th>
-            </tr>
+        <tr style="background-color: #384659;">
+            <th style="margin-left: -10cm; color: white;"><strong>Receiver</strong></th>
+            <th style="color: white"><strong>Sender</strong></th>
+            <th style="color: white"><strong>Reason</strong></th>
+            <th style="color: white"><strong>Date</strong></th>
+            <th style="color: white"><strong>State</strong></th>
+            <th style="color: white" ><strong>Actions</strong></th>
+        </tr>
         </thead>
         <tbody>
         {% for userSignal in userSignals %}
             <tr>
-                <td>{% if userSignal.receiver.username is defined and userSignal.receiver.username is not null %} {{ userSignal.receiver.username }} {% endif %}</td>
-                <td>{% if userSignal.sender.username is defined and userSignal.sender.username is not null %} {{ userSignal.sender.username }} {% endif %}</td>
-                <td>
-                    {% if userSignal.reason is not null %}
-                        {% if 0 == userSignal.reason %} Inappropriate_Content
-                        {% elseif 1 == userSignal.reason %} Racism
-                        {% elseif 2 == userSignal.reason %} Violence
-                        {% elseif 3 == userSignal.reason %} Harrassment
-                        {% elseif 4 == userSignal.reason %} False_Profile
-                        {% elseif 5 == userSignal.reason %} Other
-                        {% endif %}
-                    {% endif %}
-                </td>
-                <td>{% if userSignal.date %}{{ userSignal.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if userSignal.receiver.username is defined and userSignal.receiver.username is not null %}
+                        {{ userSignal.receiver.username }} {% endif %}</td>
+                <td>{% if userSignal.sender.username is defined and userSignal.sender.username is not null %}
+                        {{ userSignal.sender.username }} {% endif %}</td>
+                <td>{% if userSignal.reason is not null %} {% if 0 == userSignal.reason %}
+                        Inappropriate_Content {% elseif 1 == userSignal.reason %} Racism {% elseif 2 == userSignal.reason %}
+                        Violence {% elseif 3 == userSignal.reason %} Harrassment {% elseif 4 == userSignal.reason %}
+                        False_Profile {% elseif 5 == userSignal.reason %} Other {% endif %}
+                    {% endif %}</td>
+                <td>{% if userSignal.date %} {{ userSignal.date|date('Y-m-d H:i:s') }}
+                    {% endif %}</td>
                 <td>{% if userSignal.state %}Consulted{% else %}Non_consulted{% endif %}</td>
-                <td><a class="btn btn-info" href="{{ path('Signal_show', { 'id': userSignal.id }) }}">
-                        Show content
-                    </a>
+                <td><a class="btn btn-info"
+                       href="{{ path('Signal_show', { 'id': userSignal.id }) }}"> Show details.. </a>
+
+
+                    {# BLOCK BUTTON #}
+                    <form name="form_block" action="{{ path('Signal_block', {'idReceiver': userSignal.receiver.id}) }}"
+                          method="post">
+                        <input type="hidden" name="_method" value="POST" />
+                        {{ form_widget(blockForms[userSignal.receiver.id]) }}
+                        <input type="submit" id="btnrecieve" value="Ban  Receiver" class="btn btn-danger" />
+
+                        {{ form_rest(form) }}
+
+                        </form>
+                    {# DELETE BUTTON #}
+
+                    <form name="form_delete" action="{{ path('Signal_delete', {'idSignal': userSignal.id}) }}"
+                          method="post">
+                        <input type="hidden" name="_method" value="DELETE" />
+                        {{ form_widget(deleteForm[userSignal.id]) }}
+                        <button type="submit" class="btn btn-warning" /><span class="glyphicon glyphicon-trash"></span> &nbspDelete&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  </button>
+                        {{ form_rest(form) }}
+                    </form>
                 </td>
             </tr>
         {% endfor %}
@@ -54,77 +96,70 @@
             <th>Reason</th>
             <th>Date</th>
             <th>State</th>
-            <th>Content</th>
+            <th>Actions</th>
         </tr>
         </tfoot>
     </table>
+    <a href="{{ path('Bans') }}">   <button type="button" style="background-color: #0b5b97" class="btn btn-warning" /><span style="background-color: #0b5b97" class="glyphicon glyphicon-edit"></span> Show Banned Users </button>
+    </a>
+
     {# display navigation #}
-    <div class="navigation">
+    <div class="navigation" style="margin-left: 22cm;">
         {{ knp_pagination_render(userSignals) }}
     </div>
+
+
     <script src="{{ asset('member_assets/js/jquery-2.1.4.min.js') }}"></script>
 
     <script src="{{asset('datatable_assets/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('datatable_assets/js/jquery.dataTables.bootstrap.min.js')}}"></script>
+    <script
+            src="{{asset('datatable_assets/js/jquery.dataTables.bootstrap.min.js')}}"></script>
 
     <script type="text/javascript">
-
         jQuery(function($) {
 
             // Setup - add a text input to each footer cell
-            $('#dynamic-table tfoot th').each( function () {
-                var title = $(this).text();
-                $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-            } );
+            $('#dynamic-table tfoot th')
+                    .each(
+                            function() {
+                                var title = $(this).text();
+                                $(this)
+                                        .html(
+                                                '<input type="text"  width="0.5cm;" placeholder="Search '+title+'" />');
+                            });
 
             //initiate dataTables plugin
-            var tableSignal =
-                    $('#dynamic-table')
-                            .DataTable(
-                                    {
+            var tableSignal = $('#dynamic-table').DataTable({
 
-                                        //search boxes on top without replacing the columns titles
-                                        'initComplete' : function()
-                                        {
-                                            var r = $('#dynamic-table tfoot tr');
-                                            r.find('th').each(function(){
-                                                $(this).css('padding', 8);
-                                            });
-                                            $('#dynamic-table thead').append(r);
-                                            $('#search_0').css('text-align', 'center');
-                                        },
+                //search boxes on top without replacing the columns titles
+                'initComplete' : function() {
+                    var r = $('#dynamic-table tfoot tr');
+                    r.find('th').each(function() {
+                        $(this).css('padding', 8);
+                    });
+                    $('#dynamic-table thead').append(r);
+                    $('#search_0').css('text-align', 'left');
+                },
 
-                                        bAutoWidth: false,
-                                        "aoColumns": [
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null
-                                        ],
-                                        "aaSorting": [],
-                                        "bPaginate":false,
+                bAutoWidth : false,
+                "aoColumns" : [ null, null, null, null, null, null ],
+                "aaSorting" : [],
+                "bPaginate" :false,
 
-                                    } );
+            });
 
-            tableSignal.columns().every( function () {
+            tableSignal.columns().every(function() {
                 var that = this;
 
-                $( 'input', this.footer() ).on( 'keyup change', function () {
-                    if ( that.search() !== this.value ) {
-                        that
-                                .search( this.value )
-                                .draw();
+                $('input', this.footer()).on('keyup change', function() {
+                    if (that.search() !== this.value) {
+                        that.search(this.value).draw();
                     }
-                } );
-            } );
+                });
+            });
 
-
-        } );
-
+        });
     </script>
+</section>
 
 {% endblock %}
-</body>
-</html>

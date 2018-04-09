@@ -104,7 +104,7 @@
                                </a>
                                <ul class="dropdown-menu">
                                    <li><a href="{{ path('member_profile') }}">Profile</a></li>
-                                   <li><a href="{{ path('feedback_new') }}">Feedback</a></li>
+                                   <li><a href="" data-toggle="modal" data-target="#feedback_modal">Feedback</a></li>
                                    <li><a href="index-4.html">Settings</a></li>
                                    <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
                                </ul>
@@ -125,6 +125,27 @@
                </div>
            </section>
        {% endblock %}
+       <div id="feedback_modal" class="modal fade centered-modal" role="dialog" style="margin-top: 20vh;">
+           <div class="modal-dialog" style="width: 40%; border-color: #0b5b97">
+               <form id="ajoutFeedback">
+
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <button type="button" class="close" data-dismiss="modal">&times;</button>
+                       <h4 class="modal-title" style="color: #0b5b97">You can add your feedback</h4>
+                   </div>
+                   <div class="modal-body" >
+                      <textarea class="form-control" id="feedback-content" placeholder="Add your feedback" style="height: 90px" required></textarea>
+
+                   </div>
+                   <div class="modal-footer">
+                       <input class="btn btn-primary" type="submit" value="Create" />
+                   </div>
+               </div>
+               </form>
+
+           </div>
+       </div>
        {% block body %}{% endblock %}
 
         <!--================Footer Area =================-->
@@ -251,6 +272,27 @@
 
         <script src="{{ asset('member_assets/js/video_player.js') }}"></script>
         <script src="{{ asset('member_assets/js/theme.js') }}"></script>
+        <script >
+            $('#ajoutFeedback').submit(function(event){
+                event.preventDefault();
+                var fContent = $('#feedback-content').val();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('feedback_add') }}",
+                    data: { content : fContent},
+                    success: function (data) {
+                        alert("Your feedback has been added successfully");
+                        $('#ajoutFeedback').modal('hide');
+
+                    },
+                    error: function (data) {
+                        alert("An error has occured while adding this feedback");
+                        $('#ajoutFeedback').modal('hide');
+                    }
+                });
+
+            });
+        </script>
         {% block scripts %}{% endblock %}
     </body>
 

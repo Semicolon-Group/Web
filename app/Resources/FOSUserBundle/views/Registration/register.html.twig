@@ -1,3 +1,8 @@
 {% block fos_user_content %}
+    {% if app.user %}
+        <script>
+            window.location = "{{ path('homepage') }}";
+        </script>
+    {% endif %}
     {% include "@FOSUser/Registration/register_content.html.twig" %}
 {% endblock fos_user_content %}

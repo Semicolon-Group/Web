@@ -56,11 +56,9 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{ asset('admin_assets/') }}img/user.png" class="img-circle" alt="Avatar"> <span>Admin</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{ asset('member_assets/img/member.jpg') }}" style="border-radius: 50%; object-fit: cover; height: 20px; width: 20px;" alt="Avatar"> <span>Admin</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#"><i class="lnr lnr-envelope"></i> <span>Message</span></a></li>
-                            <li><a href="#"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
-                            <li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
+                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -75,18 +73,19 @@
                 <ul class="nav">
                     <li><a href="{{ path('admin_home') }}" class="{% if app.request.attributes.get('_route') == 'admin_home' %}active{% endif %}"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
                     <li><a href="{{ path('admin_members') }}" class="{% if app.request.attributes.get('_route') == 'admin_members' %}active{% endif %}"><i class="lnr lnr lnr-user"></i> <span>Members</span></a></li>
+                    <li><a href="{{ path('admin_questions') }}" class="{% if app.request.attributes.get('_route') == 'admin_questions' %}active{% endif %}"><i class="lnr lnr-question-circle"></i> <span>Questions</span></a></li>
                     <li><a href="{{ path('admin_businesses') }}" class="{% if app.request.attributes.get('_route') == 'admin_businesses' %}active{% endif %}"><i class="lnr lnr-store"></i> <span>Businesses</span></a></li>
-                    <li><a href="{{ path('admin_charts') }}" class="{% if app.request.attributes.get('_route') == 'admin_charts' %}active{% endif %}"><i class="lnr lnr-chart-bars"></i> <span>Chart</span></a></li>
-                    <!--<li>
-                        <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Pages</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
-                        <div id="subPages" class="collapse ">
+                    <li>
+                        <a href="#subPages" data-toggle="collapse" class="{% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}active{% else %}collapsed{% endif %}" aria-expanded="{% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}true{% endif %}">
+                            <i class="lnr lnr-chart-bars"></i> <span>Chart</span> <i class="icon-submenu lnr lnr-chevron-left"></i>
+                        </a>
+                        <div id="subPages" class="collapse {% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}in{% endif %}">
                             <ul class="nav">
-                                <li><a href="page-profile.html" class="">Profile</a></li>
-                                <li><a href="page-login.html" class="">Login</a></li>
-                                <li><a href="page-lockscreen.html" class="">Lockscreen</a></li>
+                                <li><a href="{{ path('admin_member_charts') }}" class="{% if app.request.attributes.get('_route') == 'admin_member_charts' %}active{% endif %}">Members</a></li>
+                                <li><a href="{{ path('admin_business_charts') }}" class="{% if app.request.attributes.get('_route') == 'admin_business_charts' %}active{% endif %}">Business</a></li>
                             </ul>
                         </div>
-                    </li>-->
+                    </li>
                 </ul>
             </nav>
         </div>

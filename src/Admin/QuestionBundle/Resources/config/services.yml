@@ -1,0 +1,4 @@
+services:
+#    admin_question.example:
+#        class: Admin\QuestionBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

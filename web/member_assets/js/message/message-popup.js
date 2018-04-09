@@ -8,7 +8,7 @@ function closePopup(partId) {
     popup.hide();
     popup.css('height', '0');
     popup.css('padding', '0');
-    if(partId === updatingId) stopUpdate();
+    stopUpdate();
     setTimeout(function () {
         popup.show();
     }, 500);
@@ -61,7 +61,7 @@ function send(partId) {
            var threadBody = $("#" + partId + "-body");
            if(threadBody.length != 0)
                threadBody.html(text);
-           scrollDown(partId);
+           scrollDownAll();
            readThread(partId);
        }
     });
@@ -106,12 +106,12 @@ function refresh() {
     }
 }*/
 function update(id) {
-    updatingId = id;
+    //updatingId = id;
     //id = id.substr(0, id.length - 6);
-    var nbr = $("#" + id + "-list > li").length;
-    var path = $("#update_thread_path").data('path');
-    var DATA = {'partId':id, 'nbr':nbr};
-    time = setTimeout(function () {
+    time = setInterval(function () {
+        var nbr = $("#" + id + "-list > li").length;
+        var path = $("#update_thread_path").data('path');
+        var DATA = {'partId':id, 'nbr':nbr};
         $.ajax({
             url: path,
             data: DATA,
@@ -120,12 +120,12 @@ function update(id) {
                 data.forEach(function (text) {
                     appendOther(id, text);
                 });
-                if(updatingId != 0) update(id);
+                scrollDownAll();
             }
         });
-    }, 5000);
+    }, 10000);
 }
 function stopUpdate() {
-    clearTimeout(time);
-    updatingId = 0;
+    clearInterval(time);
+    //updatingId = 0;
 }

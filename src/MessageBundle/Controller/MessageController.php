@@ -140,8 +140,9 @@ class MessageController extends Controller implements ContainerAwareInterface
                 $messages = $thread->getMessages();
                 $count = count($messages);
                 if($count > $nbr){
-                    for($i=$nbr - 1; $i < $count; $i++){
-                        $data [] = $messages[$i]->getBody();
+                    for($i=$nbr; $i < $count; $i++){
+                        if($messages[$i]->getSender()->getId() != $this->getUser()->getId())
+                            $data [] = $messages[$i]->getBody();
                     }
                 }
             }

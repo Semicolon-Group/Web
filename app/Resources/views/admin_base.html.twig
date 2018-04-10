@@ -26,6 +26,7 @@
 <body>
 <!-- WRAPPER -->
 <div id="wrapper">
+    {% block navbar %}
     <!-- NAVBAR -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="brand">
@@ -65,6 +66,7 @@
             </div>
         </div>
     </nav>
+    {% endblock %}
     <!-- END NAVBAR -->
     <!-- LEFT SIDEBAR -->
     <div id="sidebar-nav" class="sidebar">
@@ -76,16 +78,29 @@
                     <li><a href="{{ path('admin_questions') }}" class="{% if app.request.attributes.get('_route') == 'admin_questions' %}active{% endif %}"><i class="lnr lnr-question-circle"></i> <span>Questions</span></a></li>
                     <li><a href="{{ path('admin_businesses') }}" class="{% if app.request.attributes.get('_route') == 'admin_businesses' %}active{% endif %}"><i class="lnr lnr-store"></i> <span>Businesses</span></a></li>
                     <li>
-                        <a href="#subPages" data-toggle="collapse" class="{% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}active{% else %}collapsed{% endif %}" aria-expanded="{% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}true{% endif %}">
-                            <i class="lnr lnr-chart-bars"></i> <span>Chart</span> <i class="icon-submenu lnr lnr-chevron-left"></i>
-                        </a>
-                        <div id="subPages" class="collapse {% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}in{% endif %}">
+                        <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Businesses</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                        <div id="subPages" class="collapse ">
+                            <ul class="nav">
+                                <li class="{% if app.request.attributes.get('_route') == 'lister_admin' %}active{% endif %}"><a href="{{ path('lister_admin') }}">List Ads</a></li>
+                                <li class="{% if app.request.attributes.get('_route') == 'admin_promotion_add' %}active{% endif %}"><a href="{{ path('admin_promotion_add') }}">Add promotion</a></li>
+                                <li class="{% if app.request.attributes.get('_route') == 'admin_promotions_list' %}active{% endif %}"><a href="{{ path('admin_promotions_list') }}">List promotions</a></li>
+
+                            </ul>
+                        </div>
+                    <li>
+
+
+                    </li>
+                    <li><a href="" class="{% if app.request.attributes.get('_route') == 'admin_charts' %}active{% endif %}"><i class="lnr lnr-chart-bars"></i> <span>Chart</span></a></li>
+                    <!--<li>
+                        <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Pages</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                        <div id="subPages" class="collapse ">
                             <ul class="nav">
                                 <li><a href="{{ path('admin_member_charts') }}" class="{% if app.request.attributes.get('_route') == 'admin_member_charts' %}active{% endif %}">Members</a></li>
                                 <li><a href="{{ path('admin_business_charts') }}" class="{% if app.request.attributes.get('_route') == 'admin_business_charts' %}active{% endif %}">Business</a></li>
                             </ul>
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
             </nav>
         </div>

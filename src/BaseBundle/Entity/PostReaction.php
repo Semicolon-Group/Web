@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * PostReaction
  *
  * @ORM\Table(name="post_reaction", indexes={@ORM\Index(name="post_reaction", columns={"post_id"}), @ORM\Index(name="fk_user", columns={"user_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BaseBundle\Repository\PostReactionRepository")
  */
 class PostReaction
 {

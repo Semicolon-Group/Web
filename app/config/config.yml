@@ -20,14 +20,17 @@ imports:
     - { resource: "@AdminMemberBundle/Resources/config/services.yml" }
     - { resource: "@AdminBusinessBundle/Resources/config/services.yml" }
     - { resource: "@AdminChartBundle/Resources/config/services.yml" }
+    - { resource: "@PubliciteBundle/Resources/config/services.yml" }
     - { resource: "@BusinessFOSSecurityBundle/Resources/config/services.yml" }
     - { resource: "@AdminFOSSecurityBundle/Resources/config/services.yml" }
+    - { resource: "@MessageBundle/Resources/config/services.xml" }
     - { resource: "@AdminQuestionBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    image_directory : '%kernel.project_dir%/web/member_assets/images'
 
 framework:
     #esi: ~
@@ -134,3 +137,7 @@ vich_uploader:
             uri_prefix: uploads/images
             upload_destination: '%kernel.root_dir%/../web/uploads/images/'
             namer: vich_uploader.namer_uniqid
+fos_message:
+    db_driver: orm
+    thread_class: BaseBundle\Entity\Thread
+    message_class: BaseBundle\Entity\Msg

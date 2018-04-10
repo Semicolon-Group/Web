@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="_message_inbox" path="/">
+        <default key="_controller">MessageBundle:Message:inbox</default>
+    </route>
+
+    <route id="_message_search" path="/search">
+        <default key="_controller">MessageBundle:Message:search</default>
+    </route>
+
+    <route id="send_msg" path="/send_msg">
+        <default key="_controller">MessageBundle:Message:send</default>
+    </route>
+
+    <route id="read_thread" path="/read_thread">
+        <default key="_controller">MessageBundle:Message:readThread</default>
+    </route>
+
+    <route id="update_thread" path="/update_thread">
+        <default key="_controller">MessageBundle:Message:updateThread</default>
+    </route>
+
+    <route id="close_thread" path="/close_thread">
+        <default key="_controller">MessageBundle:Message:closeThread</default>
+    </route>
+
+    <route id="msg_icon" path="/msg_icon">
+        <default key="_controller">MessageBundle:Message:messageIcon</default>
+    </route>
+    
+</routes>

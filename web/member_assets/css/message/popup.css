@@ -1,0 +1,127 @@
+.popup{
+    position: fixed;
+    bottom: 0;
+    right: 40px;
+    width: 440px;
+    height: 0;
+    font-family: GT America, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+    z-index: 11;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(0,17,53,.16),0 0 5px 0 rgba(0,17,53,.16);
+    transition: height 0.5s ease-in;
+}
+.popup-header{
+    position: relative;
+}
+.popup-profile{
+    display: inline;
+    cursor: pointer;
+    max-width: 70%;
+    overflow: hidden;
+}
+.popup-photo{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.popup-name{
+    margin-left: 15px;
+}
+.popup-action{
+    display: inline;
+    float: right;
+}
+.popup-icon{
+    padding: 5px 5px 5px 5px;
+    cursor: pointer;
+    color: #aeb4bf;
+    z-index: 12;
+}
+.popup-icon:hover{
+    color: #949aa6;
+}
+.popup-hr{
+    margin: 10px 20px 2px 17px;
+}
+.message-list{
+    height: 220px;
+    width: 100%;
+    list-style: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 0 10px 0 10px;
+}
+.popup-msg{
+    display: block;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+.message-text{
+    text-align: left;
+    position: relative;
+    display: inline-block;
+    max-width: 70%;
+    padding: 7px 15px 7px 15px;
+    border-radius: 5px;
+}
+.msg-yours{
+    text-align: right;
+}
+.text-yours{
+    background-color: #4ba3c3;
+    color: white;
+}
+.text-theirs{
+    background-color: #f35d4e;
+    color: white;
+}
+.compose-msg{
+    position: relative;
+}
+.popup-textarea{
+    min-height: 60px;
+    max-height: 126px;
+    padding: 11px 8px 8px 13px;
+    font-size: 15px;
+    line-height: 21px;
+    width: 100%;
+    margin: 10px 0 10px 0;
+    display: block;
+    border: 1px solid #ccd0d9;
+    color: #2a2f35;
+    box-shadow: none;
+    border-radius: 3px;
+}
+.compose-btn{
+    position: absolute;
+    right: 0;
+    background-color: #4ba3c3;
+}
+
+/*-------------------*/
+.new_msg_number{
+    position: absolute;
+    top: 20px;
+    left: 18px;
+    padding-top: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    height: 22px;
+    border-radius: 11px;
+    min-width: 22px;
+    color: #fff;
+    background: #ff597e;
+    font-family: GT America,sans-serif;
+    text-align: center;
+    font-size: 12px;
+    line-height: normal;
+}
+.new_msg_count{
+    text-align: center;
+}

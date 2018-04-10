@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Comment
  *
  * @ORM\Table(name="comment", indexes={@ORM\Index(name="sender_id", columns={"sender_id"}), @ORM\Index(name="receiver_id", columns={"receiver_id"}), @ORM\Index(name="post_id", columns={"post_id"}), @ORM\Index(name="photo_id", columns={"photo_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BaseBundle\Repository\CommentRepository")
  */
 class Comment
 {
@@ -69,6 +69,10 @@ class Comment
      */
     private $sender;
 
+    /**
+     * @var string
+     */
+    private $profilePhoto;
 
 
     /**
@@ -223,5 +227,29 @@ class Comment
     public function getSender()
     {
         return $this->sender;
+    }
+
+    /**
+     * Set profilePhoto
+     *
+     * @param string $profilePhoto
+     *
+     * @return Comment
+     */
+    public function setProfilePhoto($profilePhoto)
+    {
+        $this->profilePhoto = $profilePhoto;
+
+        return $this;
+    }
+
+    /**
+     * Get profilePhoto
+     *
+     * @return string
+     */
+    public function getProfilePhoto()
+    {
+        return $this->profilePhoto;
     }
 }

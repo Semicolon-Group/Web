@@ -19,9 +19,10 @@ class PhotoRepository extends \Doctrine\ORM\EntityRepository
         )
             ->setParameter('user', $user)
             ->getResult();
-        if(!empty($result))
-            return 'uploads/images/' . $result[0]['image'];
-        return 'member_assets/img/member.jpg';
+        if(!empty($result)){
+            return '/mysoulmate/web/uploads/images/' . $result[0]['image'];
+        }
+        return '/mysoulmate/web/member_assets/img/member.jpg';
     }
 
     public function getPostPics($user)

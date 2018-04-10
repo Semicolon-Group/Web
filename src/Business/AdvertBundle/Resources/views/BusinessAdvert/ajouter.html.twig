@@ -16,7 +16,7 @@
 
 {% block body %}
 
-<script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+<script src="{{ asset('member_assets/js/jquery-2.1.4.min.js') }} "></script>
 <script type="text/javascript" >
 $(document).ready(function () {
     var date = new Date();
@@ -25,8 +25,8 @@ $(document).ready(function () {
     $('#basebundle_advert_endDate_day').val(date.getDate());
 
 
-    $('#table').css('border-spacing', '30px' )
-    $('#table').css('padding', '30px' )
+    $('#table').css('border-spacing', '30px' );
+    $('#table').css('padding', '30px' );
 
 
     $('#valider').addClass("btn btn-success","fa fa-check-circle");
@@ -49,9 +49,9 @@ $(document).ready(function () {
         var conceptName = $('#basebundle_advert_position').find(":selected").text();
 
         var prix;
-        if (prix == '') prix = 0
-        else if (conceptName == 'Bottom Banner 4dt/j ' ) prix = 4
-        else if (conceptName == 'Top Banner 10dt/j' ) prix = 10
+        if (prix == '') prix = 0;
+        else if (conceptName == 'Bottom Banner 4dt/j ' ) prix = 4;
+        else if (conceptName == 'Top Banner 10dt/j' ) prix = 10;
         else if (conceptName == 'Side Banner 7dt/j' ) prix = 7 ;
 
 

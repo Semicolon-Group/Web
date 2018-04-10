@@ -237,6 +237,7 @@ class User extends BaseUser implements ParticipantInterface
     public function __construct()
     {
         $this->event = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->createdAt = new \DateTime();
         parent::__construct();
     }
 
@@ -939,7 +940,9 @@ class User extends BaseUser implements ParticipantInterface
      */
     public function getAge(){
         $curDate = new \DateTime();
-        $age = $this->birthDate->diff($curDate)->y;
+        $age =0 ;
+        if($this->birthDate!=null)
+            $age = $this->birthDate->diff($curDate)->y;
         return $age;
     }
 

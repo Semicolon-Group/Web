@@ -76,7 +76,8 @@ class AdvertRepository extends EntityRepository
     }
     public function findPubsPourAdminDQL()
     {
-        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where  m.endDate>=CURRENT_TIMESTAMP() ORDER BY 
+        $q=$this->getEntityManager()->createQuery(
+            'select m from BaseBundle:Advert m where  m.endDate>=CURRENT_TIMESTAMP() ORDER BY 
                   m.state')
         ;
         return $q->getResult();

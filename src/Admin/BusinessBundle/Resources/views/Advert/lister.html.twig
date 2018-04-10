@@ -9,10 +9,9 @@
     <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
     <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
     <script >
-        {% for m in pubs %}
-        {% for i in [1..10] %}
         $(document).ready(function () {
 
+            {% for m in pubs %}
             $('#{{ m.id }}')
                 .countdown("{{ m.endDate | date('Y/m/d')}}",  function (event) {
                     $(this).text(
@@ -20,9 +19,8 @@
                     );
                 });
 
+            {% endfor %}
         });
-        {% endfor %}
-        {% endfor %}
         {% for m in pubs %}
 
         $('#dlt{{ m.id }}').click(function (){
@@ -152,7 +150,6 @@
                         <tbody>
 
                         {% for m in pubs %}
-                            {% for i in [1..10] %}
                                 <tr id="a{{ m.id }}">
                                     <td><span class="label label-info">{{ m.business.firstname }}</span></td>
                                     <td><span class="label label-info"> {{ m.content }}</span></td>
@@ -180,7 +177,6 @@
                                             <a  >Delete </a></button></td>
 
                                 </tr>
-                            {% endfor %}
                         {% endfor %}
 
                         </tbody>

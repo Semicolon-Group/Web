@@ -1,39 +1,73 @@
 
-{% block scripts %}
+
+    <section class="blog_grid_area">
+
+        <div class="container">
+            {% for m in sides %}
+                {% for i in [1..10]  %}
+                    {% if m.videoUrl == null  %}
+                        <div class="row">
+                            <div class="blog_grid_inner">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="blog_grid_item">
+                                        <div class="blog_grid_img">
+                                            <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
+                                            <div class="blog_share_area">
+                                                <a></a>
+                                                <a   id="{{ m.id }}-ad"  ><i class="fa fa-heart" aria-hidden="true" role="button"></i>{{ m.clicks }}</a>
+                                                <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    {% elseif  'https://www.youtube.com/embed/' in m.videoUrl %}
+                        <iframe width="280" height="250"
+                                src="{{ m.videoUrl }}">
+                        </iframe>
+                    {% else  %}
+                        <div class="row">
+                            <div class="blog_grid_inner">
+                                    <div class="blog_grid_item">
+                                        <div class="blog_grid_img">
+                                            <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
+                                            <div class="blog_share_area">
+                                                <a   id="{{ m.id }}-ad"  ><i class="fa fa-heart" aria-hidden="true" role="button"></i>{{ m.clicks }}</a>
+                                                <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+
+                        </div>
+                    {% endif %}
+                    <br>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <br>
+    <br><br><br><br><br>
+
+
     <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
     <script type="text/javascript">
-        function f(){
-
-            $.ajax({
-                url: "{{path('refrech')}}",
-                type: "POST",
-                cache: false,
-                success  : function (data){
-                    var id = data['id'];
-                    alert(id);
-                    $('#x').css("background", "url("+id+") no-repeat scroll center center; background-size: cover;");
-
-
-                }
-
-            })
-            setInterval(f(),7000);
-        }
 
         $(document).ready(function () {
 
-
             {% for m in sides %}
-
-            $('#{{ m.id }}').click(function (){
-
+            $('#{{ m.id }}-ad').click(function (){
                 $.ajax({
                     url: "{{path('increment')}}",
                     type: "POST",
-                    cache: false,
                     data: {
-                        "id" : $('#{{ m.id }}').attr('id')
-                    },
+                        "id" : {{ m.id }}
+                    }
 
                 });
             });
@@ -51,69 +85,4 @@
             fjs.parentNode.insertBefore(js, fjs); }
         (document, 'script', 'facebook-jssdk'));
     </script>
-{% endblock %}
-
-{% block body %}
-
-    <section class="blog_grid_area">
-
-        <div class="container">
-            {% for m in sides %}
-                {% for i in [1..10]  %}
-                    {% if m.videoUrl == null  %}
-                        <div class="row">
-                            <div class="blog_grid_inner">
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="blog_grid_item">
-                                        <div class="blog_grid_img">
-                                            <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
-                                            <div class="blog_share_area">
-                                                <a></a>
-                                                <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true" role="button"></i>{{ m.clicks }}</a>
-                                                <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    {% elseif  'https://www.youtube.com/embed/' in m.videoUrl %}
-                        <iframe width="280" height="250"
-                                src="{{ m.videoUrl }}">
-                        </iframe>
-                    {% else  %}
-                        <div class="row">
-                            <div class="blog_grid_inner">
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="blog_grid_item">
-                                        <div class="blog_grid_img">
-                                            <img src="{{ asset('member_assets/') }}images/{{ m.photoUrl }}" alt="" style="width: 280px ; height : 250px">
-                                            <div class="blog_share_area">
-                                                <a   id="{{ m.id }}"+i  ><i class="fa fa-heart" aria-hidden="true" role="button"></i>{{ m.clicks }}</a>
-                                                <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    {% endif %}
-                    <br>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    </section>
-
-    <br>
-    <br><br><br><br><br>
-
-
-    <!--================End Blog slider Area =================-->
-{% endblock %}
-
-
 

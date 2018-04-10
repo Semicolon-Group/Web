@@ -12,14 +12,7 @@
 {% endblock %}
 
 {% block banner %}
-    <!--<section class="banner_area">
-        <div class="container">
-            <div class="banner_content">
-                <h3 title="Discussions"><img class="left_img" src="{{ asset('member_assets/img/banner/t-left-img.png') }}" alt="">News Feed<img class="right_img" src="{{ asset('member_assets/img/banner/t-right-img.png') }}" alt=""></h3>
-                <a href="">Home</a>
-            </div>
-        </div>
-    </section>-->
+    {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherBig')) }}
 {% endblock %}
 
 {% block body %}
@@ -326,8 +319,12 @@
                             </ul>
                         </aside>
                         -->
+                        {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherSide')) }}
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherBottom')) }}
             </div>
         </div>
     </section>

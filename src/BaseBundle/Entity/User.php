@@ -231,58 +231,12 @@ class User extends BaseUser
     private $event;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $preferedRelations;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $preferedStatuses;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->event = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct();
-    }
-
-    /**
-     * Get preferedRelations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPreferedRelations(){
-        return $this->preferedRelations;
-    }
-
-    /**
-     * Set preferedRelations
-     */
-    public function setPreferedRelations($preferedRelations){
-        $this->preferedRelations = $preferedRelations;
-
-        return $this;
-    }
-
-    /**
-     * Get preferedStatuses
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPreferedStatuses(){
-        return $this->preferedStatuses;
-    }
-
-    /**
-     * Set preferedRelations
-     */
-    public function setPreferedStatuses($preferedStatuses){
-        $this->preferedStatuses = $preferedStatuses;
-
-        return $this;
     }
 
     /**

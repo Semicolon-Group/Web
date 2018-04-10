@@ -114,20 +114,6 @@ function checkPasswordMatch() {
 }
 
 function checkValidity() {
-    if($('div#fos_user_registration_form_preferedStatuses input[type=checkbox]:checked').length == 0){
-        document.getElementById('fos_user_registration_form_preferedStatuses_0').setCustomValidity("At least one prefered marital status needs to be selected");
-        showThirdPage();
-        return;
-    }else{
-        document.getElementById('fos_user_registration_form_preferedStatuses_0').setCustomValidity("");
-    }
-    if($('div#fos_user_registration_form_preferedRelations input[type=checkbox]:checked').length == 0){
-        document.getElementById('fos_user_registration_form_preferedRelations_0').setCustomValidity("At least one prefered relation needs to be selected");
-        showThirdPage();
-        return;
-    }else{
-        document.getElementById('fos_user_registration_form_preferedRelations_0').setCustomValidity("");
-    }
     $('.control').each(function (i, v) {
         if(!v.checkValidity()){
             if(v.classList.contains('first-control')){

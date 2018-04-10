@@ -321,13 +321,11 @@
                                 <div class="answers_list">
                                     <div id="answers-display">
                                         <div style="width: 100%; text-align: center;">
-                                            <a href="#add_answer_div" style="font-size: medium;">
-                                                {% if available_questions_count != 0%}
-                                                    You can still answer {{ available_questions_count }} question(s)
-                                                {% else %}
-                                                    You have answered all available questions
-                                                {% endif %}
-                                            </a>
+                                            {% if available_questions_count != 0%}
+                                                <a href="#add_answer_div" style="font-size: medium;">You can still answer {{ available_questions_count }} question(s)</a>
+                                            {% else %}
+                                                <a href="javascript:void(0);" style="font-size: medium;">You have answered all available questions</a>
+                                            {% endif %}
                                         </div>
                                         {% for answer in answers %}
                                             <div class="row card-container margins" style="width: 100%;">

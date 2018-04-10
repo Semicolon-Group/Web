@@ -34,6 +34,7 @@ class UserRepository extends EntityRepository
             ->setParameter('id', $user->getId())
             ->getResult();
     }
+
     public function getCountMaleByMonth(){
         $emConfig = $this->getEntityManager()->getConfiguration();
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
@@ -48,7 +49,7 @@ class UserRepository extends EntityRepository
                 from BaseBundle:User m 
                 WHERE m.roles LIKE :roles AND YEAR(m.createdAt) = :cyear AND m.gender = TRUE
                 GROUP BY creation_month, creation_year
-            ")->setParameter('roles', 'a:0%')->setParameter('cyear', $year);
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}')->setParameter('cyear', $year);
 
         return $query->getResult();
     }
@@ -67,7 +68,7 @@ class UserRepository extends EntityRepository
                 from BaseBundle:User m 
                 WHERE m.roles LIKE :roles AND YEAR(m.createdAt) = :cyear AND m.gender = FALSE 
                 GROUP BY creation_month, creation_year
-            ")->setParameter('roles', 'a:0%')->setParameter('cyear', $year);
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}')->setParameter('cyear', $year);
 
         return $query->getResult();
     }
@@ -79,7 +80,7 @@ class UserRepository extends EntityRepository
                 from BaseBundle:User m 
                 WHERE m.roles LIKE :roles
                 GROUP BY m.gender
-            ")->setParameter('roles', 'a:0%');
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}');
         return $query->getResult();
     }
 
@@ -91,7 +92,7 @@ class UserRepository extends EntityRepository
                 INNER JOIN m.address a
                 WHERE m.roles LIKE :roles
                 GROUP BY city
-            ")->setParameter('roles', 'a:0%');
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}');
         return $query->getResult();
     }
 

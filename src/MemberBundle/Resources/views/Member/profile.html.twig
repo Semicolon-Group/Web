@@ -110,6 +110,9 @@
 {% endblock %}
 
 {% block body %}
+    {{ render(controller(
+    'SignalBundle:UserSignal:new', { 'request':app.request }
+    )) }}
     <div id="loading-modal" class="modal fade centered-modal" role="dialog" style="display: flex; align-items: center; justify-content: center;" data-backdrop="static" data-keyboard="false">
         <div class="loader1"></div>
         <div class="loader2"></div>

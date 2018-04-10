@@ -95,10 +95,10 @@
                                                             <span class="input-group-btn">
                                                                 <span class="btn btn-primary btn-file">
                                                                     Browse&hellip;
-                                                                    <input id="basebundle_experience_imageFile_file" name="basebundle_experience[imageFile][file]" required="required" type="file">
+                                                                    <input accept=".png, .jpg, .jpeg" id="basebundle_experience_imageFile_file" name="basebundle_experience[imageFile][file]" required="required" type="file">
                                                                 </span>
                                                             </span>
-                                                            <input id="url_display" type="text" class="form-control" readonly>
+                                                            <input id="url_display" type="text" class="form-control readonly">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -424,6 +424,20 @@
                 editExperience();
             }else{
                 addExperience();
+            }
+        });
+
+        $(".readonly").on('keydown paste', function(e){
+            e.preventDefault();
+        });
+
+        $('#basebundle_experience_imageFile_file').change(function () {
+            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+            var type = $('#basebundle_experience_imageFile_file')[0].files[0].type;
+            if($.inArray(type, ValidImageTypes) < 0){
+                document.getElementById('url_display').setCustomValidity('Please select a valid file type');
+            }else{
+                document.getElementById('url_display').setCustomValidity('');
             }
         });
 

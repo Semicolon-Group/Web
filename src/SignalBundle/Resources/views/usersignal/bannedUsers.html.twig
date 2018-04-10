@@ -1,0 +1,109 @@
+{% extends "admin_base.html.twig" %}
+{% block  stylesheets %}
+    <style>
+
+        #sect{
+            background-color: transparent;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+{% endblock %}
+{% block body %}
+    <section id="sect">
+       <center><h1 style="color: #384659; -ms-text-justify: distribute " ><strong> List of Banned Users </strong></h1></center><br>
+        <table id="dynamic-table" class="table table-striped table-bordered table-hover" >
+        <thead>
+        <tr style="background-color: #384659;">
+            <th style="color: white"><strong>User name</strong></th>
+            <th style="margin-left: -10cm; color: white;"><strong>User First name</strong></th>
+            <th style="color: white"><strong>User Last name</strong></th>
+            <th style="color: white"><strong>User birth Date</strong></th>
+            <th style="color: white"><strong>User gender</strong></th>
+            <th style="color: white"><strong> Action </strong></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for b in ban %}
+        <tr>
+            <td> {{ b.username }}</td>
+            <td>{{ b.getFirstname()  }}  </td>
+            <td> {{ b.getLastname() }}</td>
+            <td> {{ b.getBirthDate() |date }}</td>
+            <td> {% if b.gender %}Male{% else %}Female{% endif %}</td>
+            <td><a href="{{ path('Remove_ban', { 'id': b.id }) }}">   <button type="button "  style="background-color: #ffa700" class="btn btn-warning"  /><span class="glyphicon glyphicon-edit"></span> Activate user </button>
+                </a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>User name</th>
+            <th>User First name</th>
+            <th>User Last name</th>
+            <th>User birth Date</th>
+            <th>User gender</th>
+            <th> Action </th>
+        </tr>
+        </tfoot>
+</table>
+        <br>
+        <a href="{{ path('Signal_index') }}" style="color:#384659;"><strong>Return to the Signals List</strong></a>
+        {# display navigation #}
+        <div class="navigation" style="margin-left: 22cm;">
+            {{ knp_pagination_render(ban) }}
+        </div>
+    <script src="{{ asset('member_assets/js/jquery-2.1.4.min.js') }}"></script>
+
+    <script src="{{asset('datatable_assets/js/jquery.dataTables.min.js')}}"></script>
+    <script
+            src="{{asset('datatable_assets/js/jquery.dataTables.bootstrap.min.js')}}"></script>
+
+    <script type="text/javascript">
+        jQuery(function($) {
+
+            // Setup - add a text input to each footer cell
+            $('#dynamic-table tfoot th')
+                    .each(
+                            function() {
+                                var title = $(this).text();
+                                $(this)
+                                        .html(
+                                                '<input type="text"  width="0.5cm;" placeholder="Search '+title+'" />');
+                            });
+
+            //initiate dataTables plugin
+            var tableSignal = $('#dynamic-table').DataTable({
+
+                //search boxes on top without replacing the columns titles
+                'initComplete' : function() {
+                    var r = $('#dynamic-table tfoot tr');
+                    r.find('th').each(function() {
+                        $(this).css('padding', 8);
+                    });
+                    $('#dynamic-table thead').append(r);
+                    $('#search_0').css('text-align', 'left');
+                },
+
+                bAutoWidth : false,
+                "aoColumns" : [ null, null, null, null, null,null],
+                "aaSorting" : [],
+                "bPaginate" :false,
+
+            });
+
+            tableSignal.columns().every(function() {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change', function() {
+                    if (that.search() !== this.value) {
+                        that.search(this.value).draw();
+                    }
+                });
+            });
+
+        });
+    </script>
+    </section>
+{% endblock %}

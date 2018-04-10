@@ -83,19 +83,9 @@ class UserType extends AbstractType
                     'Marital Status' => array('selected' => 'selected', 'disabled' => true)
                 )
             ))
-            ->add('preferedStatuses', ChoiceType::class, array(
-                'choices' => CivilStatus::getEnumAsArray(),
-                'multiple' => true,
-                'expanded' => true
-            ))
             ->add('address', AddressType::class, array(
                 'label' => false
             ))
-            ->add('preferedRelations', ChoiceType::class, array(
-                'choices' => RelationType::getEnumAsArray(),
-                'multiple' => true,
-                'expanded' => true)
-            )
             ->add('category', ChoiceType::class, array(
                     'choices' => array('Category' => null) + Categorie::getEnumAsArray(),
                     'choice_attr' => array(

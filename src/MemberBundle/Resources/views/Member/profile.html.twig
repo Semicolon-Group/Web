@@ -5,6 +5,8 @@
 {% block stylesheets %}
     <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
     <style>
+        body { padding-right: 0 !important }
+
         .loader1 {
             border: 10px solid #cce6f4; /* Light grey */
             border-top: 10px solid transparent; /* Blue */
@@ -108,7 +110,10 @@
 {% endblock %}
 
 {% block body %}
-    <div id="loading-modal" class="modal centered-modal" role="dialog" style="display: flex; align-items: center; justify-content: center;" data-backdrop="static" data-keyboard="false">
+    {{ render(controller(
+    'SignalBundle:UserSignal:new', { 'request':app.request }
+    )) }}
+    <div id="loading-modal" class="modal fade centered-modal" role="dialog" style="display: flex; align-items: center; justify-content: center;" data-backdrop="static" data-keyboard="false">
         <div class="loader1"></div>
         <div class="loader2"></div>
         <div class="loader3"></div>
@@ -203,7 +208,6 @@
 
         </div>
     </div>
-
     <section class="blog_grid_area">
         <div class="container">
             <div class="row">
@@ -260,8 +264,8 @@
                                         <li><b>Marital status</b></li>
                                         <li><b>Number of children</b></li>
                                         <li><b>Member since</b></li>
-                                        <li><b>Prefered relations</b></li>
-                                        <li><b>Prefered marital statuses</b></li>
+                                        <li><b style="visibility: hidden;">Prefered relations</b></li>
+                                        <li><b style="visibility: hidden;">Prefered marital statuses</b></li>
                                         <li><b style="visibility: hidden;">Looking for a</b></li>
                                         <li><b style="visibility: hidden;">Work as</b></li>
                                     </ul>
@@ -270,16 +274,8 @@
                                         <li>{{ user.civilStatus  }}</li>
                                         <li>{{ user.childrenNumber }}</li>
                                         <li>{{ user.createdAt | date('F d, Y') }}</li>
-                                        <li>
-                                            {% for relation in user.preferedRelations %}
-                                                {{ relation.relation }}
-                                            {% endfor %}
-                                        </li>
-                                        <li>
-                                            {% for status in user.preferedStatuses %}
-                                                {{ status.status }}
-                                            {% endfor %}
-                                        </li>
+                                        <li><b style="visibility: hidden;">Man</b></li>
+                                        <li><b style="visibility: hidden;">Man</b></li>
                                         <li><b style="visibility: hidden;">Man</b></li>
                                         <li><b style="visibility: hidden;">Designer </b></li>
                                     </ul>
@@ -606,6 +602,7 @@
                         $('#answer-form').data('bs.modal').options.keyboard = true;
                     }else{
                         $("#answer-form").modal('hide');
+                        $('#loading-modal').modal('hide');
                         alert("No more question to answer");
                         $("#loading-modal").modal('hide');
                     }

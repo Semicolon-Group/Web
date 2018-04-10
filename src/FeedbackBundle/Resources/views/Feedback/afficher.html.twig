@@ -1,0 +1,18 @@
+
+<table border="1">
+    <tr>
+        <th>id</th>
+        <th>sender</th>
+        <th>content</th>
+        <th>state</th>
+<th>date</th>
+            </tr>
+
+    {% for c in signals %}
+    <td>{{ c.id}}</td>
+    <td>{{ c.content }}</td>
+<td>{{ c.state }}</td>
+<td>{{ c.date|date }}</td>
+<td>{{ c.sender }}</td>{% endfor %}
+
+</table>

@@ -1,6 +1,6 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}Advert | Create{% endblock %}
+{% block title %}Advert |Admin Modification{% endblock %}
  {% block stylesheets %}
 
 
@@ -8,7 +8,7 @@
      <link href="{{ asset('business_assets/') }}css/main.css" rel="stylesheet" />
 
  {% endblock %}
-{% block page_title %}Advert creation form{% endblock %}
+{% block page_title %}Advert Modification{% endblock %}
 {% block page_path %}
     <li class="breadcrumb-item">Advert</li>
     <li class="breadcrumb-item active">Create</li>
@@ -90,11 +90,11 @@
             $('#basebundle_advert_state').addClass("form-control");
             $('#basebundle_advert_endDate_day').addClass("form-control");
 
-            $('#basebundle_advert_content').addClass("form-control")
-            $('#basebundle_advert_photoUrl').addClass("form-control")
-            $('#basebundle_advert_videoUrl').addClass("form-control")
-            $('#basebundle_advert_reason').addClass("form-control")
-            $('#basebundle_advert_price').addClass("form-control")
+            $('#basebundle_advert_content').addClass("form-control");
+            $('#basebundle_advert_photoUrl').addClass("form-control");
+            $('#basebundle_advert_videoUrl').addClass("form-control");
+            $('#basebundle_advert_reason').addClass("form-control");
+            $('#basebundle_advert_price').addClass("form-control");
 
         });
     </script>
@@ -117,7 +117,7 @@
 
         <tr>
             <td>Reason</td>
-            <td>{{ form_widget(form.reason) }}</td>
+            <td>{{ form_widget(form.reason , { 'required' : 'false' }) }}</td>
         </tr>
 
         <tr>

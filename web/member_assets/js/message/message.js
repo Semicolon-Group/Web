@@ -2,9 +2,9 @@ function popup(partId) {
     closeAllOthers(partId);
     $("#" + partId + "-popup").css('height', '430px').css('padding', '10px 20px 20px 20px');
     readThread(partId);
+    update(partId);
     setTimeout(function () {
         $("#" + partId + "-popup-mini").show();
-        update(partId);
     }, 500);
 }
 

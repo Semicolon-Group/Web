@@ -122,7 +122,7 @@ function update(id) {
                     blink(id);
             }
         });
-    }, 10000);
+    }, 5000);
 }
 function stopUpdate() {
     clearInterval(time);
@@ -150,9 +150,7 @@ function global() {
     var partId = $("#global").data('id');
     globalVar = partId;
     $("#" + partId + "-popup").css('height', '60px').css('padding', '10px 20px 20px 20px');
-    setTimeout(function () {
-        update(partId);
-    }, 500);
+    update(partId);
 }
 function closeThread(partId) {
     partId = partId.substr(0, partId.length - 6);

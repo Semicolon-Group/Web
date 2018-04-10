@@ -110,9 +110,6 @@
 {% endblock %}
 
 {% block body %}
-    {{ render(controller(
-    'SignalBundle:UserSignal:new', { 'request':app.request }
-    )) }}
     <div id="loading-modal" class="modal fade centered-modal" role="dialog" style="display: flex; align-items: center; justify-content: center;" data-backdrop="static" data-keyboard="false">
         <div class="loader1"></div>
         <div class="loader2"></div>
@@ -270,8 +267,20 @@
                                         <li><b style="visibility: hidden;">Work as</b></li>
                                     </ul>
                                     <ul>
-                                        <li>{{ user.relegion }}</li>
-                                        <li>{{ user.civilStatus  }}</li>
+                                        <li>
+                                            {% for key, value in religions %}
+                                                {% if user.relegion == value %}
+                                                    {{ key }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </li>
+                                        <li>
+                                            {% for key,value in statuses %}
+                                                {% if user.civilStatus == value %}
+                                                    {{ key }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </li>
                                         <li>{{ user.childrenNumber }}</li>
                                         <li>{{ user.createdAt | date('F d, Y') }}</li>
                                         <li><b style="visibility: hidden;">Man</b></li>
@@ -311,7 +320,15 @@
                             <div role="tabpanel" class="tab-pane fade" id="answers">
                                 <div class="answers_list">
                                     <div id="answers-display">
-                                        <a href="#add_answer_div">Available question to answer: {{ available_questions_count }}</a>
+                                        <div style="width: 100%; text-align: center;">
+                                            <a href="#add_answer_div" style="font-size: medium;">
+                                                {% if available_questions_count != 0%}
+                                                    You can still answer {{ available_questions_count }} question(s)
+                                                {% else %}
+                                                    You have answered all available questions
+                                                {% endif %}
+                                            </a>
+                                        </div>
                                         {% for answer in answers %}
                                             <div class="row card-container margins" style="width: 100%;">
                                                 <div class="col-md-12">
@@ -438,10 +455,8 @@
                         });
                         $('#answer-form').data('bs.modal').options.backdrop = 'static';
                         $('#answer-form').data('bs.modal').options.keyboard = false;
-                        $('#loading-modal').modal('hide');
-                    }else{
-                        generateAnswer();
                     }
+                    $('#loading-modal').modal('hide');
                 }
             });
         }
@@ -603,8 +618,6 @@
                     }else{
                         $("#answer-form").modal('hide');
                         $('#loading-modal').modal('hide');
-                        alert("No more question to answer");
-                        $("#loading-modal").modal('hide');
                     }
                 }
             });

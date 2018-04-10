@@ -57,7 +57,7 @@ class AdvertController extends Controller
         )])
             ->add('payed',ChoiceType::class,[
             'choices' => ['Payed' => '1', 'Not payed' => '0']
-        ])->add('reason',TextType::class, ['required' => true]) ->add('Valider',SubmitType::class);;
+        ])->add('reason',TextType::class) ->add('Valider',SubmitType::class);;
         $form->handleRequest($request);
         if ($form->isSubmitted() )
         {

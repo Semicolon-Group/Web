@@ -54,6 +54,47 @@ class BusinessAdvertController extends Controller
             'bottoms'=>$var3
         ));
     }
+    /**
+     * @Route("/Afficher_big")
+     */
+    public function AfficherBigAction()
+    {
+
+        $var2 = $this->getDoctrine()->getRepository(Advert::class)->findBigPubDQL();
+
+
+        return $this->render('BusinessAdvertBundle:BusinessAdvert:bigpub.html.twig', array(
+
+            'bigs' => $var2
+
+        ));
+    }
+    /**
+     * @Route("/Afficher_side")
+     */
+    public function AfficherSideAction()
+    {
+        $var = $this->getDoctrine()->getRepository(Advert::class)->findSidePubDQL();
+
+
+        return $this->render('BusinessAdvertBundle:BusinessAdvert:sidepub.html.twig', array(
+            'sides' => $var,
+
+        ));
+    }
+    /**
+     * @Route("/Afficher_bottom")
+     */
+    public function AfficherBottomAction()
+    {
+
+        $var3 = $this->getDoctrine()->getRepository(Advert::class)->findBottomPubDQL();
+
+        return $this->render('BusinessAdvertBundle:BusinessAdvert:bottompub.html.twig', array(
+
+            'bottoms'=>$var3
+        ));
+    }
 
     /**
      * @Route("/Ajouter",name="business_adverts_add")

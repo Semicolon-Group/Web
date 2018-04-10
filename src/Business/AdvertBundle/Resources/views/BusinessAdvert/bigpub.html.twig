@@ -1,0 +1,77 @@
+{% extends "member_base.html.twig" %}
+
+{% block scripts %}
+    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+    <script type="text/javascript">
+        function f(){
+
+            $.ajax({
+                url: "{{path('refrech')}}",
+                type: "POST",
+                cache: false,
+                success  : function (data){
+                    var id = data['id'];
+                    alert(id);
+                    $('#x').css("background", "url("+id+") no-repeat scroll center center; background-size: cover;");
+
+
+                }
+
+            })
+            setInterval(f(),7000);
+        }
+
+        $(document).ready(function () {
+
+            {% for m in bigs %}
+
+            $('#{{ m.id }}').click(function (){
+
+                $.ajax({
+                    url: "{{path('increment')}}",
+                    type: "POST",
+                    cache: false,
+                    data: {
+                        "id" : $('#{{ m.id }}').attr('id')
+                    },
+
+                });
+            });
+
+            {% endfor %}
+        });
+
+    </script>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v2.12&appId=212394559315715&autoLogAppEvents=1';
+            fjs.parentNode.insertBefore(js, fjs); }
+        (document, 'script', 'facebook-jssdk'));
+    </script>
+{% endblock %}
+{% block title %}News Feed{% endblock %}
+
+       {% block banner %}
+
+           {% for m in bigs %}
+               {% set menuUri %}https://{{ m.business.link }}{% endset %}
+
+               <section role="button" class="banner_area" style="background: url({% block banner_img %} {{ asset('member_assets/images/') }}{{ m.photoUrl}}{% endblock %}) no-repeat scroll center center; background-size: cover;" id="x">
+                   <div class="container">
+                       <div class="banner_content">
+                           <br><br><br><br><br><br><br><br><br><br><br><br><br>
+                       </div>
+                   </div>
+                   <div class="fb-like" data-href="https://{{ m.business.link }}" data-layout="button" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+
+               </section>
+
+           {% endfor %}
+       {% endblock %}
+
+
+
+

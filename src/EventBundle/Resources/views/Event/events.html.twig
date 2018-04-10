@@ -40,7 +40,7 @@
                                     <div class="blog_grid_date">
                                         <a href="#">{{ event['event'].business }}</a>
                                         <a href="#">{{ event['event'].startDate | date('y-M-d') }}</a>
-                                        <a href="#">Dating</a>
+                                        <a href="#">{{ event['event'].address.country }}</a>
                                     </div>
 
 
@@ -60,10 +60,9 @@
 
 
                                     </p>
-                                    <ul class="list-inline btn-yellow">
-                                        <li><a href="{{ path('info_event',{'id':event['event'].id}) }}"class="btn btn-primary ">EVALUER</a></li>
-                                    </ul>
-
+                                      <div class="search_btn">
+                                        <a href="{{ path('info_event',{'id':event['event'].id}) }}" class="register_angkar_btn" >EVALUER</a>
+                                      </div>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +108,7 @@
                             $(that).attr('data-url', currentUrl.join('/'));
                         }
                         else{
-                            alert('no')
+                            alert('No more places')
                         }
                     }
                 },

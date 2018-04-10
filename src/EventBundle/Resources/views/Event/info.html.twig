@@ -33,15 +33,15 @@
                                     </div>
                                 </div>
                                 <div class="blog_grid_content">
-                                    <h3>{{ m.title }}</h3>
+                                     <h3>Name: {{ m.title }}</h3>
                                     <div class="blog_grid_date">
-                                        <a href="#">{{m.business }}</a>
-                                        <a href="#">{{ m.startDate | date('y-M-d') }}</a>
-                                        <a href="#">Dating</a>
+                                        Business :<a href="#">{{m.business }}</a><br>
+                                        Date :<a href="#">{{ m.startDate | date('y-M-d') }}</a><br>
+                                        Address :<a href="#">{{ m.address.city }}</a>
                                     </div>
 
 
-                                    <p>{{ m.content }}</p>
+                                    <p>Content :{{ m.content }}</p>
 
 
 

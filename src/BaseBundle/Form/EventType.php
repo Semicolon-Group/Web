@@ -26,13 +26,14 @@ class EventType extends AbstractType
             ->add('title', TextareaType::class, ['required' => true])
             ->add('photoUrl',FileType::class, array('data_class' => null))
             ->add('maxPlaces', NumberType::class, array('attr' => ['min' => 0]))
-            ->add('startDate',DateTimeType::class, ['required' => true], array(
+            ->add('startDate',DateTimeType::class, array(
             'data' => new \DateTime(),
             'attr' => array('style' => 'display: yes;'),
             'label' => false
         ))
             ->add('state', ChoiceType::class,[
                 'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
+
             ])
             ->add('reason',TextareaType::class, ['required' => true])
             ->add('endDate',DateType::class, ['required' => true])

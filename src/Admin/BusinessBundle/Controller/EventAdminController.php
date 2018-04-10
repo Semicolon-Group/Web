@@ -43,11 +43,7 @@ class EventAdminController extends Controller
         $var2 =$this->getDoctrine()->getRepository(Event::class)->findNotifsEventsAdmin();
         $event=$repo->find($id);
         $x = $event->getState() ;
-        $editForm = $this->createForm('BaseBundle\Form\EventType', $event)->add('state', ChoiceType::class,[
-            'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
-        ])
-            ->add('reason',TextType::class, ['required' => true])->add('Valider',SubmitType::class);
-        $editForm->handleRequest($request);
+        $editForm = $this->createForm('BaseBundle\Form\EventType', $event);$editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -55,18 +51,15 @@ class EventAdminController extends Controller
 
             $var1 =$this->getDoctrine()->getRepository(Event::class)->find($id);
             if ($var1->getState() != $x && $var1->getState()== 1  ) {
-                /*$message = (new Swift_Message())
+                $message = (new Swift_Message())
                     ->setSubject('MySoulmate | Add approved !')
                     ->setFrom('mysoulmatepi@gmail.com')
-                    ->setTo('haithem.besghaier@esprit.tn')
+                    ->setTo($event->getBusiness()->getEmail())
                     ->setBody(
-                        "Bonjour Monsieur  Nous avons confirmé votre demande de pub !
-                    Vous pouvez maintenant la payer afin qu'elle soit publiée sur notre Site !             
-                     "
-                        ." Votre . ",
+                        "Hi " .$event->getBusiness()->getFirstName() . " , your event is approved !",
                         'text/html'
                     );
-                $this->get('mailer')->send($message);*/
+                $this->get('mailer')->send($message);
             }var_dump($var1->getState());
             return $this->redirectToRoute("admin_businesses");
         }

@@ -49,9 +49,8 @@ class DefaultController extends Controller
     public function createAction(Request $request){
         $event = new Event();
         /*$event->setUser($this->getUser());*/
-        $form= $this->createForm(EventType::class,$event)
+        $form= $this->createForm(EventType::class,$event);
             /*->add('photoUrl',FileType::class, ['required' => true , 'data_class' => null])*/
-            ->add('Valider',SubmitType::class);
         $form = $this->createForm('BaseBundle\Form\EventType', $event);
         $form->handleRequest($request);
 
@@ -85,7 +84,6 @@ class DefaultController extends Controller
     {
 
         $editForm = $this->createForm('BaseBundle\Form\EventType', $event)
-            ->add('Valider',SubmitType::class);
         ;
         $editForm->handleRequest($request);
 

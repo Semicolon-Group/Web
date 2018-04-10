@@ -31,8 +31,10 @@ class MemberController extends Controller
      */
     public function profileAction(Request $request)
     {
-        if (!($this->container->get('security.authorization_checker')->isGranted('ROLE_USER')))
-            return $this->redirectToRoute('homepage');
+        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
+            return $this->redirectToRoute('admin_home');
+        else if($this->container->get('security.authorization_checker')->isGranted('ROLE_BUSINESS'))
+            return $this->redirectToRoute('business_home');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $likes = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeSender' => $user));
         foreach ($likes as $like){

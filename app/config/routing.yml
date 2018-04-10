@@ -7,6 +7,15 @@ admin_question:
     type:     annotation
     prefix:   /admin/questions
 
+publicite:
+    resource: "@PubliciteBundle/Controller/AdvertController.php"
+    type:     annotation
+    prefix:   /publicite
+publicite_admin:
+    resource: "@PubliciteBundle/Controller/AdminController.php"
+    type:     annotation
+    prefix:   /publiciteAdmin
+
 admin_chart:
     resource: "@AdminChartBundle/Controller/"
     type:     annotation
@@ -32,8 +41,11 @@ business_chart:
     type:     annotation
     prefix:   /business/charts
 
+
+
+
 business_advert:
-    resource: "@BusinessAdvertBundle/Controller/"
+    resource: "@BusinessAdvertBundle/Controller/BusinessAdvertController.php"
     type:     annotation
     prefix:   /business/adverts
 

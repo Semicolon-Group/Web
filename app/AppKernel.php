@@ -32,6 +32,7 @@ class AppKernel extends Kernel
             new Admin\MemberBundle\AdminMemberBundle(),
             new Admin\BusinessBundle\AdminBusinessBundle(),
             new Admin\ChartBundle\AdminChartBundle(),
+            new PubliciteBundle\PubliciteBundle(),
             new Business\FOSSecurityBundle\BusinessFOSSecurityBundle(),
             new Admin\FOSSecurityBundle\AdminFOSSecurityBundle(),
             new FOS\MessageBundle\FOSMessageBundle(),

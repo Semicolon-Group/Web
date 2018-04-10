@@ -1,0 +1,90 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}AdminBusinessBundle:Advert:Lister{% endblock %}
+{% block stylesheets %}
+ <link rel="stylesheet" href="{{ asset('admin_assets/') }}css/style.css">
+    <link href="{{ asset('business_assets/') }}css/demo.css" rel="stylesheet" />
+    <link href="{{ asset('business_assets/') }}css/main.css" rel="stylesheet" />
+{% endblock %}
+
+
+{% block scripts %}
+ <script src="{{ asset('member_assets/js/jquery-2.1.4.min.js') }} "></script>
+    <script type="text/javascript">
+     $(document).ready(function () {
+
+         var date = new Date();
+         $('#basebundle_promotion_endDate_year').val(date.getFullYear());
+         $('#basebundle_promotion_endDate_month').val(date.getMonth()+1);
+         $('#basebundle_promotion_endDate_day').val(date.getDate());
+
+
+         $('#table').css('border-spacing', '30px' )
+         $('#table').css('padding', '30px' )
+        $('#valider').addClass("btn btn-success","fa fa-check-circle");
+         $('#basebundle_promotion_name').addClass("form-control");
+         $('#basebundle_promotion_code').addClass("form-control");
+         $('#basebundle_promotion_endDate_year').addClass("form-control");
+         $('#basebundle_promotion_endDate_month').addClass("form-control");
+         $('#basebundle_promotion_endDate_day').addClass("form-control");
+         $('#basebundle_promotion_code').attr('readonly',"true");
+         $('#basebundle_promotion_name').attr('required',"true");
+
+
+             var text = "";
+             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+             for (var i = 0; i < 7; i++)
+                 text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            $('#basebundle_promotion_code').val(text);
+
+            $('#valider').click(function f(e){
+
+                var pub = new Date(
+                    $('#basebundle_promotion_endDate_year').val()
+                    ,
+                    $('#basebundle_promotion_endDate_month').val()-1
+                    ,
+                    $('#basebundle_promotion_endDate_day').val());
+                var d = new Date();
+                var s = (pub.getTime()-d.getTime());
+                var diff = Math.ceil(s / (1000 * 3600 * 24));
+                if (diff <= 0)
+                {
+                    e.preventDefault();
+                    alert("Please select a valid end date !");
+
+                }
+
+            });
+
+
+
+     });
+    </script>
+
+{% endblock %}
+ {% block body %}
+
+{{ form_start(form) }}
+     <table id="table">
+      <tr>
+       <td>Promotion's name   </td><td>{{ form_widget(form.name) }}</td>
+      </tr>
+      <tr>
+       <td>Promotion's code   </td><td>{{ form_widget(form.code) }}</td>
+      </tr>
+      <tr>
+       <td>Promotion's date   </td><td>{{ form_widget(form.endDate) }}</td>
+      </tr>
+      <tr>  </tr>
+      <tr>
+
+       <td></td> <td >{{ form_widget(form.Valider ,  { 'id': 'valider' })  }}</td>
+      </tr>
+     </table>
+
+
+     {{ form_end(form) }}
+{% endblock %}

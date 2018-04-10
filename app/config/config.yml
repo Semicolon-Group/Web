@@ -17,6 +17,7 @@ imports:
     - { resource: "@AdminMemberBundle/Resources/config/services.yml" }
     - { resource: "@AdminBusinessBundle/Resources/config/services.yml" }
     - { resource: "@AdminChartBundle/Resources/config/services.yml" }
+    - { resource: "@PubliciteBundle/Resources/config/services.yml" }
     - { resource: "@BusinessFOSSecurityBundle/Resources/config/services.yml" }
     - { resource: "@AdminFOSSecurityBundle/Resources/config/services.yml" }
     - { resource: "@MessageBundle/Resources/config/services.xml" }
@@ -26,6 +27,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    image_directory : '%kernel.project_dir%/web/member_assets/images'
 
 framework:
     #esi: ~

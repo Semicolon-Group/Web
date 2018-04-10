@@ -14,7 +14,7 @@ function readThread(partId) {
     globalVar = partId;
     $.ajax({
         url: path,
-        method: 'post',
+        type: 'post',
         data: DATA,
         success: function () {
             var threadBody = $("#" + partId + "-body");

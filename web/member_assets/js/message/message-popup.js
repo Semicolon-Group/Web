@@ -59,7 +59,7 @@ function send(partId) {
     var path = $("#send_msg_path").data('path');
     $.ajax({
        url: path,
-       method: 'post',
+       type: 'post',
        data: DATA,
        success: function (data) {
            area.val('');
@@ -78,7 +78,7 @@ function readThread(partId) {
     globalVar = partId;
     $.ajax({
         url: path,
-        method: 'post',
+        type: 'post',
         data: DATA,
         success: function () {
             var threadBody = $("#" + partId + "-body");
@@ -112,7 +112,7 @@ function update(id) {
         $.ajax({
             url: path,
             data: DATA,
-            method: 'post',
+            type: 'post',
             success: function (data) {
                 data.forEach(function (text) {
                     appendOther(id, text);
@@ -163,7 +163,7 @@ function closeThread(partId) {
     globalVar = 0;
     $.ajax({
         url: path,
-        method: 'post',
+        type: 'post',
         data: DATA
     });
 }

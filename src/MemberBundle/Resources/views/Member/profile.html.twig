@@ -203,7 +203,9 @@
 
         </div>
     </div>
-
+    {% for dif in diffs %}
+        {{ dif.question }}
+    {% endfor %}
     <section class="blog_grid_area">
         <div class="container">
             <div class="row">
@@ -260,8 +262,8 @@
                                         <li><b>Marital status</b></li>
                                         <li><b>Number of children</b></li>
                                         <li><b>Member since</b></li>
-                                        <li><b>Prefered relations</b></li>
-                                        <li><b>Prefered marital statuses</b></li>
+                                        <li><b style="visibility: hidden;">Prefered relations</b></li>
+                                        <li><b style="visibility: hidden;">Prefered marital statuses</b></li>
                                         <li><b style="visibility: hidden;">Looking for a</b></li>
                                         <li><b style="visibility: hidden;">Work as</b></li>
                                     </ul>
@@ -270,16 +272,8 @@
                                         <li>{{ user.civilStatus  }}</li>
                                         <li>{{ user.childrenNumber }}</li>
                                         <li>{{ user.createdAt | date('F d, Y') }}</li>
-                                        <li>
-                                            {% for relation in user.preferedRelations %}
-                                                {{ relation.relation }}
-                                            {% endfor %}
-                                        </li>
-                                        <li>
-                                            {% for status in user.preferedStatuses %}
-                                                {{ status.status }}
-                                            {% endfor %}
-                                        </li>
+                                        <li><b style="visibility: hidden;">Man</b></li>
+                                        <li><b style="visibility: hidden;">Man</b></li>
                                         <li><b style="visibility: hidden;">Man</b></li>
                                         <li><b style="visibility: hidden;">Designer </b></li>
                                     </ul>

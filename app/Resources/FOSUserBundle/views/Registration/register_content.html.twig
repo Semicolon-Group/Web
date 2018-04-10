@@ -102,25 +102,15 @@
             <div class="form-group">
                 {{ form_widget(form.civilStatus, { 'attr': {'class': "second-control control", 'required': 'true' } }) }}
             </div>
-            <div class="form-group">
-                <label>Preferd marital statuses</label>
-                {{ form_widget(form.preferedStatuses, { 'attr': {'class': "second-control control", 'required': 'true' } }) }}
-            </div>
-            <div class="form-group">
-                <label>Preferd relations</label><span class="form_error" id="prefered_relations_error">At least one prefered relation needs to be selected</span>
-                {{ form_widget(form.preferedRelations, { 'attr': {'class': "second-control control", 'required': 'true' } }) }}
-            </div>
-        </div>
-        <div id="fourth" class="form-group">
             <div style="margin-bottom: 10px;">
                 <label>Address </label><button type="button" class="btn btn-default btn-sm" style="float: right;" id="locate"><span class="glyphicon glyphicon-screenshot"></span> Locate me</button>
             </div>
             <div class="row">
                 <div class="form-group col-xs-7">
-                    {{ form_widget(form.address.city, { 'attr': {'class': "form-control third-control control", 'placeholder': "City", 'required': 'true' } }) }}
+                    {{ form_widget(form.address.city, { 'attr': {'class': "form-control second-control control", 'placeholder': "City", 'required': 'true' } }) }}
                 </div>
                 <div class="form-group col-xs-5">
-                    {{ form_widget(form.address.country, { 'attr': {'class': "form-control third-control control", 'placeholder': "Country", 'required': 'true', 'readonly': 'true'} }) }}
+                    {{ form_widget(form.address.country, { 'attr': {'class': "form-control second-control control", 'placeholder': "Country", 'required': 'true', 'readonly': 'true'} }) }}
                 </div>
                 <div class="form-group col-xs-6">
                     {{ form_widget(form.address.latitude, { 'attr': {'style': 'display: none;' } }) }}
@@ -129,8 +119,10 @@
                     {{ form_widget(form.address.longitude, { 'attr': {'style': 'display: none;' } }) }}
                 </div>
             </div>
+        </div>
+        <div id="fourth" class="form-group">
             <div class="form-group">
-                {{ form_widget(form.about, { 'attr': {'class': "form-control third-control control", 'placeholder': "About", 'style': "height: 300px;" } }) }}
+                {{ form_widget(form.about, { 'attr': {'class': "form-control third-control control", 'placeholder': "About", 'style': "height: 420px;" } }) }}
             </div>
         </div>
         <div class="reg_chose form-group">

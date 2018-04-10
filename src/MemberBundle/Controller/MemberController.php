@@ -34,8 +34,6 @@ class MemberController extends Controller
         if (!($this->container->get('security.authorization_checker')->isGranted('ROLE_USER')))
             return $this->redirectToRoute('homepage');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $user->setPreferedRelations($this->getDoctrine()->getRepository(PreferedRelation::class)->findBy(array('user' => $user)));
-        $user->setPreferedStatuses($this->getDoctrine()->getRepository(PreferedStatus::class)->findBy(array('user' => $user)));
         $likes = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeSender' => $user));
         foreach ($likes as $like){
             $pp = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user' => $like->getLikeReceiver(), 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Profile));
@@ -64,8 +62,46 @@ class MemberController extends Controller
             'cover' => sizeof($coverList)==0?null:$coverList[0],
             'profile' => sizeof($profileList)==0?null:$profileList[0],
             'form' => $form->createView(),
-            'available_questions_count' => $this->getAvailableQuestionCount()
+            'available_questions_count' => $this->getAvailableQuestionCount(),
+            'diffs' => $this->getMandatory()
         ));
+    }
+
+    private function getMandatory(){
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $data=null;
+        if(sizeof($this->getDoctrine()->getRepository(Answer::class)->getMandatoryAnswers($user))<10){
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(2);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user' => $user));
+            $answeredQuestions = array_map(function ($an){
+                return $an->getQuestion();
+            }, $answers);
+            $questions = $this->getDoctrine()->getRepository(Question::class)->findBy(array("topic" => Topic::Mandatory));
+
+            if(sizeof($answeredQuestions) != sizeof($questions)){
+                $diffQuestions = array_udiff($questions, $answeredQuestions,
+                    function ($obj_a, $obj_b) {
+                        return $obj_a->getId() - $obj_b->getId();
+                    }
+                );
+                $diffQuestions = array_values($diffQuestions);
+                if(sizeof($diffQuestions) != 0){
+                    $questionIndex = rand ( 0 , sizeof($diffQuestions)-1 );
+                    $question = $diffQuestions[$questionIndex];
+                    $choices = $this->getDoctrine()->getRepository(Choice::class)->findBy(array('question' => $question));
+                    $toSend = array('question' => $question, 'choices' => $choices);
+                    $data = $serializer->normalize($toSend);
+                }
+                return $diffQuestions;
+            }
+        }
+        return null;
     }
 
     /**
@@ -184,8 +220,6 @@ class MemberController extends Controller
         $connectedUser = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-        $user->setPreferedRelations($this->getDoctrine()->getRepository(PreferedRelation::class)->findBy(array('user' => $user)));
-        $user->setPreferedStatuses($this->getDoctrine()->getRepository(PreferedStatus::class)->findBy(array('user' => $user)));
 
         $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user'=>$user));
         $photos = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Regular));

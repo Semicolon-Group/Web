@@ -43,6 +43,12 @@ function initPhotoModal(node) {
 }
 
 $('#basebundle_photo_imageFile_file').change(function () {
+    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+    var type = $('#basebundle_photo_imageFile_file')[0].files[0].type;
+    if($.inArray(type, ValidImageTypes) < 0){
+        alert('Please select a valid file type');
+        return;
+    }
     $("#photo-form").submit();
 });
 

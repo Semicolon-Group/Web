@@ -31,11 +31,11 @@ class MemberController extends Controller
      */
     public function profileAction(Request $request)
     {
-        if (!($this->container->get('security.authorization_checker')->isGranted('ROLE_USER')))
-            return $this->redirectToRoute('homepage');
+        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN'))
+            return $this->redirectToRoute('admin_home');
+        else if($this->container->get('security.authorization_checker')->isGranted('ROLE_BUSINESS'))
+            return $this->redirectToRoute('business_home');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $user->setPreferedRelations($this->getDoctrine()->getRepository(PreferedRelation::class)->findBy(array('user' => $user)));
-        $user->setPreferedStatuses($this->getDoctrine()->getRepository(PreferedStatus::class)->findBy(array('user' => $user)));
         $likes = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeSender' => $user));
         foreach ($likes as $like){
             $pp = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user' => $like->getLikeReceiver(), 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Profile));
@@ -64,7 +64,7 @@ class MemberController extends Controller
             'cover' => sizeof($coverList)==0?null:$coverList[0],
             'profile' => sizeof($profileList)==0?null:$profileList[0],
             'form' => $form->createView(),
-            'available_questions_count' => $this->getAvailableQuestionCount()
+            'available_questions_count' => $this->getAvailableQuestionCount(),
         ));
     }
 
@@ -184,8 +184,6 @@ class MemberController extends Controller
         $connectedUser = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-        $user->setPreferedRelations($this->getDoctrine()->getRepository(PreferedRelation::class)->findBy(array('user' => $user)));
-        $user->setPreferedStatuses($this->getDoctrine()->getRepository(PreferedStatus::class)->findBy(array('user' => $user)));
 
         $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user'=>$user));
         $photos = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('user'=>$user, 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Regular));

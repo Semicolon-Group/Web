@@ -201,9 +201,69 @@ function leave(id) {
 }
 function enterStar(id) {
     var star = $("#" + id);
-    star.attr('class', 'fas fa-star like-star');
+    if(star.data('liked') == true)
+        star.attr('class', 'far fa-star like-star');
+    else
+        star.attr('class', 'fas fa-star like-star');
 }
 function leaveStar(id) {
     var star = $("#" + id);
-    star.attr('class', 'far fa-star like-star');
+    if(star.data('liked') == true)
+        star.attr('class', 'fas fa-star like-star');
+    else
+        star.attr('class', 'far fa-star like-star');
+}
+function like(id){
+    var path = $("#like-path").data('path');
+    var DATA = {'id':id};
+    $.ajax({
+       url: path,
+       type: 'post',
+       data: DATA,
+       success: function () {
+           var star = $("#" + id + "-star");
+           star.attr('class', 'fas fa-star like-star');
+           star.css('font-size', '25px');
+           setTimeout(function () {
+               star.css('font-size', '50px');
+           }, 200);
+           star.data('liked', true);
+       },
+        error: function () {
+
+        }
+    });
+}
+function dislike(id){
+    var path = $("#dislike-path").data('path');
+    var DATA = {'id':id};
+    $.ajax({
+        url: path,
+        type: 'post',
+        data: DATA,
+        success: function () {
+            var star = $("#" + id + "-star");
+            star.attr('class', 'far fa-star like-star');
+            star.css('font-size', '25px');
+            setTimeout(function () {
+                star.css('font-size', '50px');
+            }, 200);
+            star.data('liked', false);
+        },
+        error: function () {
+
+        }
+    });
+}
+function decide(id) {
+    var star = $("#" + id + "-star");
+    if(star.data('liked') == true)
+        dislike(id);
+    else
+        like(id);
+}
+function goTo(event, id) {
+   if(event.target == document.getElementById(id + '-star')){
+       event.preventDefault();
+   }
 }

@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Date;
  * User
  *
  * @ORM\Table(name="user", indexes={@ORM\Index(name="address_id", columns={"address_id"})})
- * @ORM\Entity
+ * @ORM\Entity("BaseBundle\Repository\UserRepository")
  */
 class User extends BaseUser
 {
@@ -231,57 +231,12 @@ class User extends BaseUser
     private $event;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $preferedRelations;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $preferedStatuses;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->event = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Get preferedRelations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPreferedRelations(){
-        return $this->preferedRelations;
-    }
-
-    /**
-     * Set preferedRelations
-     */
-    public function setPreferedRelations($preferedRelations){
-        $this->preferedRelations = $preferedRelations;
-
-        return $this;
-    }
-
-    /**
-     * Get preferedStatuses
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPreferedStatuses(){
-        return $this->preferedStatuses;
-    }
-
-    /**
-     * Set preferedRelations
-     */
-    public function setPreferedStatuses($preferedStatuses){
-        $this->preferedStatuses = $preferedStatuses;
-
-        return $this;
+        parent::__construct();
     }
 
     /**
@@ -986,4 +941,30 @@ class User extends BaseUser
         $age = $this->birthDate->diff($curDate)->y;
         return $age;
     }
+
+    /**
+     * @var \BaseBundle\Entity\Photo
+     */
+    private $profilePhoto;
+
+    /**
+     * Set profilePhoto
+     *
+     * @param \BaseBundle\Entity\Photo $photo
+     *
+     * @return void
+     */
+    public function setProfilePhoto($photo){
+        $this->profilePhoto = $photo;
+    }
+
+    /**
+     * Get profilePhoto
+     *
+     * @return \BaseBundle\Entity\Photo
+     */
+    public function getProfilePhoto(){
+        return $this->profilePhoto;
+    }
+
 }

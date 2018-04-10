@@ -1,4 +1,13 @@
-<a id="redirect" href="{{ path('news_feed') }}" style="display: none;">profile</a>
-<script>
-    document.getElementById('redirect').click();
-</script>
+{% if is_granted("ROLE_BUSINESS") %}
+    <script>
+        window.location = "{{ path('business_home') }}";
+    </script>
+{% elseif is_granted("ROLE_ADMIN") %}
+    <script>
+        window.location = "{{ path('admin_home') }}";
+    </script>
+{% else %}
+    <script>
+        window.location = "{{ path('member_profile') }}";
+    </script>
+{% endif %}

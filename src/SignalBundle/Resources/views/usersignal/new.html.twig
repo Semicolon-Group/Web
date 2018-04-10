@@ -1,0 +1,23 @@
+
+
+<div class="radio-inline">
+      <h1>Help us to understand what is happening</h1>
+
+        {{ form_start(form) }}
+        {{ form_widget(form.reason)  }}
+        {{ form_widget(form.state) }}
+        {{ form_widget(form.content) }}
+        {{ form_widget(form.receiver) }}
+        {{ form_widget(form.sender) }}
+        <input type="submit" value="Submit" />
+        {{ form_end(form) }}
+</div>
+
+    <ul>
+        <li>
+            <a href="{{ path('Signal_index') }}">Back to the list</a>
+        </li>
+    </ul>
+
+
+

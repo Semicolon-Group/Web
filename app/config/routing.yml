@@ -1,7 +1,20 @@
+message:
+    resource: "@MessageBundle/Resources/config/routing.xml"
+    prefix:   /message
+
 admin_question:
     resource: "@AdminQuestionBundle/Controller/"
     type:     annotation
     prefix:   /admin/questions
+
+publicite:
+    resource: "@PubliciteBundle/Controller/AdvertController.php"
+    type:     annotation
+    prefix:   /publicite
+publicite_admin:
+    resource: "@PubliciteBundle/Controller/AdminController.php"
+    type:     annotation
+    prefix:   /publiciteAdmin
 
 admin_chart:
     resource: "@AdminChartBundle/Controller/"
@@ -28,8 +41,11 @@ business_chart:
     type:     annotation
     prefix:   /business/charts
 
+
+
+
 business_advert:
-    resource: "@BusinessAdvertBundle/Controller/"
+    resource: "@BusinessAdvertBundle/Controller/BusinessAdvertController.php"
     type:     annotation
     prefix:   /business/adverts
 
@@ -42,6 +58,16 @@ business_home:
     resource: "@BusinessHomeBundle/Controller/"
     type:     annotation
     prefix:   /business
+
+base_feedback:
+    resource: "@FeedbacksBundle/Controller/FeedbackController.php"
+    type:     annotation
+    prefix:   /feedback
+
+base_user_signal:
+    resource: "@SignalBundle/Controller/UserSignalController.php"
+    type:     annotation
+    prefix:   /signal
 
 #MEMBER ROUTES#
 recommandation:
@@ -62,7 +88,7 @@ event:
 match:
     resource: "@MatchBundle/Controller/MatchController.php"
     type:     annotation
-    prefix:   /member/matches
+    prefix:   /member
 
 news_feed:
     resource: "@NewsFeedBundle/Controller/NewsFeedController.php"
@@ -102,3 +128,31 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+
+business_login:
+    path:  /business/login
+    defaults: { _controller: BusinessFOSSecurityBundle:Security:login }
+
+business_login_check:
+    path:  /business/login_check
+    defaults: { _controller: FOSUserBundle:Security:check }
+
+business_logout:
+    path:  /business/logout
+    defaults: { _controller: FOSUserBundle:Security:logout }
+
+admin_login:
+    path:  /admin/login
+    defaults: { _controller: AdminFOSSecurityBundle:Security:login }
+
+admin_login_check:
+    path:  /admin/login_check
+    defaults: { _controller: FOSUserBundle:Security:check }
+
+admin_logout:
+    path:  /admin/logout
+    defaults: { _controller: FOSUserBundle:Security:logout }
+
+fos_message:
+    resource: "@FOSMessageBundle/Resources/config/routing.xml"
+    prefix: /fosmessage

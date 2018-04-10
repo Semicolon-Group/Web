@@ -4,7 +4,9 @@ namespace MemberBundle\Controller;
 
 use BaseBundle\Entity\Answer;
 use BaseBundle\Entity\Choice;
+use BaseBundle\Entity\Enumerations\CivilStatus;
 use BaseBundle\Entity\Enumerations\Importance;
+use BaseBundle\Entity\Enumerations\Religion;
 use BaseBundle\Entity\Enumerations\Topic;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\PreferedRelation;
@@ -60,6 +62,8 @@ class MemberController extends Controller
             'answers' => $answers,
             'topics' => Topic::getEnumAsArray(),
             'importances' => Importance::getEnumAsArray(),
+            'religions' => Religion::getEnumAsArray(),
+            'statuses' => CivilStatus::getEnumAsArray(),
             'photos' => $photos,
             'cover' => sizeof($coverList)==0?null:$coverList[0],
             'profile' => sizeof($profileList)==0?null:$profileList[0],

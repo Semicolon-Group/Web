@@ -1,0 +1,31 @@
+<h1> Admin treating publicité</h1>
+
+{% block body %}
+    {% for m in pubs %}
+        <table border="1">
+
+            <tr>
+                <th>business id </th>
+                <th>content</th>
+                <th>reason</th>
+                <th>photo</th>
+                <th>position</th>
+                <th>price</th>
+                <th>payed</th>
+            </tr>
+
+            <tr>
+                <td>{{ m.business }}</td><td>{{ m.content }}</td><td>{{ m.reason }}</td>
+                <td>   <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
+                              style="height : 150px ;width:150px" alt=""></td>
+                <td>{% if m.position == 1 %} TOP {% elseif m.position==2 %} Side {% elseif m.position==3 %} Bottom {% else %} No position {% endif %}</td>
+                <td>{{ m.price }}</td>
+                <td>{% if m.payed==1 %} Yes {% else %} No {% endif %}</td>
+                <td>    <a href="{{ path('traiter_admin', {'id':m.id}) }}">Modifier</a></td>
+                <td>    <a href="{{ path('supprimer_admin', {'id':m.id}) }}">Supprimer</a></td>
+
+            </tr>
+        </table>
+    {% endfor %}
+
+{% endblock %}

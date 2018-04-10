@@ -191,6 +191,21 @@ function showFourthPage() {
     $('#step_four').show();
 }
 
+$('#fos_user_registration_form_minAge').change(function () {
+   updateMaxAge();
+});
+
+var maxAge;
+$('#fos_user_registration_form_maxAge').focus(function () {
+    maxAge = $(this).val();
+});
+
+$('#fos_user_registration_form_maxAge').change(function () {
+   if($(this).val()<=$('#fos_user_registration_form_minAge').val()){
+       $(this).val(maxAge);
+   }
+});
+
 function updateMaxAge() {
     $('#fos_user_registration_form_maxAge').attr('min', parseInt($('#fos_user_registration_form_minAge').val()) + 1);
     if($('#fos_user_registration_form_maxAge').val() == '' || $('#fos_user_registration_form_maxAge').val()<=$('#fos_user_registration_form_minAge').val()) {

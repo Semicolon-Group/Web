@@ -1,0 +1,195 @@
+{% extends 'business_base.html.twig' %}
+
+
+{% block title %}PubliciteBundle:Advert:Lister{% endblock %}
+{% block stylesheets %}
+
+
+
+{% endblock %}
+
+
+{% block body %}
+    <!-- Modal -->
+    <div id="delete_post_modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure ?.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="delete" type="button" class="btn btn-primary">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECENT PURCHASES -->
+    <div class="panel" id="rslt">
+        <div class="panel-heading">
+            <h3 class="panel-title">Recent Purchases</h3>
+
+        </div>
+        <a class="panel-body no-padding">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+
+                    <th>Content</th>
+                    <th>Photo</th>
+                    <th>Price</th>
+                    <th>Payed</th>
+                    <th>State</th>
+                    <th>Ends in</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for m in pubs %}
+                    {% for i in [1..10] %}
+                <tr id="a{{ m.id }}"+i >
+
+                    <td><span class="label label-info"> {{ m.content }}</span></td>
+                    <td> <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
+                                style="height : 150px ;width:150px" alt=""></td>
+                    <td ><span class="label label-info">{{ m.price }} EUR</span></td>
+                    <td >{% if m.payed==1 %}<span class="label label-success"> Yes</span> {% else %}<span class="label label-danger"> No</span> {% endif %}</td>
+
+                    <td><span class="label label-{% if m.state==1 %}success{% elseif m.state==0 %}warning{% elseif m.state==2 %}danger{% endif %}">{% if m.state==1 %}
+                    approved {% elseif m.state==0 %}not processed{% elseif m.state==2 %} denied {% endif %}</span></td>
+
+
+
+                    <td ><span class="label label-default" id="{{ m.id }}"+i > </span></br>
+                <span id="time" class="label label-default" >
+                        {{ m.endDate | date('Y/m/d') }}
+
+                </span>
+                        </td>
+                    <td ><button type="button" class="btn btn-warning" ><i class="fa fa-warning"></i>
+                            <a href="{{ path('traiter_business', {'id':m.id}) }}"> Modify </a></button>
+
+                     {% if m.payed==0 and m.state == 1 %}   <button type="button" class="btn btn-success"  id="#paypal-button">
+                            <a href="{{ path('payer_business', {'id':m.id}) }}" > <img src="{{ asset('member_assets/images/Paypal.png') }}">Paypal</a></button>
+                        {% else %}<a></a>{% endif %}
+                        <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ m.id }})" data-toggle="modal" data-target="#delete_post_modal" ><i class="fa fa-trash-o" ></i> <a >Delete</a>  </button></td>
+
+                </tr>
+                        {% endfor %}
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </a>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-6" id="echo"><span class="panel-note"><i class="fa fa-clock-o"></i> Your recent orders .</span></div>
+
+            </div>
+        </div>
+
+    <div id="selected_post" data-id=""></div>
+    <!-- END RECENT PURCHASES -->
+
+    <!-- Delete Post Modal -->
+
+
+{% endblock %}
+{% block scripts %}
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
+
+
+
+
+    <script >
+
+
+        $(document).ready(function () {
+            {% for m in pubs %}
+            $('#{{ m.id }}')
+                .countdown("{{ m.endDate | date('Y/m/d')}}",  function (event) {
+                    $(this).text(
+                        event.strftime('%D days %H:%M:%S')
+                    );
+                });
+            {% endfor %}
+
+            $('#search-text').keyup( function(){
+                var txt = $(this).val();
+
+                if (txt != '')
+                {
+                    $.ajax({
+
+                        url: "{{path('find')}}",
+
+                        type: "POST",
+                        cache: false,
+                        async:false,
+                        data :{search:txt},
+                        dataType : "text" ,
+                        success: function(data){
+
+                            $('#rslt').html(data);
+
+
+                        }
+
+                    });
+                }
+
+            });
+            {% for m in pubs %}
+
+            $('#delete').click(function (){
+                var id = $("#selected_post").data('id');
+                $('#a'+id).remove();
+                $.ajax({
+                    url: "{{path('delete_post_business')}}",
+                    type: "POST",
+                    cache: false,
+                    data: {
+                        "id" : id
+                    }
+
+                });
+            });
+            {% endfor %}
+
+        });
+        $('#delete').click(function (){
+            var id = $("#selected_post").data('id');
+            $('#a'+id).remove();
+            $.ajax({
+                url: "{{path('delete_post_business')}}",
+                type: "POST",
+                cache: false,
+                data: {
+                    "id" : id
+                }
+
+            });
+
+        });
+
+
+        function showDeleteModal(id) {
+            $("#selected_post").data('id',id);
+        }
+
+    </script>
+
+
+{% endblock %}
+
+
+

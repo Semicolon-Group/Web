@@ -3,6 +3,7 @@
 namespace BaseBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Advert
@@ -30,7 +31,8 @@ class Advert
 
     /**
      * @var string
-     *
+     **@Assert\NotBlank(message="Please, upload an image.")
+     * @Assert\Image()
      * @ORM\Column(name="photo_url", type="text", length=65535, nullable=true)
      */
     private $photoUrl;
@@ -79,7 +81,24 @@ class Advert
      * })
      */
     private $business;
-
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="price", type="integer", nullable=true)
+     */
+    private $price;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="payed", type="integer", nullable=true)
+     */
+    private $payed;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     */
+    private $position;
 
 
     /**
@@ -282,5 +301,77 @@ class Advert
     public function getBusiness()
     {
         return $this->business;
+    }
+
+    /**
+     * Set price
+     *
+     * @param integer $price
+     *
+     * @return Advert
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return integer
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set payed
+     *
+     * @param integer $payed
+     *
+     * @return Advert
+     */
+    public function setPayed($payed)
+    {
+        $this->payed = $payed;
+
+        return $this;
+    }
+
+    /**
+     * Get payed
+     *
+     * @return integer
+     */
+    public function getPayed()
+    {
+        return $this->payed;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     *
+     * @return Advert
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }

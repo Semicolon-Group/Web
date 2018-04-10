@@ -1,0 +1,112 @@
+{% extends 'admin_base.html.twig' %}
+
+
+{% block title %}AdminBusinessBundle:Advert:Lister{% endblock %}
+{% block stylesheets %}
+{% endblock %}
+{% block scripts %}
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.js"></script>
+    <script src="{{ asset('business_assets/') }}js/jq/jquery.countdown.min.js"></script>
+    <script >
+        {% for m in promos %}
+        {% for i in [1..10] %}
+        $(document).ready(function () {
+
+            $('#{{ m.id }}')
+                .countdown("{{ m.endDate | date('Y/m/d')}}",  function (event) {
+                    $(this).text(
+                        event.strftime('%D days %H:%M:%S')
+                    );
+                });
+
+
+            {% for m in promos %}
+
+            $('#dlt{{ m.id }}').click(function (){
+                $('#a{{ m.id }}').remove();
+                $.ajax({
+                    url: "{{path('supprimer_promo_admin')}}",
+                    type: "POST",
+                    cache: false,
+                    data: {
+                        "id" : {{ m.id }}
+                    }
+
+                });
+            });
+            {% endfor %}
+        });
+        {% endfor %}
+        {% endfor %}
+        {% for m in promos %}
+
+
+        {% endfor %}
+    </script>
+
+
+{% endblock %}
+
+{% block body %}
+    <!-- Delete Post Modal -->
+    <div class="modal fade" id="delete_post_modal" tabindex="-1" role="dialog" aria-labelledby="delete_post_modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <h4 class="modal-title">Are you sure?</h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="delete" type="button" class="btn btn-primary" data-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <h1>Promos actives : </h1>
+
+
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>End date</th>
+            <th>Actions</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for m in promos %}
+            {% for i in [1..10] %}
+                <tr id="a{{ m.id }}">
+                    <td><span class="label label-info">{{ m.name }}</span></td>
+                    <td><span class="label label-info"> {{ m.code }}</span></td>
+                     <td ><span class="label label-default" id="{{ m.id }}"+i > </span></br>
+                        <span id="time" class="label label-default" >
+                        {{ m.endDate | date('Y/m/d') }}
+                        </span>
+                    </td>
+                    <td ><button type="button" class="btn btn-warning" ><i class="fa fa-warning"></i>
+                            <a href="{{ path('traiter_promo_admin', {'id':m.id}) }}"> Modify </a></button>
+
+
+                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o" id="dlt{{ m.id }}"></i>
+                            <a  >Delete </a></button></td>
+
+                </tr>
+            {% endfor %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+
+
+{% endblock %}

@@ -1,6 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
+ * User: Elyes
+ * Date: 29/03/2018
+ * Time: 19:43
  * User: Seif
  * Date: 3/29/2018
  * Time: 11:07 PM
@@ -9,12 +12,28 @@
 namespace BaseBundle\Repository;
 
 
+use BaseBundle\Entity\User;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 
 class UserRepository extends EntityRepository
 {
+    /**
+     * @param $user User
+     * @return array
+     */
+    public function getUsersNotBlocked($user)
+    {
+        return $this->getEntityManager()->createQuery(
+            "SELECT u FROM BaseBundle:User u LEFT JOIN BaseBundle:UserBlock b
+                  WITH :user = b.blockReceiver AND u = b.blockSender
+                  WHERE b.blockSender IS NULL AND u.id != :id"
+        )
+            ->setParameter('user', $user)
+            ->setParameter('id', $user->getId())
+            ->getResult();
+    }
     public function getCountMaleByMonth(){
         $emConfig = $this->getEntityManager()->getConfiguration();
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');

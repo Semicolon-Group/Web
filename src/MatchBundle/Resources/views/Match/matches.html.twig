@@ -480,62 +480,6 @@
                     </div>
                 </div>
             {% endfor %}
-            {% for card in cards %}
-                <div class="matchcard" onclick="">
-                    <div class="photo-div">
-                        <img class="profile-photo" src="{{ card.photo }}">
-                    </div>
-                    <div class="matchcard-text">
-                        <div class="profile-info">
-                            <div class="username">
-                                {{ card.user.firstname ~ ' ' ~ card.user.lastname }}
-                            </div>
-                            <div class="user-info">
-                                <span class="age">{{ card.age }}</span>
-                                <span class="dot fas fa-circle"></span>
-                                <span class="location">{{ card.user.address.city }}, {{ card.user.address.country }}</span>
-                            </div>
-                        </div>
-                        <div class="percentages">
-                            <div class="percentage-wrapper">
-                                <span class="percentage">{{ card.match }}%</span>
-                                <span class="percentage-label">Match</span>
-                            </div><div class="percentage-wrapper enemy">
-                                <span class="percentage">{{ card.enemy }}%</span>
-                                <span class="percentage-label">Enemy</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-            {% for card in cards %}
-                <div class="matchcard" onclick="">
-                    <div class="photo-div">
-                        <img class="profile-photo" src="{{ card.photo }}">
-                    </div>
-                    <div class="matchcard-text">
-                        <div class="profile-info">
-                            <div class="username">
-                                {{ card.user.firstname ~ ' ' ~ card.user.lastname }}
-                            </div>
-                            <div class="user-info">
-                                <span class="age">{{ card.age }}</span>
-                                <span class="dot fas fa-circle"></span>
-                                <span class="location">{{ card.user.address.city }}, {{ card.user.address.country }}</span>
-                            </div>
-                        </div>
-                        <div class="percentages">
-                            <div class="percentage-wrapper">
-                                <span class="percentage">{{ card.match }}%</span>
-                                <span class="percentage-label">Match</span>
-                            </div><div class="percentage-wrapper enemy">
-                                <span class="percentage">{{ card.enemy }}%</span>
-                                <span class="percentage-label">Enemy</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
 
             <!--
                     <div class="col-md-4">

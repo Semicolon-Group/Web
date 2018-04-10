@@ -112,7 +112,7 @@ class PostService
             $post->setTime(MatchCardService::getTimeDiffString($photo->getDate()));
             $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($photo->getUser()));
             $post->setDate($photo->getDate());
-            $post->setContent('/mysoulmateuploads/images/' . $photo->getUrl());
+            $post->setContent('/mysoulmate/web/uploads/images/' . $photo->getImage());
             $post->setReactions($reactRepo->findBy(['photoId' => $photo->getId()]));
             $post->setComments(getComments($post, $doctrine));
             $post->setStats(getStats($post->getReactions(), $post->getComments()));

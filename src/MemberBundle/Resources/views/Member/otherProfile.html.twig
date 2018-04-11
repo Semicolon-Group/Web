@@ -60,16 +60,17 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
                                 <ul class="dropdown-menu">
                                     <li><a id="block">Block</a></li>
-                                    <li><a id="report">Report</a></li>
+                                    <li><a id="report" data-toggle="modal" data-target="#feedback">Report</a></li>
                                 </ul>
                             </li>
                         </ul>
+                        <!--<li><a href="" data-toggle="modal" data-target="#feedback_modal" ><strong style="font-size: 20px">Show the Content of Signal</strong></a></li>-->
                         <span id="dis-like-display">
                             {% if like is null %}
                                 <button type="button" id="like" value="LogIn" class="btn form-control login_btn">Like </button>
                             {% else %}
                                 <button type="button" id="dislike" value="LogIn" class="btn form-control login_btn">Dislike</button>
-                                <button type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
+                                <button onclick="popup({{ user.id }})" type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
                             {% endif %}
                         </span>
                     </div>
@@ -79,6 +80,23 @@
     </section>
 {% endblock %}
 {% block body %}
+    {{ render(controller('MessageBundle:Message:popup', {'userId':user.id})) }}
+    <div id="feedback" class="modal fade centered-modal" role="dialog" style="margin-top: 30vh; ">
+        <div class="modal-dialog" style="width: 45%; ">
+            <div class="modal-content" style="border-color: #0b5b97" >
+                <div class="modal-header" style="background-color: #ffffcc">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center><h2 class="modal-title" style="color: #384659"><strong>Help us to understand what is happening ! </strong></h2></center>
+                </div>
+
+                <div class="modal-body" style="height: 100%;" ><br>
+                    {{ render(controller(
+                    'SignalBundle:UserSignal:new' , {'request': app.request, 'id':user.id }
+                    )) }}   <br><br>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="answer-form" class="modal fade centered-modal" role="dialog" style="margin-top: 10vh;">
         <div class="modal-dialog" style="width: 70%;">
             <div class="modal-content">
@@ -288,6 +306,7 @@
 
 {% block scripts %}
     <script>
+
         var topics;
         var importances;
 
@@ -431,7 +450,8 @@
         });
 
         $('#report').click(function () {
-            alert('report');
+            $('#basebundle_usersignal_content').val('');
+            $('#basebundle_usersignal_reason').val(0);
         });
 
         $('#like').click(function () {
@@ -478,10 +498,6 @@
                 }
             });
         }
-
-        $('#chat').click(function () {
-            alert('chat');
-        });
 
         $('.photo').click(function () {
             initPhotoModal(this);

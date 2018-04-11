@@ -30,6 +30,7 @@
         "symfony/swiftmailer-bundle": "^2.3.10",
         "symfony/symfony": "3.3.*",
         "twig/twig": "^1.0||^2.0",
+        "blackknight467/star-rating-bundle": "2.*",
         "knplabs/knp-paginator-bundle": "^2.7",
         "knplabs/knp-snappy-bundle": "^1.4",
         "vich/uploader-bundle": "^1.4"

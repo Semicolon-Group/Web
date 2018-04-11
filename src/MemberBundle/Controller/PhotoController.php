@@ -96,7 +96,7 @@ class PhotoController extends Controller
      */
     public function makeProfileAction(Request $request){
         if($request->isXmlHttpRequest()){
-            $list = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('type'=>\BaseBundle\Entity\Enumerations\PhotoType::Profile));
+            $list = $this->getDoctrine()->getRepository(Photo::class)->findBy(array('type'=>\BaseBundle\Entity\Enumerations\PhotoType::Profile, 'user' => $this->getUser()));
             if(sizeof($list)!=0){
                 $oldProfile = $list[0];
                 $oldProfile->setType(\BaseBundle\Entity\Enumerations\PhotoType::Regular);

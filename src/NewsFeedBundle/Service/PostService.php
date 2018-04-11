@@ -26,49 +26,6 @@ class PostService
 {
 
     public static function getPosts($doctrine, $user){
-        /**
-         * @param array $reactions
-         * @param array $comments
-         * @return object
-         */
-        function getStats($reactions, $comments){
-            $mapped = array_map(function($a){
-                /** @var PostReaction $a */
-                return ReactionType::getName($a->getReaction());
-            }, $reactions);
-            $count = count($mapped);
-            $mapped = array_unique($mapped);
-            $stat = new \stdClass();
-            $stat->reactions = $mapped;
-            $stat->nbrReaction = $count;
-            $stat->nbrComment = count($comments);
-            return $stat;
-        }
-
-        /**
-         * @param Post $post
-         * @param ManagerRegistry $doctrine
-         * @return array
-         */
-        function getComments($post, $doctrine){
-            $postId = $post->getId();
-            $photoId = 0;
-            if ($post->getType() == PostType::Picture){
-                $postId = 0;
-                $photoId = $post->getId();
-            }
-            $comments = $doctrine->getRepository(Comment::class)->findBy([
-                'postId' => $postId,
-                'photoId' => $photoId
-            ]);
-            /** @var PhotoRepository $photoRepo */
-            $photoRepo = $doctrine->getRepository(Photo::class);
-            foreach ($comments as $comment){
-                $comment->setProfilePhoto($photoRepo->getProfilePhotoUrl($comment->getSender()));
-            }
-            return $comments;
-        }
-
         /** @var ManagerRegistry $doctrine */
         /** @var User $user */
         /** @var PhotoRepository $photoRepo */
@@ -88,8 +45,8 @@ class PostService
             $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($post->getUser()));
             $post->setType(PostType::Status);
             $post->setReactions($reactRepo->findBy(['postId' => $post->getId()]));
-            $post->setComments(getComments($post, $doctrine));
-            $post->setStats(getStats($post->getReactions(), $post->getComments()));
+            $post->setComments(PostService::getComments($post, $doctrine));
+            $post->setStats(PostService::getStats($post->getReactions(), $post->getComments()));
             $currentReaction = $reactRepo->findBy(['postId' => $post->getId(), 'user' => $user]);
             if(empty($currentReaction)){
                 $currentReaction = -1;
@@ -114,8 +71,8 @@ class PostService
             $post->setDate($photo->getDate());
             $post->setContent('/mysoulmate/web/uploads/images/' . $photo->getImage());
             $post->setReactions($reactRepo->findBy(['photoId' => $photo->getId()]));
-            $post->setComments(getComments($post, $doctrine));
-            $post->setStats(getStats($post->getReactions(), $post->getComments()));
+            $post->setComments(PostService::getComments($post, $doctrine));
+            $post->setStats(PostService::getStats($post->getReactions(), $post->getComments()));
             $currentReaction = $reactRepo->findBy(['photoId' => $photo->getId(), 'user' => $user]);
             if(empty($currentReaction)){
                 $currentReaction = -1;
@@ -138,4 +95,82 @@ class PostService
         return $posts;
     }
 
+    /**
+     * @param Post $post
+     * @param ManagerRegistry $doctrine
+     * @return array
+     */
+    static function getComments($post, $doctrine){
+        $postId = $post->getId();
+        $photoId = 0;
+        if ($post->getType() == PostType::Picture){
+            $postId = 0;
+            $photoId = $post->getId();
+        }
+        $comments = $doctrine->getRepository(Comment::class)->findBy([
+            'postId' => $postId,
+            'photoId' => $photoId
+        ]);
+        /** @var PhotoRepository $photoRepo */
+        $photoRepo = $doctrine->getRepository(Photo::class);
+        foreach ($comments as $comment){
+            $comment->setProfilePhoto($photoRepo->getProfilePhotoUrl($comment->getSender()));
+        }
+        return $comments;
+    }
+
+    /**
+     * @param array $reactions
+     * @param array $comments
+     * @return object
+     */
+    static function getStats($reactions, $comments){
+        $mapped = array_map(function($a){
+            /** @var PostReaction $a */
+            return ReactionType::getName($a->getReaction());
+        }, $reactions);
+        $count = count($mapped);
+        $mapped = array_unique($mapped);
+        $stat = new \stdClass();
+        $stat->reactions = $mapped;
+        $stat->nbrReaction = $count;
+        $stat->nbrComment = count($comments);
+        return $stat;
+    }
+
+    /**
+     * @param $post Post
+     * @param $doctrine ManagerRegistry $doctrine
+     * @return Post
+     */
+    static function createStatusPost($post, $doctrine){
+        /** @var ManagerRegistry $doctrine */
+        /** @var User $user */
+        /** @var PhotoRepository $photoRepo */
+        /** @var PostReactionRepository $reactRepo */
+        /** @var Post $post */
+        /** @var Photo $photo */
+
+        $reactRepo = $doctrine->getRepository(PostReaction::class);
+        $photoRepo = $doctrine->getRepository(Photo::class);
+
+        $post->setTime('Now');
+        $post->setPhotoUrl($photoRepo->getProfilePhotoUrl($post->getUser()));
+        $post->setType(PostType::Status);
+        $post->setReactions($reactRepo->findBy(['postId' => $post->getId()]));
+        $post->setComments(PostService::getComments($post, $doctrine));
+        $post->setStats(PostService::getStats($post->getReactions(), $post->getComments()));
+        $currentReaction = $reactRepo->findBy(['postId' => $post->getId(), 'user' => $post->getUser()]);
+        if(empty($currentReaction)){
+            $currentReaction = -1;
+            $post->getStats()->currReacTitle = 'None';
+        }
+        else {
+            $currentReaction = $currentReaction[0]->getReaction();
+            $post->getStats()->currReacTitle = ReactionType::getName($currentReaction);
+        }
+        $post->setCurrentReaction($currentReaction);
+
+        return $post;
+    }
 }

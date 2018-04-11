@@ -12,20 +12,23 @@
 namespace BaseBundle\Repository;
 
 
+use BaseBundle\Entity\Answer;
 use BaseBundle\Entity\User;
 use DateInterval;
 use DateTime;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
 
 class UserRepository extends EntityRepository
 {
     /**
      * @param $user User
+     * @param $doctrine ManagerRegistry
      * @return array
      */
-    public function getUsersNotBlocked($user)
+    public function getUsersNotBlocked($user, $doctrine)
     {
-        return $this->getEntityManager()->createQuery(
+        $result = $this->getEntityManager()->createQuery(
             "SELECT u FROM BaseBundle:User u LEFT JOIN BaseBundle:UserBlock b
                   WITH :user = b.blockReceiver AND u = b.blockSender
                   WHERE b.blockSender IS NULL AND u.id != :id"
@@ -33,7 +36,19 @@ class UserRepository extends EntityRepository
             ->setParameter('user', $user)
             ->setParameter('id', $user->getId())
             ->getResult();
+        foreach ($result as $key => $u){
+            /** @var User $u */
+            if(in_array('ROLE_ADMIN', $u->getRoles()) || in_array('ROLE_BUSINESS', $u->getRoles())){
+                unset($result[$key]);
+                continue;
+            }
+            if($doctrine->getRepository(Answer::class)->getAnswerCount($u) < 10){
+                unset($result[$key]);
+            }
+        }
+        return $result;
     }
+
     public function getCountMaleByMonth(){
         $emConfig = $this->getEntityManager()->getConfiguration();
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
@@ -48,7 +63,7 @@ class UserRepository extends EntityRepository
                 from BaseBundle:User m 
                 WHERE m.roles LIKE :roles AND YEAR(m.createdAt) = :cyear AND m.gender = TRUE
                 GROUP BY creation_month, creation_year
-            ")->setParameter('roles', 'a:0%')->setParameter('cyear', $year);
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}')->setParameter('cyear', $year);
 
         return $query->getResult();
     }
@@ -67,7 +82,7 @@ class UserRepository extends EntityRepository
                 from BaseBundle:User m 
                 WHERE m.roles LIKE :roles AND YEAR(m.createdAt) = :cyear AND m.gender = FALSE 
                 GROUP BY creation_month, creation_year
-            ")->setParameter('roles', 'a:0%')->setParameter('cyear', $year);
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}')->setParameter('cyear', $year);
 
         return $query->getResult();
     }
@@ -79,7 +94,7 @@ class UserRepository extends EntityRepository
                 from BaseBundle:User m 
                 WHERE m.roles LIKE :roles
                 GROUP BY m.gender
-            ")->setParameter('roles', 'a:0%');
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}');
         return $query->getResult();
     }
 
@@ -91,7 +106,7 @@ class UserRepository extends EntityRepository
                 INNER JOIN m.address a
                 WHERE m.roles LIKE :roles
                 GROUP BY city
-            ")->setParameter('roles', 'a:0%');
+            ")->setParameter('roles', 'a:1:{i:0;s:0:"";}');
         return $query->getResult();
     }
 

@@ -93,9 +93,15 @@
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right">
+                        <ul class="nav navbar-nav">
                             <li><a class="popup-with-zoom-anim" href="#small-dialog"><i class="mdi mdi-key-variant"></i>Login</a></li>
-                            <li><a href="#register_form" class="popup-with-zoom-anim"><i class="fa fa-user-plus"></i>Registration</a></li>
+                            <li class="dropdown submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-plus"></i>Registration</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#register_form" class="popup-with-zoom-anim">As Member</a></li>
+                                    <li><a href="{{ path('fos_user_registration_register', {'type': 'business'}) }}">As Business</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->

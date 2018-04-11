@@ -1,11 +1,235 @@
 {% extends 'business_base.html.twig' %}
 {% block title %}Event | Create{% endblock %}
-{% block page_title %}Event creation form{% endblock %}
+{% block page_title %}Event creation {% endblock %}
 {% block page_path %}
     <li class="breadcrumb-item">Event</li>
     <li class="breadcrumb-item active">Create</li>
 {% endblock %}
 
-{% block body %}
-    <p>TestEvents</p>
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('business_assets/css/bootstrap-datetimepicker.css') }}">
 {% endblock %}
+
+
+
+{% block body %}
+
+
+        <h1>Ajouter Event</h1>
+    {{ form_start(form,{'attr':{'id':'add_event_form'}}) }}
+    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label  style="color: #0a0a0a" class="control-label" class="required"  for="first-name">Name event: </label><br>
+            {{ form_widget(form.title, {'attr':{'class':'form-control','required':'true'}}) }}
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label  style="color: #0a0a0a" class="control-label" for="first-name">content: </label><br>
+            {{ form_widget(form.content, {'attr':{'class':'form-control','required':'true'}}) }}
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="form-group">
+            <label style="color: #0a0a0a" class="control-label" for="company-name">image : {{ form_widget(form.photoUrl, {'attr':{'class':'form-control'}}) }}  </label></br>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label  style="color: #0a0a0a" class="control-label" for="first-name">max places :</label><br>
+            {{ form_widget(form.maxPlaces, {'attr':{'class':'form-control','min':0}}) }}
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label  style="color: #0a0a0a" class="control-label" for="first-name" id="start">Start Date: </label><br>
+            {{ form_widget(form.startDate, {'attr':{'class':'form-control','required':'true'}}) }}
+            <span id="start_date_error" style="display: none; color: red"> Invalid start date </span>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label  style="color: #0a0a0a" class="control-label" for="first-name" id="end">End Date: </label><br>
+            {{ form_widget(form.endDate, {'attr':{'class':'form-control','required':'true'}}) }}
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label  style="color: #0a0a0a" class="control-label" class="required"  for="first-name">country </label><br>
+            {{ form_widget(form.address.country, {'attr':{'class':'form-control','readonly':'true','required':'true'}}) }}
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label  style="color: #0a0a0a" class="control-label" class="required"  for="first-name">city </label><br>
+            {{ form_widget(form.address.city, {'attr':{'class':'form-control','required':'true'}}) }}
+        </div>
+    </div>
+    {{ form_widget(form.address.longitude, {'attr':{'class':'form-control', 'style':'display: none;'}}) }}
+    {{ form_widget(form.address.latitude, {'attr':{'class':'form-control', 'style':'display: none;'}}) }}
+
+    {{ form_widget(form.valider) }}
+    {{ form_widget(form._token)}}
+    {{ form_end(form, {'render_rest': false}) }}
+    <style>
+
+        #map {
+            height: 400px;
+
+        }
+        .pac-container {
+            font-family: Roboto;
+        }
+
+        #type-selector {
+            color: #fff;
+            background-color: #4d90fe;
+            padding: 5px 11px 0px 11px;
+        }
+
+        #type-selector label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
+    </style>
+
+    <div class="col-md-5" id="map">
+        <input type="hidden" id="latDepart" name="latDepart">
+        <input type="hidden" id="lngDepart" name="lngDepart">
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+
+
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
+    <script src="{{ asset('member_assets/js/events.js') }}"></script>
+    <script>
+
+        $(document).ready(function(){
+            $('#basebundle_event_endDate').removeClass('form-control').find('select').addClass('myselect')
+            $('#basebundle_event_startDate').removeClass('form-control').find('select').addClass('myselect')
+        })
+        $("#basebundle_event_valider").click(function (event) {
+            var start = new Date(
+                $('#basebundle_event_startDate_date_year').val()
+                ,
+                $('#basebundle_event_startDate_date_month').val()-1
+                ,
+                $('#basebundle_event_startDate_date_day').val());
+
+            var today = new Date();
+
+            var s = (start.getTime()-today.getTime());
+            var diff = Math.ceil(s / (1000 * 3600 * 24));
+            console.log(start)
+            console.log(end)
+            console.log(s)
+            console.log(diff)
+            if(diff<0){
+                //alert("Invalid StartDate for event");
+                $("#start_date_error").show();
+                event.preventDefault();
+            }
+        })
+        $(document).ready(function(){
+            $('#basebundle_event_endDate').removeClass('form-control').find('select').addClass('myselect')
+            $('#basebundle_event_startDate').removeClass('form-control').find('select').addClass('myselect')
+        })
+        $("#basebundle_event_valider").click(function (event) {
+            var start = new Date(
+                $('#basebundle_event_startDate_date_year').val()
+                ,
+                $('#basebundle_event_startDate_date_month').val()-1
+                ,
+                $('#basebundle_event_startDate_date_day').val());
+            var end = new Date(
+                $('#basebundle_event_endDate_year').val()
+                ,
+                $('#basebundle_event_endDate_month').val()-1
+                ,
+                $('#basebundle_event_endDate_day').val());
+
+            var s = (end.getTime()-start.getTime());
+            var diff = Math.ceil(s / (1000 * 3600 * 24));
+            console.log(start)
+            console.log(end)
+            console.log(s)
+            console.log(diff)
+            if(diff<0){
+                alert("Invalid date");
+                event.preventDefault();
+            }
+        })
+
+        /*-------------------*/
+
+
+
+    </script>
+
+    <script>
+           $(function () {
+               activateAutoComplete();
+           });
+
+        function activateAutoComplete() {
+            var input = document.getElementById('basebundle_event_address_city');
+            var options = {
+                types: ['(cities)'],
+                componentRestrictions: {country: 'tn'}
+            };
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                $('#basebundle_event_address_latitude').val(place.geometry.location.lat());
+                $('#basebundle_event_address_longitude').val(place.geometry.location.lng());
+                var results = place.formatted_address.split(',');
+                var country = results[results.length-1].trim();
+                var city = place.formatted_address.replace(', '+country, '');
+                $('#basebundle_event_address_city').val(city);
+                $('#basebundle_event_address_country').val(country);
+                $('#basebundle_event_address_city').blur();
+            });
+        }
+
+        $('#basebundle_event_address_city').on('input', function () {
+            $('#basebundle_event_address_country').val('');
+        });
+
+        $('#basebundle_event_address_city').blur(function () {
+            if($('#basebundle_event_address_city').val() != '' && $('#basebundle_event_address_country').val() == ''){
+                document.getElementById("basebundle_event_address_city").setCustomValidity("Please provide a valid address or let us get your location!");
+            }else{
+                document.getElementById("basebundle_event_address_city").setCustomValidity("");
+            }
+        })
+    </script>
+
+
+{% endblock %}
+
+
+

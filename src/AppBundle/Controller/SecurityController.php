@@ -17,6 +17,7 @@ class SecurityController extends BaseController
         $masterRequest = $requestStack->getMasterRequest(); // this is the call that breaks ESI
         $requestAttributes = $masterRequest->attributes;
 
+        unset($_SESSION['partId']);
         if ('business_login' === $requestAttributes->get('_route')) {
             $template = sprintf('BusinessFOSSecurityBundle:Security:login.html.twig');
         }else if('admin_login' === $requestAttributes->get('_route')){

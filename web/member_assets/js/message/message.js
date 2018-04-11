@@ -1,10 +1,13 @@
+var time = -1;
+
 function popup(partId) {
     closeAllOthers(partId);
     $("#" + partId + "-popup").css('height', '430px').css('padding', '10px 20px 20px 20px');
     readThread(partId);
+    time = -1;
+    update(partId);
     setTimeout(function () {
         $("#" + partId + "-popup-mini").show();
-        update(partId);
     }, 500);
 }
 
@@ -14,7 +17,7 @@ function readThread(partId) {
     globalVar = partId;
     $.ajax({
         url: path,
-        method: 'post',
+        type: 'post',
         data: DATA,
         success: function () {
             var threadBody = $("#" + partId + "-body");

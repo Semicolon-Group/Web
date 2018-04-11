@@ -216,7 +216,8 @@ class MessageController extends Controller implements ContainerAwareInterface
      * @return Thread
      */
     public function getThread($part1, $part2){
-        $tmd1 = $this->getDoctrine()->getRepository(ThreadMetadata::class)->findBy([
+        return $this->getDoctrine()->getRepository(Thread::class)->getCommonThread($part1, $part2);
+        /*$tmd1 = $this->getDoctrine()->getRepository(ThreadMetadata::class)->findBy([
             'participant' => $part1
         ]);
         $tmd2 = $this->getDoctrine()->getRepository(ThreadMetadata::class)->findBy([
@@ -234,6 +235,6 @@ class MessageController extends Controller implements ContainerAwareInterface
             }
             if($found == true) break;
         }
-        return $thread;
+        return $thread;*/
     }
 }

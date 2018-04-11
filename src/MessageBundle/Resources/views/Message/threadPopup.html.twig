@@ -1,9 +1,11 @@
 <div class="popup" id="{{ thr.participant.id }}-popup">
     <div id="{{ thr.participant.id }}-popup-header" class="popup-header" onclick="miniPopup(event, {{ thr.participant.id }})">
-        <div class="popup-profile">
-            <img class="popup-photo" src="{{ thr.photo }}">
-            <span class="popup-name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
-        </div>
+        <a href="{{ path('other_profile',{'id':thr.participant.id}) }}">
+            <div class="popup-profile">
+                <img class="popup-photo" src="{{ thr.photo }}">
+                <span class="popup-name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+            </div>
+        </a>
         <div class="popup-action">
             <span id="{{ thr.participant.id }}-popup-mini" class="fas fa-window-minimize popup-icon popup-mini"></span>
             <span id="{{ thr.participant.id }}-popup-close" class="fas fa-times popup-icon popup-close" onclick="closePopup('{{ thr.participant.id }}-popup')"></span>

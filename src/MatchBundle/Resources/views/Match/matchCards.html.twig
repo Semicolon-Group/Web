@@ -1,0 +1,32 @@
+{% for card in cards %}
+    <div id="{{ card.user.id }}-profile-path" data-path="{{ path("other_profile", {'id':card.user.id}) }}" hidden></div>
+    <div class="matchcard" onmouseenter="enter({{ card.user.id }})" onmouseleave="leave({{ card.user.id }})">
+        <a href="{{ path('other_profile', {'id':card.user.id}) }}" onclick="goTo(event, {{ card.user.id }})">
+            <div class="photo-div">
+                <img class="profile-photo" src="{{ card.photo }}" id="{{ card.user.id }}-photo">
+            </div>
+            <div class="matchcard-text">
+                <div class="profile-info">
+                    <div class="username">
+                        {{ card.user.firstname ~ ' ' ~ card.user.lastname }}
+                    </div>
+                    <div class="user-info">
+                        <span class="age">{{ card.age }}</span>
+                        <span class="dot fas fa-circle"></span>
+                        <span class="location">{{ card.user.address.city }}, {{ card.user.address.country }}</span>
+                    </div>
+                </div>
+                <div class="percentages">
+                    <div class="percentage-wrapper {{ card.user.id }}-perc">
+                        <span class="percentage">{{ card.match }}%</span>
+                        <span class="percentage-label">Match</span>
+                    </div><div class="percentage-wrapper enemy {{ card.user.id }}-perc">
+                        <span class="percentage">{{ card.enemy }}%</span>
+                        <span class="percentage-label">Enemy</span>
+                    </div>
+                    <span id="{{ card.user.id }}-star" class="like-star {{ card.liked ? 'fas' : 'far' }} fa-star" onmouseenter="enterStar('{{ card.user.id }}-star')" onmouseleave="leaveStar('{{ card.user.id }}-star')" onclick="decide({{ card.user.id }})" data-liked="{{ card.liked ? 'true' : 'false' }}"></span>
+                </div>
+            </div>
+        </a>
+    </div>
+{% endfor %}

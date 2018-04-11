@@ -43,4 +43,16 @@ class AnswerRepository extends EntityRepository
             ->setParameter('user', $user)->setParameter('topic', Topic::Mandatory);
         return $query->getResult();
     }
+    /**
+     * @param $user User
+     * @return int
+     */
+    public function getAnswerCount($user){
+        $result = $this->getEntityManager()->createQuery(
+            "SELECT a FROM BaseBundle:Answer a WHERE a.user = :user"
+        )
+            ->setParameter('user', $user)
+            ->getResult();
+        return count($result);
+    }
 }

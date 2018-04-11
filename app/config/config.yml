@@ -30,8 +30,8 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    event_directory: '%kernel.root_dir%/../web/business_assets/images/img_event'
     image_directory : '%kernel.project_dir%/web/member_assets/images'
-
 framework:
     #esi: ~
     translator: ~

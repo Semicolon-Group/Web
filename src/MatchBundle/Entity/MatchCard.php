@@ -38,6 +38,27 @@ class MatchCard
      */
     private $age;
 
+    /**
+     * @var bool
+     */
+    private $liked;
+
+    /**
+     * @return bool
+     */
+    public function isLiked()
+    {
+        return $this->liked;
+    }
+
+    /**
+     * @param bool $liked
+     */
+    public function setLiked($liked)
+    {
+        $this->liked = $liked;
+    }
+
 
     /**
      * @return User

@@ -25,7 +25,7 @@ class MemberChartsController extends Controller
                 'member_gender' => $obj['chart'],
                 'total_number' => $obj['total_number'],
                 'number_by_city' => $this->getMemberNumberByCity(),
-                'cum_number' => $o['chart2']
+                'cum_number' => $o['chart2'],
             ));
     }
 
@@ -88,8 +88,8 @@ class MemberChartsController extends Controller
             array_push($maleTabs, $mal);
         }
         $series = array(
-            array("name" => "Male inscriptions number",'color' => '#4572A7', "data" => $maleTabs),
-            array("name" => "Female inscriptions number",'color' => '#f9354c', "data" => $femaleTabs)
+            array("name" => "Female inscriptions number",'color' => '#f9354c', "data" => $maleTabs),
+            array("name" => "Male inscriptions number",'color' => '#4572A7', "data" => $femaleTabs)
         );
         $ob = new Highchart();
         $ob->chart->renderTo('linechart'); // #id du div où afficher le graphe
@@ -101,8 +101,8 @@ class MemberChartsController extends Controller
 
         $series2 = array(
             array("name" => "Member cumulative number", "data" => $tabs2),
-            array("name" => "Male cumulative number",'color' => '#4572A7', "data" => $tabs2mal),
-            array("name" => "Female cumulative number",'color' => '#f9354c', "data" => $tabs2fem)
+            array("name" => "Female cumulative number",'color' => '#f9354c', "data" => $tabs2mal),
+            array("name" => "Male cumulative number",'color' => '#4572A7', "data" => $tabs2fem)
         );
         $ob2 = new Highchart();
         $ob2->chart->renderTo('cumlinechart'); // #id du div où afficher le graphe

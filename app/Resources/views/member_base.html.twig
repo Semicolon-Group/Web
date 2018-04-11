@@ -58,6 +58,7 @@
         <![endif]-->
 
         {% block stylesheets %}{% endblock %}
+
     </head>
     <body>
         <!--global chat-->
@@ -107,6 +108,8 @@
                                    <img src="{{ asset('member_assets/img/notification.png') }}" height="25">
                                </a>
                                <ul class="dropdown-menu">
+                                   {% block notification %}
+                                   {% endblock %}
                                </ul>
                            </li>
                            <li class="dropdown submenu">
@@ -288,6 +291,7 @@
         <script src="{{ asset('member_assets/js/theme.js') }}"></script>
 
         <script src="{{ asset('member_assets/js/message/message-popup.js') }}"></script>
+        <script src="{{ asset('member_assets/js/message/message.js') }}"></script>
         <script >
             $('#ajoutFeedback').submit(function(event){
                 event.preventDefault();
@@ -298,12 +302,12 @@
                     data: { content : fContent},
                     success: function (data) {
                         alert("Your feedback has been added successfully");
-                        $('#ajoutFeedback').modal('hide');
+                        $('#feedback_modal').modal('hide');
 
                     },
                     error: function (data) {
                         alert("An error has occured while adding this feedback");
-                        $('#ajoutFeedback').modal('hide');
+                        $('#feedback_modal').modal('hide');
                     }
                 });
 

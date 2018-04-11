@@ -61,12 +61,18 @@ class NewsFeedController extends Controller
             $em->flush();
 
             $serializer = new Serializer([new ObjectNormalizer()]);
-            $data = $serializer->normalize([
-                'id' => $post->getId(),
-                'type' => PostType::Status
-            ]);
+            $post = PostService::createStatusPost($post, $this->getDoctrine());
+            $photoUrl = $this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($user);
+            $content = [];
+            $content [] = $this->render('@NewsFeed/NewsFeed/post.html.twig',[
+                'post' => $post,
+                'online' => $this->getUser(),
+                'photo' => $photoUrl,
+                'StatusType' => PostType::Status,
+                'PictureType' => PostType::Picture
+            ])->getContent();
 
-            return new JsonResponse($data);
+            return new JsonResponse($content);
         }
     }
 

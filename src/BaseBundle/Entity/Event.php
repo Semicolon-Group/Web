@@ -8,8 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Event
  *
  * @ORM\Table(name="event", indexes={@ORM\Index(name="business_id", columns={"business_id"}), @ORM\Index(name="address_id", columns={"address_id"})})
- * @ORM\Entity
- */
+ * @ORM\Entity("BaseBundle\Repository\eventRepository") */
 class Event
 {
     /**
@@ -80,7 +79,7 @@ class Event
     /**
      * @var \Address
      *
-     * @ORM\ManyToOne(targetEntity="Address")
+     * @ORM\ManyToOne(targetEntity="Address", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="address_id", referencedColumnName="id")
      * })
@@ -111,6 +110,7 @@ class Event
      * )
      */
     private $user;
+
 
     /**
      * Constructor

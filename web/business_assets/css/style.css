@@ -5391,9 +5391,7 @@ thead tr th {
   color: #455a64;
   font-weight: 500;
 }
-thead tr th:last-child {
-  text-align: right;
-}
+
 tbody tr th {
   color: #455a64;
   font-family: 'Poppins', sans-serif;
@@ -5403,9 +5401,7 @@ tbody tr td {
   font-family: 'Poppins', sans-serif;
   color: #99abb4;
 }
-tbody tr td:last-child {
-  text-align: right;
-}
+
 .table > tbody > tr > td,
 .table > tbody > tr > th,
 .table > tfoot > tr > td,
@@ -6918,4 +6914,13 @@ tbody tr td:last-child {
   .retina-logo {
     display: inline-block !important;
   }
+}
+.myselect{
+  padding: 5px 15px;
+  margin-right: 10px;
+  height: 42px;
+  border-radius: 0;
+  box-shadow: none;
+  border-color: #e7e7e7;
+  font-family: 'Poppins', sans-serif;
 }

@@ -1,9 +1,9 @@
 {% extends 'business_base.html.twig' %}
-{% block title %}Event | Create{% endblock %}
-{% block page_title %}Event creation {% endblock %}
+{% block title %}Event | Edit{% endblock %}
+{% block page_title %}Event Edit{% endblock %}
 {% block page_path %}
     <li class="breadcrumb-item">Event</li>
-    <li class="breadcrumb-item active">Create</li>
+    <li class="breadcrumb-item active">Edit</li>
 {% endblock %}
 
 {% block stylesheets %}
@@ -15,8 +15,8 @@
 {% block body %}
 
 
-        <h1>Ajouter Event</h1>
-    {{ form_start(form,{'attr':{'id':'add_event_form'}}) }}
+    <h1>Ajouter Event</h1>
+    {{ form_start(form ,{'attr':{'id':'add_event_form'}}) }}
     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
         <div class="form-group">
             <label  style="color: #0a0a0a" class="control-label" class="required"  for="first-name">Name event: </label><br>
@@ -50,10 +50,8 @@
         <div class="form-group">
             <label  style="color: #0a0a0a" class="control-label" for="first-name" id="start">Start Date: </label><br>
             {{ form_widget(form.startDate, {'attr':{'class':'form-control','required':'true'}}) }}
-            <span id="start_date_error" style="display: none; color: red"> Invalid start date </span>
         </div>
     </div>
-
 
 
     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
@@ -148,8 +146,7 @@
             console.log(s)
             console.log(diff)
             if(diff<0){
-                //alert("Invalid StartDate for event");
-                $("#start_date_error").show();
+                alert("Invalid StartDate for event");
                 event.preventDefault();
             }
         })
@@ -190,9 +187,9 @@
     </script>
 
     <script>
-           $(function () {
-               activateAutoComplete();
-           });
+        $(function () {
+            activateAutoComplete();
+        });
 
         function activateAutoComplete() {
             var input = document.getElementById('basebundle_event_address_city');

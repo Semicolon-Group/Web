@@ -1,4 +1,5 @@
-var time;
+var requestReceived = true;
+var time = -1;
 var blinkTime = 0;
 var globalVar = 0;
 $(function () {
@@ -58,18 +59,18 @@ function send(partId) {
     var DATA = {'text':text, 'partId':partId};
     var path = $("#send_msg_path").data('path');
     $.ajax({
-       url: path,
-       type: 'post',
-       data: DATA,
-       success: function (data) {
-           area.val('');
-           append(partId, text);
-           var threadBody = $("#" + partId + "-body");
-           if(threadBody.length != 0)
-               threadBody.html(text);
-           scrollDownAll();
-           readThread(partId);
-       }
+        url: path,
+        type: 'post',
+        data: DATA,
+        success: function (data) {
+            area.val('');
+            append(partId, text);
+            var threadBody = $("#" + partId + "-body");
+            if(threadBody.length != 0)
+                threadBody.html(text);
+            scrollDownAll();
+            readThread(partId);
+        }
     });
 }
 function readThread(partId) {
@@ -106,6 +107,8 @@ function append(partId, text) {
 }
 function update(id) {
     time = setInterval(function () {
+        if(!requestReceived) return;
+        requestReceived = false;
         var nbr = $("#" + id + "-list > li").length;
         var path = $("#update_thread_path").data('path');
         var DATA = {'partId':id, 'nbr':nbr};
@@ -114,17 +117,46 @@ function update(id) {
             data: DATA,
             type: 'post',
             success: function (data) {
+                requestReceived = true;
                 data.forEach(function (text) {
                     appendOther(id, text);
                 });
                 scrollDownAll();
                 if($("#" + id + "-popup").css('height') == '60px' && blinkTime == 0 && data.length > 0)
                     blink(id);
+            },
+            error: function(){
+                requestReceived = true;
             }
         });
-    }, 5000);
+    }, 6000);
+}
+function update1(id) {
+    console.log(time);
+    if (time == 0) return;
+    var nbr = $("#" + id + "-list > li").length;
+    var path = $("#update_thread_path").data('path');
+    var DATA = {'partId':id, 'nbr':nbr};
+    $.ajax({
+        url: path,
+        data: DATA,
+        type: 'post',
+        success: function (data) {
+            data.forEach(function (text) {
+                appendOther(id, text);
+            });
+            scrollDownAll();
+            if($("#" + id + "-popup").css('height') == '60px' && blinkTime == 0 && data.length > 0)
+                blink(id);
+            time = setTimeout(update(id), 6000);
+        },
+        error: function(){
+            time = setTimeout(update(id), 6000);
+        }
+    });
 }
 function stopUpdate() {
+    //time = 0;
     clearInterval(time);
 }
 function blink(partId){

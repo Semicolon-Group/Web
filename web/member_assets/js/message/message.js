@@ -1,7 +1,10 @@
+var time = -1;
+
 function popup(partId) {
     closeAllOthers(partId);
     $("#" + partId + "-popup").css('height', '430px').css('padding', '10px 20px 20px 20px');
     readThread(partId);
+    time = -1;
     update(partId);
     setTimeout(function () {
         $("#" + partId + "-popup-mini").show();

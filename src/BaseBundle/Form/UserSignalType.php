@@ -30,7 +30,6 @@ class UserSignalType extends AbstractType
             ->add('reason', ChoiceType::class, [
                 'choices' => $reasons,
 
-                'expanded' => true ,
             ])
             ->add('state', HiddenType::class)
             ->add('content')

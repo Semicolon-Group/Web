@@ -103,7 +103,7 @@ class DefaultController extends Controller
         }
 
         return $this->render('BusinessEventBundle:Default:edit.html.twig', array('event' => $event,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
 
         ));
     }

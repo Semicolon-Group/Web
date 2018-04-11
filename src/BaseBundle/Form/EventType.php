@@ -23,23 +23,25 @@ class EventType extends AbstractType
     {
         $builder
             ->add('content',TextareaType::class)
-            ->add('title', TextareaType::class, ['required' => true])
-            ->add('photoUrl',FileType::class, array('data_class' => null))
-            ->add('maxPlaces', NumberType::class, array('attr' => ['min' => 0]))
+            ->add('title', TextareaType::class)
+            ->add('maxPlaces')
             ->add('startDate',DateTimeType::class, array(
             'data' => new \DateTime(),
             'attr' => array('style' => 'display: yes;'),
             'label' => false
         ))
-            ->add('state', ChoiceType::class,[
-                'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
-
-            ])
-            ->add('reason',TextareaType::class, ['required' => true])
-            ->add('endDate',DateType::class, ['required' => true])
+            ->add('state',choiceType::class ,[
+                    'choices' => [ 'Approved' => '1',  'Not processed' => '0', 'Denied'=>'2' ]
+                ]
+            )
+            ->add('reason',TextareaType::class)
+            ->add('endDate',DateType::class)
             ->add('address', AddressType::class, array(
-                'label' => false))
-            ->add('valider',SubmitType::class);
+                'label' => false));
+            if(!$options['edit']){
+                $builder->add('photoUrl',FileType::class, array('data_class' => null));
+            }
+            $builder->add('valider',SubmitType::class);
 
     }/**
      * {@inheritdoc}
@@ -47,7 +49,8 @@ class EventType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'BaseBundle\Entity\Event'
+            'data_class' => 'BaseBundle\Entity\Event',
+            'edit' => false
         ));
     }
 

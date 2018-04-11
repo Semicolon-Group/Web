@@ -19,8 +19,8 @@ class AddressType extends AbstractType
         $builder
             ->add('country')
             ->add('city')
-            ->add('longitude',HiddenType::class)
-            ->add('latitude',HiddenType::class);
+            ->add('longitude')
+            ->add('latitude');
     }/**
      * {@inheritdoc}
      */

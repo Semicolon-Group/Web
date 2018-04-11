@@ -38,12 +38,12 @@ class EventAdminController extends Controller
      */
     public function EditAction(Request $request,event $event,$id)
     {
-        $advert = new Event();
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $var2 =$this->getDoctrine()->getRepository(Event::class)->findNotifsEventsAdmin();
         $event=$repo->find($id);
         $x = $event->getState() ;
-        $editForm = $this->createForm('BaseBundle\Form\EventType', $event);$editForm->handleRequest($request);
+        $editForm = $this->createForm('BaseBundle\Form\EventType', $event, ['edit' => true]);
+        $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -51,7 +51,7 @@ class EventAdminController extends Controller
 
             $var1 =$this->getDoctrine()->getRepository(Event::class)->find($id);
             if ($var1->getState() != $x && $var1->getState()== 1  ) {
-                $message = (new Swift_Message())
+                /*  $message = (new Swift_Message())
                     ->setSubject('MySoulmate | Add approved !')
                     ->setFrom('mysoulmatepi@gmail.com')
                     ->setTo($event->getBusiness()->getEmail())
@@ -59,7 +59,7 @@ class EventAdminController extends Controller
                         "Hi " .$event->getBusiness()->getFirstName() . " , your event is approved !",
                         'text/html'
                     );
-                $this->get('mailer')->send($message);
+                $this->get('mailer')->send($message);*/
             }var_dump($var1->getState());
             return $this->redirectToRoute("admin_businesses");
         }
@@ -71,18 +71,4 @@ class EventAdminController extends Controller
         ));
     }
 
-    /**
-     * @Route("/Delete", name="admin_events_delete")
-     */
-    public function DeleteAction(Request $request)
-    {
-        if($request->isXmlHttpRequese()){
-            $id = $request->get('id');
-            $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($event);
-            $em->flush();
-            return new JsonResponse();
-        }
-    }
 }

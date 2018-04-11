@@ -70,7 +70,7 @@
                                 <button type="button" id="like" value="LogIn" class="btn form-control login_btn">Like </button>
                             {% else %}
                                 <button type="button" id="dislike" value="LogIn" class="btn form-control login_btn">Dislike</button>
-                                <button type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
+                                <button onclick="popup({{ user.id }})" type="button" id="chat" value="LogIn" class="btn form-control login_btn">Chat Now <img src="{{ asset('member_assets/img/comment.png') }}" alt=""></button>
                             {% endif %}
                         </span>
                     </div>
@@ -80,6 +80,7 @@
     </section>
 {% endblock %}
 {% block body %}
+    {{ render(controller('MessageBundle:Message:popup', {'userId':user.id})) }}
     <div id="feedback" class="modal fade centered-modal" role="dialog" style="margin-top: 30vh; ">
         <div class="modal-dialog" style="width: 45%; ">
             <div class="modal-content" style="border-color: #0b5b97" >
@@ -96,7 +97,6 @@
             </div>
         </div>
     </div>
-
     <div id="answer-form" class="modal fade centered-modal" role="dialog" style="margin-top: 10vh;">
         <div class="modal-dialog" style="width: 70%;">
             <div class="modal-content">
@@ -498,10 +498,6 @@
                 }
             });
         }
-
-        $('#chat').click(function () {
-            alert('chat');
-        });
 
         $('.photo').click(function () {
             initPhotoModal(this);

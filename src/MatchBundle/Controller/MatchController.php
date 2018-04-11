@@ -58,9 +58,11 @@ class MatchController extends Controller
             $filter->setMaxHeight($request->get('maxHeight'));
 
             $cards = MatchCardService::getMatches($this->getDoctrine(), $this->getUser(), $filter);
+            $content = [];
+            $content [] = $this->render('MatchBundle:Match:matchCards.html.twig',['cards' => $cards])->getContent();
             $serializer = new Serializer([new ObjectNormalizer()]);
-            $cards = $serializer->normalize($cards);
-            return new JsonResponse($cards);
+            $content = $serializer->normalize($content);
+            return new JsonResponse($content);
         }
     }
 

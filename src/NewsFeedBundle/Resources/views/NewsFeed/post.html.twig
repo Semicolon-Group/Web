@@ -1,0 +1,121 @@
+<div class="media">
+
+    <!-- Edit/Delete Buttons -->
+    {% if post.type == StatusType and post.user.id == online.id %}
+        <div class="update_box">
+            <button class="button" data-toggle="modal" data-target="#edit_post_modal" onclick="updateModalText({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}"></button>
+            <button class="button" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }}, 0)"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
+        </div>
+    {% endif %}
+
+    <!-- Post Body -->
+    <div class="media-left">
+        <a href="{{ post.user.id == online.id ? path('member_profile') : path('other_profile',{'id':post.user.id}) }}">
+            <img class="post_pic" src="{{ post.photoUrl }}" alt="">
+        </a>
+    </div>
+    <div class="media-body">
+        <a href="{{ post.user.id == online.id ? path('member_profile') : path('other_profile',{'id':post.user.id}) }}">
+            <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
+        </a>
+        <p>{{ post.time }}</p><br>
+        {% if post.type == StatusType %}
+            <p id="{{ post.id }}">{{ post.content | raw }}</p>
+        {% elseif post.type == PictureType %}
+            <img id="{{ post.id }}-pic-post" class="pic_post" src="{{ post.content }}" data-toggle="modal" data-target="#view_photo_modal" onclick="viewPhoto('{{ post.id }}-pic-post')">
+        {% endif %}
+    </div>
+    <hr>
+
+    <!-- Reactions -->
+    <div class="reaction-box">
+        <!-- Statistics -->
+        <span class="reaction-statistics">
+                                        {% for r in post.stats.reactions %}
+                                            <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
+                                        {% endfor %}
+            <span id="{{ post.id }}-nbr-reaction" data-nbr="{{ post.stats.nbrReaction - 1 }}">
+                                            {% if post.stats.nbrReaction != 0 %}
+                                                {% if post.currentReaction != -1 %}
+                                                    You
+                                                    {% if post.stats.nbrReaction > 1 %}
+                                                        and {{ post.stats.nbrReaction - 1 }} others
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ post.stats.nbrReaction }}
+                                                {% endif %}
+                                            {% endif %}
+                                        </span>
+            {% if post.stats.nbrComment != 0 %}
+                &nbsp;
+                <img src="{{ asset('member_assets/img/Emoticons/comment.png') }}" class="emo-stat">
+                <span id="{{ post.id }}-nbr-comment" data-nbr="{{ post.stats.nbrComment }}">
+                                                {{ post.stats.nbrComment }}
+                                            </span>
+            {% endif %}
+                                    </span>
+
+        <!-- React Action -->
+        <div class="react-action">
+            <span id="{{ post.id }}-current-reaction"></span>
+            {% if post.user.id != online.id %}
+            <button class="button" id="{{ post.id }}-react" onmouseenter="show({{ post.id }})" onmouseleave="hide({{ post.id }})" onclick="react({{ post.id }}, {{ post.type}}, 'None')">
+            {% if post.currentReaction == -1 %}
+                <p>React</p>
+            {% else %}
+                <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/' ~ post.stats.currReacTitle ~ '.png') }}">
+                <p>{{ post.stats.currReacTitle }}</p>
+            {% endif %}
+            </button>{% endif %}<button class="button" onclick="toggleComments({{ post.id }})">
+                <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/comment.png') }}">
+                <p>Comment</p>
+            </button>
+            {% if post.user.id != online.id %}
+                <div id="{{ post.id }}-popup" class="reaction-popup">
+                    <img src="{{ asset('member_assets/img/Emoticons/Smile.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Smile')">
+                    <img src="{{ asset('member_assets/img/Emoticons/Love.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Love')">
+                    <img src="{{ asset('member_assets/img/Emoticons/Laugh.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Laugh')">
+                    <img src="{{ asset('member_assets/img/Emoticons/Scowl.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Scowl')">
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Comment Box -->
+    <div class="comment-box" id="{{ post.id }}-comment-box">
+        <div id="{{ post.id }}-comments">
+            {% for comment in post.comments %}
+                <!-- Comment section -->
+                <div class="comment-sub-box">
+                    <div class="comment-profile-pic">
+                        <a href="{{ comment.sender.id == online.id ? path('member_profile') : path('other_profile',{'id':comment.sender.id}) }}">
+                            <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                        </a>
+                    </div>
+                    <div class="comment-body comment">
+                        <p id="{{ comment.id }}-comment-content">{{ comment.content | raw }}</p>
+                    </div>
+
+                    <!-- Update/Delete comment -->
+                    {% if comment.sender.id == online.id %}
+                        <div class="update-comment-box">
+                            <span class="button far fa-edit" onclick="updateModalText({{ comment.id }})" data-toggle="modal" data-target="#edit_post_modal"></span><span class="button far fa-trash-alt" onclick="showDeleteModal({{ comment.id }}, {{ post.id }})" data-toggle="modal" data-target="#delete_post_modal"></span>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Writing comment section -->
+        <div class="writing-comment">
+            <div class="comment-profile-pic">
+                <a href="{{ path('member_profile') }}">
+                    <img class="comment_pic" src="{{ photo }}" alt="">
+                </a>
+            </div>
+            <div class="comment-body comment comment-border comment-space">
+                <textarea id="{{ post.id }}-comment-space" class="comment-space" placeholder="Leave a comment..." onkeypress="addComment(event, {{ post.id }}, {{ post.type }})"></textarea>
+            </div>
+        </div>
+    </div>
+</div>

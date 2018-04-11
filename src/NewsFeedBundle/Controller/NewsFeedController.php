@@ -230,7 +230,7 @@ class NewsFeedController extends Controller
             $postId = $request->get('postId');
             $photoId = $request->get('photoId');
             $content = $request->get('content');
-            $user = $this->container->get("security.token_storage")->getToken()->getUser();
+            $user = $this->getUser();
 
             /* Create comment */
             $comment = new Comment();
@@ -240,23 +240,27 @@ class NewsFeedController extends Controller
             $comment->setPostId($postId);
             $comment->setContent($content);
             $comment->setDate(new \DateTime());
+            $comment->setProfilePhoto($this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($user));
 
             /* Persist comment */
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
 
-            /* Retrive new comment id */
-            $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(
-                [],
-                [
-                    'id' => 'DESC'
-            ]);
-            $data = ['id' => $comment->getId()];
-            $serializer = new Serializer([new ObjectNormalizer()]);
-            $data = $serializer->normalize($data);
+            $post = new Post;
+            $post->setId($postId == 0 ? $photoId : $postId);
 
-            return new JsonResponse($data);
+            $content = [];
+            $content [] = $this->render('@NewsFeed/NewsFeed/comment.html.twig',[
+                'online' => $user,
+                'comment' => $comment,
+                'post' => $post
+            ])->getContent();
+
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $content = $serializer->normalize($content);
+
+            return new JsonResponse($content);
         }
     }
 

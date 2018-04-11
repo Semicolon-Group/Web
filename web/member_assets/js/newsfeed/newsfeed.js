@@ -170,19 +170,7 @@ function addComment(event, id, type) {
             data: DATA,
             url: path,
             success: function (data) {
-                comments.append(
-                    "<div class=\"comment-sub-box\">\n" +
-                    "<div class=\"comment-profile-pic\">\n" +
-                    "<img class=\"comment_pic\" src='" + pic + "'>\n" +
-                    "</div>\n" +
-                    "<div class=\"comment-body comment\">\n" +
-                    "<p id=\"" + data['id'] + "-comment-content\">" + content + "</p>\n" +
-                    "</div>\n" +
-                    "<div class=\"update-comment-box\">\n" +
-                    "<span class=\"button far fa-edit\" onclick=\"updateModalText(" + data['id'] + ")\" data-toggle=\"modal\" data-target=\"#edit_post_modal\"></span><span class=\"button far fa-trash-alt\" onclick=\"showDeleteModal(" + data['id'] + ")\" data-toggle=\"modal\" data-target=\"#delete_post_modal\"></span>\n" +
-                    "</div>" +
-                    "</div>"
-                );
+                comments.append(data[0]);
                 var newComment = $("#" + id + "-comments > div").last();
                 newComment.css('background-color', '#e0dede');
                 window.setTimeout(function(){

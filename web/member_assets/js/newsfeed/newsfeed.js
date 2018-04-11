@@ -250,3 +250,8 @@ function expandArea(id, max, def){
         area.scrollTop = area.scrollHeight;
     }
 }
+function viewPhoto(id){
+    var src = $("#" + id).attr('src');
+    console.log(src);
+    $("#photo_modal").html("<img src='" + src + "' style='width:100%;height:auto;'>");
+}

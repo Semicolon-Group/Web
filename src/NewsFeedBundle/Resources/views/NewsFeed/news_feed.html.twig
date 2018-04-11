@@ -33,6 +33,16 @@
     <div id="picture_type" data-type="{{ PictureType }}"></div>
 
     <!-- Edit Post Modal -->
+    <div class="modal fade" id="view_photo_modal" tabindex="-1" role="dialog" aria-labelledby="view_photo_modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="photo_modal">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Post Modal -->
     <div class="modal fade" id="edit_post_modal" tabindex="-1" role="dialog" aria-labelledby="edit_post_modal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -126,7 +136,7 @@
                                         {% if post.type == StatusType %}
                                             <p id="{{ post.id }}">{{ post.content | raw }}</p>
                                         {% elseif post.type == PictureType %}
-                                            <img class="pic_post" src="{{ post.content }}">
+                                            <img id="{{ post.id }}-pic-post" class="pic_post" src="{{ post.content }}" data-toggle="modal" data-target="#view_photo_modal" onclick="viewPhoto('{{ post.id }}-pic-post')">
                                         {% endif %}
                                     </div>
                                     <hr>

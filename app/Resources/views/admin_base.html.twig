@@ -30,24 +30,18 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="brand">
-            <a href="index.html"><img src="{{ asset('admin_assets/') }}img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
+            <a href="index.html"><img src="{{ asset('member_assets/img/logo.png') }}" alt="Klorofil Logo" style="height: 25px;" class="img-responsive logo"></a>
         </div>
         <div class="container-fluid">
             <div class="navbar-btn">
                 <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
             </div>
-            <form class="navbar-form navbar-left">
-                <div class="input-group">
-                    <input type="text" value="" class="form-control" placeholder="Search dashboard...">
-                    <span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
-                </div>
-            </form>
             <div id="navbar-menu">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
                             <i class="lnr lnr-alarm"></i>
-                            <span class="badge bg-danger">{% block notifications_number %}5{% endblock %}</span>
+                            <span class="badge bg-danger">{% block notifications_number %}{% endblock %}</span>
                         </a>
                         <ul class="dropdown-menu notifications">
                             {% block notifications %}
@@ -73,7 +67,6 @@
         <div class="sidebar-scroll">
             <nav>
                 <ul class="nav">
-                    <li><a href="{{ path('admin_home') }}" class="{% if app.request.attributes.get('_route') == 'admin_home' %}active{% endif %}"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
                     <li><a href="{{ path('admin_questions') }}" class="{% if app.request.attributes.get('_route') == 'admin_questions' %}active{% endif %}"><i class="lnr lnr-question-circle"></i> <span>Questions</span></a></li>
                     <li>
                         <a href="#subBus" data-toggle="collapse" class="{% if (app.request.attributes.get('_route') == 'lister_admin') or ((app.request.attributes.get('_route') == 'admin_promotion_add') or ((app.request.attributes.get('_route') == 'admin_promotions_list'))) %}active{% else %}collapsed{% endif %}">

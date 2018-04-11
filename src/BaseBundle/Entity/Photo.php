@@ -82,6 +82,7 @@ class Photo
         // otherwise the event listeners won't be called and the file is lost
         if ($image) {
             // if 'updatedAt' is not defined in your entity, use another property
+            date_default_timezone_set('Africa/Tunis');
             $this->date = new \DateTime('now');
         }
     }

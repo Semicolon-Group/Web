@@ -170,7 +170,7 @@ class MatchCardService
      * @return \stdClass
      */
     static function getTimeDiff($date){
-        date_default_timezone_set('Europe/Paris');
+        date_default_timezone_set('Africa/Tunis');
         $diff = new \stdClass();
         $diff->year = $date->diff(new DateTime('now'))->y;
         $diff->month = $date->diff(new DateTime('now'))->m;

@@ -59,9 +59,7 @@ $(function () {
             url: path,
             success: function (data) {
                 if(comment){
-                    var stat = $("#" + selectedPost + "-nbr-comment");
-                    var nbr = stat.data('nbr');
-                    stat.html(nbr - 1);
+                    $("#" + selectedPost + "-stats").html(data[0]);
                 }
             }
         });
@@ -171,6 +169,7 @@ function addComment(event, id, type) {
             url: path,
             success: function (data) {
                 comments.append(data[0]);
+                $("#" + id + "-stats").html(data[1]);
                 var newComment = $("#" + id + "-comments > div").last();
                 newComment.css('background-color', '#e0dede');
                 window.setTimeout(function(){

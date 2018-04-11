@@ -30,7 +30,7 @@
     <!-- Reactions -->
     <div class="reaction-box">
         <!-- Statistics -->
-        <span class="reaction-statistics">
+        <span id="{{ post.id }}-stats" class="reaction-statistics">
                                         {% for r in post.stats.reactions %}
                                             <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
                                         {% endfor %}

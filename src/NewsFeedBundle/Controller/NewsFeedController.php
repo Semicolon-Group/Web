@@ -247,13 +247,16 @@ class NewsFeedController extends Controller
             $em->persist($comment);
             $em->flush();
 
-            $post = new Post;
-            $post->setId($postId == 0 ? $photoId : $postId);
+            $post = $this->preparePost($photoId, $postId);
 
             $content = [];
             $content [] = $this->render('@NewsFeed/NewsFeed/comment.html.twig',[
                 'online' => $user,
                 'comment' => $comment,
+                'post' => $post
+            ])->getContent();
+
+            $content [] = $this->render('@NewsFeed/NewsFeed/postStats.html.twig',[
                 'post' => $post
             ])->getContent();
 
@@ -274,11 +277,24 @@ class NewsFeedController extends Controller
             $id = $request->get('id');
             $comment = $this->getDoctrine()->getRepository(Comment::class)->find($id);
 
+            $photoId = $comment->getPhotoId();
+            $postId = $comment->getPostId();
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($comment);
             $em->flush();
 
-            return new JsonResponse();
+            $post = $this->preparePost($photoId, $postId);
+
+            $content = [];
+            $content [] = $this->render('@NewsFeed/NewsFeed/postStats.html.twig',[
+                'post' => $post
+            ])->getContent();
+
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $content = $serializer->normalize($content);
+
+            return new JsonResponse($content);
         }
     }
 
@@ -301,5 +317,26 @@ class NewsFeedController extends Controller
 
             return new JsonResponse();
         }
+    }
+
+    /**
+     * @param $photoId int
+     * @param $postId int
+     * @return Post
+     */
+    function preparePost($photoId, $postId){
+        $post = new Post;
+        if($postId == 0){
+            $post->setId($photoId);
+            $post->setType(PostType::Picture);
+            $post->setUser($this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser());
+        }else{
+            $post->setId($postId);
+            $post->setType(PostType::Status);
+            $post->setUser($this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser());
+        }
+        $post = PostService::getReactionStats($post, $this->getDoctrine());
+
+        return $post;
     }
 }

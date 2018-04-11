@@ -3,6 +3,7 @@
 {% block title %}Recommandations{% endblock %}
 {% block stylesheets %}
     <link href="{{ asset('member_assets/css/recommandation/recommandation.css') }}" rel="stylesheet">
+    <link href="{{ asset('member_assets/css/card.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block banner_title %}Recommandations{% endblock %}
@@ -13,116 +14,145 @@
 {% endblock %}
 
 {% block body %}
-    <div class="content">
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
+    <div id="address" style="display: none;">
+        <span id="lat">{{ address.latitude }}</span>
+        <span id="lng">{{ address.longitude }}</span>
+    </div>
+    <div id="map" class="modal fade centered-modal" role="dialog">
+        <div class="modal-dialog" style="width: 70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Directions</h4>
                 </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
+                <div class="modal-body">
+                    <div class="row card-container" style="width: 100%;">
+                        <div class="col-md-12">
+                            <div class="card horizontal" style=" height: 70vh;">
+                                <div class="" style="width: 60%;">
+                                    <div id="map_canvas"></div>
+                                </div>
+                                <div class="card-stacked">
+                                    <div class="card-content" style="max-height: 100%;">
+                                        <div class="row" style="height: 100%; max-height: 100%;">
+                                            <div class="card" style="height: 100%;">
+                                                <div class="card-image" style="min-width: 100%; min-height: 40%; overflow: hidden; ">
+                                                    <img id="place-img" style='min-width: 100%; min-height: 100%;' src="{{ asset('member_assets/img/who-we-right.jpg') }}">
+                                                </div>
+                                                <div class="card-content" style="overflow-y: auto; max-height: 60%;">
+                                                    <div class="card-title">
+                                                        <span id="place-name">Card Title</span><br/>
+                                                        <div  style="font-size: medium;">
+                                                            <div class="stars-outer">
+                                                                <div id="start" class="stars-inner"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="open"></div>
+                                                    <div id="place-address"></div>
+                                                    <span id="phone-number"></span><br/>
+                                                    <span id="website"></span>
+                                                    <br/>
+                                                    <br/>
+                                                    <b>Reviews:</b><br/>
+                                                    <div id="reviews" style="margin-bottom: 20px;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="img-container">
-                    <img class="card-img" src="{{ asset('member_assets/img/logo.png') }}" width="200">
-                </div>
-                <div class="card-content">
-                    <h2 class="card-title">Header</h2>
-                    <p class="card-text">Content</p>
-                </div>
-            </div>
+
         </div>
     </div>
+
+    <div class="content">
+        <div class="tabs" style="margin-top: 30px;">
+            <div class="row col-md-offset-1 col-md-10" style="text-align: center;">
+                <div class="tab-1 col-md-4 tabs-tab">
+                    <h2 id="cafe" class="active">Cafes</h2>
+                </div>
+                <div class="tab-1 col-md-4 tabs-tab">
+                    <h2 id="restaurant">Restaurants</h2>
+                </div>
+                <div class="tab-1 col-md-4 tabs-tab">
+                    <h2 id="park">Parks</h2>
+                </div>
+            </div>
+            <br/><hr/>
+        </div>
+
+        <div id="filter" style="margin-top: 30px;">
+            <div class="row">
+                <div class="col-sm-offset-1 col-md-10">
+                    <div class="card" style="background-color: white;">
+                        <div class="card-content">
+                            <div class="row" style="margin: 10px;">
+                                <span class="card-title">Filter</span>
+                                <hr>
+                                <table style="margin-left: 20px; width: 100%;">
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <div class="form-group col-md-11">
+                                                <label for="search-box">Search:</label>
+                                                <input type="text" class="form-control" id="search-box" placeholder="Keyword...">
+                                            </div>
+                                        </td>
+                                        <td class="col-md-2">
+                                            <div class="form-group">
+                                                <label>Show:</label><br>
+                                                <!--<input name="show" type="radio" id="all" checked/><label for="all"> All</label>
+                                                <input style="margin-left: 20px;" name="show" type="radio" id="open"/><label for="open"> Open</label>-->
+                                                <!--<input value="false" name="show" type="radio" id="all" checked="checked"/><label for="all">All</label>
+                                                <input style="margin-left: 20px;" value="true" name="show" type="radio" id="op"/><label for="op">Open</label>-->
+                                                <input type="radio" id="all" name="openToggle" value="false" checked/><label for="all">All</label>
+                                                <input style="margin-left: 20px;" type="radio" id="op" name="openToggle" value="true" /><label for="op">Open</label>
+                                            </div>
+                                        </td>
+                                        <td class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="range">Range (<span id="output"></span> m) :</label><br>
+                                                <div class="slidecontainer">
+                                                    <input type="range" min="500" max="5000" value="1000" step="100" class="slider" id="range">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="sort">Sort by:</label><br>
+                                                <select id="sort">
+                                                    <option value="name" selected>Name</option>
+                                                    <option value="rating">Rating</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span style="display: none;" id="placeholder-img">{{ asset('member_assets/img/recommandation/placeIcon.jpg') }}</span>
+        <div id="recommandations" style="margin-top: 40px; margin-bottom: 40px;">
+
+        </div>
+    </div>
+    <div id="nearBYSearch-container"></div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIdDidnYa6DrY7gbh4cocnriVYei7EaaQ&sensor=false"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsnCz2NQYg03HRAqsT3ip_6pw3IP4JjvA&libraries=places"></script>
+    <script>
+        function buildPath(placeId) {
+            var x = '{{ path("experience_from_rec", {'placeId': '_placeId'}) }}';
+            return x.replace('_placeId', placeId);
+        }
+    </script>
+    <script src="{{ asset('member_assets/js/recommandation/recommandation.js') }}"></script>
 {% endblock %}

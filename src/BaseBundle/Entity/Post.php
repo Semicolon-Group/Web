@@ -51,11 +51,50 @@ class Post
     private $photoUrl;
 
     /**
-     * @var boolean
+     * @var int
      */
-    /* true = photo
-        false = text */
     private $type;
+
+    /**
+     * @var array
+     */
+    private $reactions;
+
+    /**
+     * @var int
+     */
+    private $currentReaction;
+
+    /**
+     * @var \stdClass
+     */
+    private $stats;
+
+    /**
+     * @var array
+     */
+    private $comments;
+
+    /**
+     * @var string
+     */
+    private $time;
+
+    /**
+     * @return string
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param string $time
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
 
     /**
      * Get id
@@ -132,7 +171,7 @@ class Post
     /**
      * Get user
      *
-     * @return \BaseBundle\Entity\User
+     * @return \User
      */
     public function getUser()
     {
@@ -166,7 +205,7 @@ class Post
     /**
      * Set type
      *
-     * @param boolean $type
+     * @param int $type
      *
      * @return Post
      */
@@ -178,12 +217,121 @@ class Post
     }
 
     /**
-     * Get type
-     *
-     * @return boolean
-     */
+ * Get type
+ *
+ * @return int
+ */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return Post
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * Set reactions
+     *
+     * @param array $reactions
+     *
+     * @return Post
+     */
+    public function setReactions($reactions)
+    {
+        $this->reactions = $reactions;
+
+        return $this;
+    }
+
+    /**
+     * Get reactions
+     *
+     * @return array
+     */
+    public function getReactions()
+    {
+        return $this->reactions;
+    }
+
+    /**
+     * Set currentReaction
+     *
+     * @param int $currentReaction
+     *
+     * @return Post
+     */
+    public function setCurrentReaction($currentReaction)
+    {
+        $this->currentReaction = $currentReaction;
+
+        return $this;
+    }
+
+    /**
+     * Get currentReaction
+     *
+     * @return int
+     */
+    public function getCurrentReaction()
+    {
+        return $this->currentReaction;
+    }
+
+    /**
+     * Set stats
+     *
+     * @param \stdClass $stats
+     *
+     * @return Post
+     */
+    public function setStats($stats)
+    {
+        $this->stats = $stats;
+
+        return $this;
+    }
+
+    /**
+     * Get stats
+     *
+     * @return \stdClass
+     */
+    public function getStats()
+    {
+        return $this->stats;
+    }
+
+    /**
+     * Set comments
+     *
+     * @param array $comments
+     *
+     * @return Post
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return array
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

@@ -1,0 +1,31 @@
+<div class="popup" id="{{ thr.participant.id }}-popup">
+    <div id="{{ thr.participant.id }}-popup-header" class="popup-header" onclick="miniPopup(event, {{ thr.participant.id }})">
+        <a href="{{ path('other_profile',{'id':thr.participant.id}) }}">
+            <div class="popup-profile">
+                <img class="popup-photo" src="{{ thr.photo }}">
+                <span class="popup-name">{{ thr.participant.firstname ~ ' ' ~ thr.participant.lastname }}</span>
+            </div>
+        </a>
+        <div class="popup-action">
+            <span id="{{ thr.participant.id }}-popup-mini" class="fas fa-window-minimize popup-icon popup-mini"></span>
+            <span id="{{ thr.participant.id }}-popup-close" class="fas fa-times popup-icon popup-close" onclick="closePopup('{{ thr.participant.id }}-popup')"></span>
+        </div>
+    </div>
+    <hr class="popup-hr">
+    <ul class="message-list" id="{{ thr.participant.id }}-list">
+        {% for message in thr.thread.messages %}
+            <li class="popup-msg{{ message.sender.id == online.id ? ' msg-yours' : '' }}">
+                <div class="message-text {{ message.sender.id == online.id ? 'text-yours' : 'text-theirs' }}">
+                    {{ message.body }}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="compose-msg">
+        <textarea id="{{ thr.participant.id }}-popup-textarea" class="popup-textarea" placeholder="Write your message"></textarea>
+        <button class="btn btn-primary compose-btn" onclick="send({{ thr.participant.id }})">Send</button>
+    </div>
+</div>
+{% if type == 'global' %}
+    <div id="global" data-id="{{ thr.participant.id }}" hidden></div>
+{% endif %}

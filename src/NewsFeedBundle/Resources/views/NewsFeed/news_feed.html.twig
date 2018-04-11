@@ -1,35 +1,46 @@
 {% extends "member_base.html.twig" %}
 
-{% block title %}News Feed{% endblock %}
+{% block title %}News Feed | MySoulmate{% endblock %}
 
 {% block stylesheets %}
-    <link href="{{ asset("member_assets/css/newsfeed.css") }}" rel="stylesheet">
+    <link href="{{ asset("member_assets/css/newsfeed/newsfeed.css") }}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
     <script src="{{ asset("member_assets/js/jquery-2.1.4.min.js") }}"></script>
-    <script src="{{ asset("member_assets/js/newsfeed.js") }}"></script>
+    <script src="{{ asset("member_assets/js/newsfeed/newsfeed.js") }}"></script>
 {% endblock %}
 
 {% block banner %}
-    <!--<section class="banner_area">
-        <div class="container">
-            <div class="banner_content">
-                <h3 title="Discussions"><img class="left_img" src="{{ asset('member_assets/img/banner/t-left-img.png') }}" alt="">News Feed<img class="right_img" src="{{ asset('member_assets/img/banner/t-right-img.png') }}" alt=""></h3>
-                <a href="">Home</a>
-            </div>
-        </div>
-    </section>-->
+    {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherBig')) }}
 {% endblock %}
 
 {% block body %}
     <!-- Data elements -->
     <div id="create_post_path" data-path = "{{ path('create_post') }}"></div>
     <div id="edit_post_path" data-path = "{{ path('edit_post') }}"></div>
+    <div id="edit_comment_path" data-path = "{{ path('edit_comment') }}"></div>
     <div id="delete_post_path" data-path = "{{ path('delete_post') }}"></div>
+    <div id="delete_comment_path" data-path = "{{ path('delete_comment') }}"></div>
+    <div id="react_path" data-path = "{{ path('react') }}"></div>
+    <div id="add_comment_path" data-path = "{{ path('add_comment') }}"></div>
     <div id="edit_icon_path" data-path = "{{ asset("member_assets/img/edit.png") }}"></div>
     <div id="delete_icon_path" data-path = "{{ asset("member_assets/img/close.png") }}"></div>
+    <div id="emoticon_path" data-path = "{{ asset("member_assets/img/Emoticons/") }}"></div>
     <div id="selected_post" data-id=""></div>
+    <div id="online_id" data-id="{{ online.id }}"></div>
+    <div id="status_type" data-type="{{ StatusType }}"></div>
+    <div id="picture_type" data-type="{{ PictureType }}"></div>
+
+    <!-- Edit Post Modal -->
+    <div class="modal fade" id="view_photo_modal" tabindex="-1" role="dialog" aria-labelledby="view_photo_modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="photo_modal">
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Edit Post Modal -->
     <div class="modal fade" id="edit_post_modal" tabindex="-1" role="dialog" aria-labelledby="edit_post_modal" aria-hidden="true">
@@ -37,10 +48,10 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="media-left">
-                        <img id="post_writing_pic" class="post_pic" src="/mysoulmateuploads/images/{{ photo }}" alt="">
+                        <img class="post_pic" src="{{ photo }}" alt="">
                     </div>
                     <div class="media-body">
-                        <div contenteditable="true" id="modal_post" class="writing_post"></div>
+                        <textarea id="modal_post" class="textarea"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -80,50 +91,155 @@
                 </div>
 
                 <!-- NewsFeed -->
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="community_activity">
 
                         <!-- Writing Space -->
                         <div class="media">
                             <div class="media-left">
-                                <img id="post_writing_pic" class="post_pic" src="{{ photo }}" alt="">
+                                <a href="{{ path('member_profile') }}">
+                                    <img id="post_writing_pic" class="post_pic" src="{{ photo }}" alt="">
+                                </a>
                             </div>
                             <div class="media-body">
-                                <div contenteditable="true" id="post_space" class="writing_post" data-text="Share your thoughts..."></div>
-                                <button id="post_button">Post</button>
+                                <!--<div contenteditable="true" id="post_space" class="writing_post" data-text="Share your thoughts..." hidden></div>-->
+                                <textarea id="post_space" class="textarea" placeholder="Share your thoughts..."></textarea>
+                                <hr>
+                                <button id="post_button" class="btn btn-default">Post</button>
                             </div>
                         </div>
 
                         <!-- Posts -->
                         <div id="feed">
-                        {% for post in posts %}
-                            <div class="media">
-                                {% if post.type == false and post.user.id == online.id %}
-                                    <div class="update_box">
-                                        <button class="update_btn" data-toggle="modal" data-target="#edit_post_modal"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}" onclick="updateModalText({{ post.id }})"></button>
-                                        <button class="update_btn" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
-                                    </div>
-                                {% endif %}
-                                <div class="media-left">
-                                    <img class="post_pic" src="{{ post.photoUrl }}" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
-                                    <p>{{ post.date | date('d-m-Y') }}</p><br>
-                                    {% if post.type == false %}
-                                        <p id="{{ post.id }}">{{ post.content }}</p>
-                                    {% else %}
-                                        <img class="pic_post" src="/mysoulmateuploads/images/{{ post.content }}">
+                            {% for post in posts %}
+                                <div class="media">
+
+                                    <!-- Edit/Delete Buttons -->
+                                    {% if post.type == StatusType and post.user.id == online.id %}
+                                        <div class="update_box">
+                                            <button class="button" data-toggle="modal" data-target="#edit_post_modal" onclick="updateModalText({{ post.id }})"><img class="update_img" src="{{ asset("member_assets/img/edit.png") }}"></button>
+                                            <button class="button" data-toggle="modal" data-target="#delete_post_modal" onclick="showDeleteModal({{ post.id }}, 0)"><img class="update_img" src="{{ asset("member_assets/img/close.png") }}"></button>
+                                        </div>
                                     {% endif %}
+
+                                    <!-- Post Body -->
+                                    <div class="media-left">
+                                        <a href="{{ post.user.id == online.id ? path('member_profile') : path('other_profile',{'id':post.user.id}) }}">
+                                            <img class="post_pic" src="{{ post.photoUrl }}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="{{ post.user.id == online.id ? path('member_profile') : path('other_profile',{'id':post.user.id}) }}">
+                                            <b>{{ post.user.firstname ~ ' ' ~ post.user.lastname }}</b>
+                                        </a>
+                                        <p>{{ post.time }}</p><br>
+                                        {% if post.type == StatusType %}
+                                            <p id="{{ post.id }}">{{ post.content | raw }}</p>
+                                        {% elseif post.type == PictureType %}
+                                            <img id="{{ post.id }}-pic-post" class="pic_post" src="{{ post.content }}" data-toggle="modal" data-target="#view_photo_modal" onclick="viewPhoto('{{ post.id }}-pic-post')">
+                                        {% endif %}
+                                    </div>
+                                    <hr>
+
+                                    <!-- Reactions -->
+                                    <div class="reaction-box">
+                                        <!-- Statistics -->
+                                        <span class="reaction-statistics">
+                                        {% for r in post.stats.reactions %}
+                                            <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
+                                        {% endfor %}
+                                            <span id="{{ post.id }}-nbr-reaction" data-nbr="{{ post.stats.nbrReaction - 1 }}">
+                                            {% if post.stats.nbrReaction != 0 %}
+                                                {% if post.currentReaction != -1 %}
+                                                    You
+                                                    {% if post.stats.nbrReaction > 1 %}
+                                                        and {{ post.stats.nbrReaction - 1 }} others
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ post.stats.nbrReaction }}
+                                                {% endif %}
+                                            {% endif %}
+                                        </span>
+                                            {% if post.stats.nbrComment != 0 %}
+                                                &nbsp;
+                                                <img src="{{ asset('member_assets/img/Emoticons/comment.png') }}" class="emo-stat">
+                                                <span id="{{ post.id }}-nbr-comment" data-nbr="{{ post.stats.nbrComment }}">
+                                                {{ post.stats.nbrComment }}
+                                            </span>
+                                            {% endif %}
+                                    </span>
+
+                                        <!-- React Action -->
+                                        <div class="react-action">
+                                            <span id="{{ post.id }}-current-reaction"></span>
+                                            {% if post.user.id != online.id %}
+                                            <button class="button" id="{{ post.id }}-react" onmouseenter="show({{ post.id }})" onmouseleave="hide({{ post.id }})" onclick="react({{ post.id }}, {{ post.type}}, 'None')">
+                                            {% if post.currentReaction == -1 %}
+                                                <p>React</p>
+                                            {% else %}
+                                                <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/' ~ post.stats.currReacTitle ~ '.png') }}">
+                                                <p>{{ post.stats.currReacTitle }}</p>
+                                            {% endif %}
+                                            </button>{% endif %}<button class="button" onclick="toggleComments({{ post.id }})">
+                                                <img class="button-icon" src="{{ asset('member_assets/img/Emoticons/comment.png') }}">
+                                                <p>Comment</p>
+                                            </button>
+                                            {% if post.user.id != online.id %}
+                                                <div id="{{ post.id }}-popup" class="reaction-popup">
+                                                    <img src="{{ asset('member_assets/img/Emoticons/Smile.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Smile')">
+                                                    <img src="{{ asset('member_assets/img/Emoticons/Love.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Love')">
+                                                    <img src="{{ asset('member_assets/img/Emoticons/Laugh.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Laugh')">
+                                                    <img src="{{ asset('member_assets/img/Emoticons/Scowl.png') }}" class="emoticon" onclick="react({{ post.id }}, {{ post.type}}, 'Scowl')">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Comment Box -->
+                                    <div class="comment-box" id="{{ post.id }}-comment-box">
+                                        <div id="{{ post.id }}-comments">
+                                            {% for comment in post.comments %}
+                                                <!-- Comment section -->
+                                                <div class="comment-sub-box">
+                                                    <div class="comment-profile-pic">
+                                                        <a href="{{ comment.sender.id == online.id ? path('member_profile') : path('other_profile',{'id':comment.sender.id}) }}">
+                                                            <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                        </a>
+                                                    </div>
+                                                    <div class="comment-body comment">
+                                                        <p id="{{ comment.id }}-comment-content">{{ comment.content | raw }}</p>
+                                                    </div>
+
+                                                    <!-- Update/Delete comment -->
+                                                    {% if comment.sender.id == online.id %}
+                                                        <div class="update-comment-box">
+                                                            <span class="button far fa-edit" onclick="updateModalText({{ comment.id }})" data-toggle="modal" data-target="#edit_post_modal"></span><span class="button far fa-trash-alt" onclick="showDeleteModal({{ comment.id }}, {{ post.id }})" data-toggle="modal" data-target="#delete_post_modal"></span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <!-- Writing comment section -->
+                                        <div class="writing-comment">
+                                            <div class="comment-profile-pic">
+                                                <a href="{{ path('member_profile') }}">
+                                                    <img class="comment_pic" src="{{ photo }}" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="comment-body comment comment-border comment-space">
+                                                <textarea id="{{ post.id }}-comment-space" class="comment-space" placeholder="Leave a comment..." onkeypress="addComment(event, {{ post.id }}, {{ post.type }})"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
 
                 <!-- Adverts -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="right_sidebar_area">
                         <!-- *****Default template content*****
                         <aside class="s_widget search_widget">
@@ -223,8 +339,12 @@
                             </ul>
                         </aside>
                         -->
+                        {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherSide')) }}
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherBottom')) }}
             </div>
         </div>
     </section>

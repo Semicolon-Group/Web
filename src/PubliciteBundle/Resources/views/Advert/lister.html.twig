@@ -1,0 +1,35 @@
+
+
+{% block title %}PubliciteBundle:Advert:Lister{% endblock %}
+
+{% block body %}
+    {% for m in pubs %}
+    <table border="1">
+
+        <tr>
+            <th>business id </th>
+            <th>content</th>
+            <th>reason</th>
+            <th>state</th>
+            <th>photo</th>
+            <th>price</th>
+            <th>payed</th>
+            <th>position</th>
+        </tr>
+
+        <tr>
+            <td>{{ m.business }}</td><td>{{ m.content }}</td><td>{{ m.reason }}</td>
+            <td> {% if m.state==1 %} approved </td>{% else %} not approved{% endif %}</td>
+            <td>   <img   src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}"
+                          style="height : 150px ;width:150px" alt=""></td>
+            <td>{{ m.price }}</td><td>{% if m.payed==1 %} Yes {% else %} No {% endif %}</td>
+            <td>{% if m.position == 1 %} TOP {% elseif m.position==2 %} Side {% elseif m.position==3 %} Bottom {% else %} No position {% endif %}</td>
+
+            <td>    <a href="{{ path('traiter', {'id':m.id}) }}">Modifier</a></td>
+        </tr>
+
+
+
+    </table>
+{% endfor %}
+{% endblock %}

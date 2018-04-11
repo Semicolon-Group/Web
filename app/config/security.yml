@@ -13,7 +13,7 @@ security:
             id: fos_user.user_provider.username
 
     firewalls:
-#       business:
+#        business:
 #            pattern:            /business/(.*)
 #            form_login:
 #              provider:       fos_userbundle
@@ -23,9 +23,9 @@ security:
 #            logout:
 #              path:           business_logout
 #              target:         business_login
-#            anonymous:        true
-#           context:          application
-#       admin:
+#            anonymous:        ~
+#            context:          application
+#        admin:
 #            pattern:            /admin/(.*)
 #            form_login:
 #              provider:       fos_userbundle
@@ -35,7 +35,7 @@ security:
 #            logout:
 #              path:           admin_logout
 #              target:         admin_login
-#            anonymous:        true
+#            anonymous:        ~
 #            context:          application
         main:
             pattern: ^/

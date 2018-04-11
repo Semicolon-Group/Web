@@ -15,13 +15,14 @@ class PhotoRepository extends \Doctrine\ORM\EntityRepository
     public function getProfilePhotoUrl($user)
     {
         $result = $this->getEntityManager()->createQuery(
-            "SELECT p.url FROM BaseBundle:Photo p WHERE p.user = :user AND p.type = " . PhotoType::Profile
+            "SELECT p.image FROM BaseBundle:Photo p WHERE p.user = :user AND p.type = " . PhotoType::Profile
         )
             ->setParameter('user', $user)
             ->getResult();
-        if(!empty($result))
-            return '/mysoulmateuploads/images/' . $result[0]['url'];
-        return '/mysoulmateuploads/images/member.jpg';
+        if(!empty($result)){
+            return '/mysoulmate/web/uploads/images/' . $result[0]['image'];
+        }
+        return '/mysoulmate/web/member_assets/img/member.jpg';
     }
 
     public function getPostPics($user)

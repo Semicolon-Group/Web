@@ -1,0 +1,37 @@
+
+
+
+
+    <!--================Blog slider Area =================-->
+    <section class="blog_slider_area">
+
+        <div class="blog_slider_inner">
+            {% for m in bottoms %}
+                <div class="item">
+                    <div class="single_blog_slider">
+                        <img src="{{ asset('member_assets/images/') }}{{ m.photoUrl}}" alt="" style="width: 350px ; height: 400px">
+                        <div class="blog_item_content">
+                            <ul>
+                                <li><a href="https://{{ m.business.link }}"><i class="fa fa-search"></i></a></li>
+                                <li><a href="https://{{ m.business.link }}"><i class="fa fa-link"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <script src="{{ asset('member_assets/js/jquery-3.2.1.min.js') }} "></script>
+    <script type="text/javascript">
+
+    </script>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v2.12&appId=212394559315715&autoLogAppEvents=1';
+            fjs.parentNode.insertBefore(js, fjs); }
+        (document, 'script', 'facebook-jssdk'));
+    </script>

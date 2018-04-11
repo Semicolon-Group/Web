@@ -825,7 +825,7 @@ h6.h1 {
 }
 .color-success,
 .text-success {
-  color: #26dad2;
+  color: #5cb85c;
 }
 .color-info,
 .text-info {
@@ -1850,9 +1850,7 @@ textarea {
 .label-custom {
   background-color: #00897b;
 }
-.label-success {
-  background-color: #26dad2;
-}
+
 .label-info {
   background-color: #1976d2;
 }
@@ -1860,7 +1858,7 @@ textarea {
   background-color: #ffb22b;
 }
 .label-danger {
-  background-color: #ef5350;
+  background-color: red;
 }
 .label-megna {
   background-color: #00897b;
@@ -1884,8 +1882,8 @@ textarea {
   background-color: #ffffff;
 }
 .label-light-success {
-  background-color: #e8fdeb;
-  color: #26dad2;
+  background-color: #5cb85c;
+  color: #5cb85c;
 }
 .label-light-info {
   background-color: #cfecfe;
@@ -2940,7 +2938,7 @@ table.dataTable thead .sorting::after {
   background: #028ee1;
 }
 .btn-success {
-  background: #26dad2;
+  background: #003087;
   border: 1px solid #26dad2;
   -webkit-box-shadow: 0 2px 2px 0 rgba(40, 190, 189, 0.14), 0 3px 1px -2px rgba(40, 190, 189, 0.2), 0 1px 5px 0 rgba(40, 190, 189, 0.12);
   box-shadow: 0 2px 2px 0 rgba(40, 190, 189, 0.14), 0 3px 1px -2px rgba(40, 190, 189, 0.2), 0 1px 5px 0 rgba(40, 190, 189, 0.12);
@@ -5825,9 +5823,9 @@ tbody tr td {
   color: #4680ff;
 }
 .alert-success {
-  background-color: #93ede9;
-  border-color: #93ede9;
-  color: #26dad2;
+  background-color: lightgreen;
+
+
 }
 .alert-warning {
   background-color: #ffeacd;
@@ -5857,13 +5855,13 @@ tbody tr td {
   background-color: #4680ff;
 }
 .label-success {
-  background-color: #26dad2;
+  background-color: #5cb85c;
 }
 .label-info {
   background-color: #62d1f3;
 }
 .label-danger {
-  background-color: #fc6180;
+  background-color: red;
 }
 .label-warning {
   background-color: #ffb64d;

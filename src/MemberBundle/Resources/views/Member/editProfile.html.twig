@@ -3,5 +3,6 @@
 {% block title %}Profile | {{ user.firstname | capitalize }}{% endblock %}
 
 {% block body %}
-
+    {{ form_start(edit_form) }}
+    {{ form_end(edit_form) }}
 {% endblock %}

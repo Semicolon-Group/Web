@@ -186,13 +186,11 @@
                     <!-- End Messages -->
                     <!-- Profile -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% block profile_pic %}{% endblock %}" alt="user" class="profile-pic" /></a>
+                        <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>{{ app.user.username }}</span></a>
                         <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                             <ul class="dropdown-user">
-                                <li><a href="#"><i class="ti-user"></i> Profile</a></li>
-                                <li><a href="#"><i class="ti-wallet"></i> Feedback</a></li>
-                                <li><a href="#"><i class="ti-settings"></i> Setting</a></li>
-                                <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                                <li><a href="{{ path('fos_user_change_password') }}"><i class="ti-settings"></i>ChangePassword</a></li>
+                                <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
                         </div>
                     </li>
@@ -222,8 +220,9 @@
                     </li>
                     <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-suitcase"></i><span class="hide-menu">Ads</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li class="{% if app.request.attributes.get('_route') == 'business_adverts' %}active{% endif %}"><a href="{{ path('business_adverts') }}">List</a></li>
-                            <li class="{% if app.request.attributes.get('_route') == 'business_create_advert' %}active{% endif %}"><a href="{{ path('business_create_advert') }}">Create</a></li>
+                            <li class="{% if app.request.attributes.get('_route') == 'business_adverts_list' %}active{% endif %}"><a href="{{ path('business_adverts_list') }}">List</a></li>
+                            <li class="{% if app.request.attributes.get('_route') == 'business_adverts_add' %}active{% endif %}"><a href="{{ path('business_adverts_add') }}">Create</a></li>
+
                         </ul>
                     </li>
                     <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-bar-chart"></i><span class="hide-menu">Charts</span></a>
@@ -255,7 +254,7 @@
         </div>
         <!-- End Bread crumb -->
         <!-- Container fluid  -->
-        <div class="container-fluid">
+        <div class="container-fluid" style="height: 77vh;">
             {% block body %}
             {% endblock %}
             <!-- End PAge Content -->

@@ -11,24 +11,20 @@ namespace BaseBundle\Entity\Enumerations;
 
 abstract class PostType
 {
-    const Answer = 0;
+    const Experience = 0;
     const Picture = 1;
     const Status = 2;
-    const Update = 3;
 
-    public static function getName($bodyType){
-        switch ($bodyType){
+    public static function getName($postType){
+        switch ($postType){
             case 0:
-                return 'Answer';
+                return 'Experience';
                 break;
             case 1:
                 return 'Picture';
                 break;
             case 2:
                 return 'Status';
-                break;
-            case 3:
-                return 'Update';
                 break;
             default:
                 return null;
@@ -37,10 +33,9 @@ abstract class PostType
     }
 
     public static function getEnumAsArray(){
-        return array('Answer' => 0,
+        return array('Experience' => 0,
             'Picture' => 1,
-            'Status' => 2,
-            'Update' => 3
+            'Status' => 2
         );
     }
 }

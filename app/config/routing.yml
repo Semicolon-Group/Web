@@ -1,3 +1,21 @@
+message:
+    resource: "@MessageBundle/Resources/config/routing.xml"
+    prefix:   /message
+
+admin_question:
+    resource: "@AdminQuestionBundle/Controller/"
+    type:     annotation
+    prefix:   /admin/questions
+
+publicite:
+    resource: "@PubliciteBundle/Controller/AdvertController.php"
+    type:     annotation
+    prefix:   /publicite
+publicite_admin:
+    resource: "@PubliciteBundle/Controller/AdminController.php"
+    type:     annotation
+    prefix:   /publiciteAdmin
+
 admin_chart:
     resource: "@AdminChartBundle/Controller/"
     type:     annotation
@@ -23,8 +41,11 @@ business_chart:
     type:     annotation
     prefix:   /business/charts
 
+
+
+
 business_advert:
-    resource: "@BusinessAdvertBundle/Controller/"
+    resource: "@BusinessAdvertBundle/Controller/BusinessAdvertController.php"
     type:     annotation
     prefix:   /business/adverts
 
@@ -37,6 +58,16 @@ business_home:
     resource: "@BusinessHomeBundle/Controller/"
     type:     annotation
     prefix:   /business
+
+base_feedback:
+    resource: "@FeedbacksBundle/Controller/FeedbackController.php"
+    type:     annotation
+    prefix:   /feedback
+
+base_user_signal:
+    resource: "@SignalBundle/Controller/UserSignalController.php"
+    type:     annotation
+    prefix:   /signal
 
 #MEMBER ROUTES#
 recommandation:
@@ -57,7 +88,7 @@ event:
 match:
     resource: "@MatchBundle/Controller/MatchController.php"
     type:     annotation
-    prefix:   /member/matches
+    prefix:   /member
 
 news_feed:
     resource: "@NewsFeedBundle/Controller/NewsFeedController.php"
@@ -65,7 +96,7 @@ news_feed:
     prefix:   /member/home
 
 member:
-    resource: "@MemberBundle/Controller/MemberController.php"
+    resource: "@MemberBundle/Controller/"
     type:     annotation
     prefix:   /member
 
@@ -83,11 +114,12 @@ fos_user_security:
 
 fos_user_profile:
     resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
-    prefix: /profile
+    prefix: /member
 
 fos_user_register:
     resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
-    prefix: /register
+    prefix: /register/{type}
+    defaults: {type: 1}
 
 fos_user_resetting:
     resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
@@ -120,3 +152,7 @@ admin_login_check:
 admin_logout:
     path:  /admin/logout
     defaults: { _controller: FOSUserBundle:Security:logout }
+
+fos_message:
+    resource: "@FOSMessageBundle/Resources/config/routing.xml"
+    prefix: /fosmessage

@@ -1,0 +1,21 @@
+
+
+<div class="radio-inline" style="width: 100%">
+        {{ form_start(form) }}
+        <div class="form-group">
+                {{ form_widget(form.reason, {'attr': {'class': 'form-control'}})  }}
+        </div>
+        {{ form_widget(form.state , {'attr': {'class': 'form-control'}}) }}
+        <div class="form-group">
+                {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        {{ form_widget(form.receiver, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.sender, {'attr': {'class': 'form-control'}}) }}
+        <input type="submit" class="btn btn-primary" value="Submit" />
+        {{ form_end(form) }}
+</div>
+
+
+
+
+

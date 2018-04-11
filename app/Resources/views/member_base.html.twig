@@ -3,6 +3,15 @@
     
     <!-- Mirrored from demo.verodate.com/html/verodate/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 24 Jan 2018 12:29:26 GMT -->
     <head>
+        {% if is_granted("ROLE_ADMIN") %}
+            <script>
+                window.location = "{{ path('admin_home') }}";
+            </script>
+            {% elseif is_granted("ROLE_BUSINESS") %}
+            <script>
+                window.location = "{{ path('business_home') }}";
+            </script>
+        {% endif %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,6 +23,7 @@
         <link href="{{ asset('member_assets/vendors/material-icon/css/materialdesignicons.min.css') }}" rel="stylesheet">
         <link href="{{ asset('member_assets/css/font-awesome.min.css') }}" rel="stylesheet">
         <link href="{{ asset('member_assets/vendors/linears-icon/style.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
 
         <!-- RS5.0 Layers and Navigation Styles -->
         <link rel="stylesheet" type="text/css" href="{{ asset('member_assets/vendors/revolution/css/layers.css') }}">
@@ -35,8 +45,7 @@
 
         <link href="{{ asset('member_assets/css/style.css') }}" rel="stylesheet">
         <link href="{{ asset('member_assets/css/responsive.css') }}" rel="stylesheet">
-
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+        <link href="{{ asset('member_assets/css/message/popup.css') }}" rel="stylesheet">
 
         <script src="{{ asset('member_assets/js/map-custome.js') }}"></script>
 
@@ -52,10 +61,19 @@
 
     </head>
     <body>
+        <!--global chat-->
+        {{ render(controller('MessageBundle:Message:popup', {userId:-1})) }}
+
+        <!--Data Divs-->
+        <div id="send_msg_path" data-path="{{ path('send_msg') }}"></div>
+        <div id="read_thread_path" data-path="{{ path('read_thread') }}"></div>
+        <div id="update_thread_path" data-path="{{ path('update_thread') }}"></div>
+        <div id="close_thread_path" data-path="{{ path('close_thread') }}"></div>
+
        <!--================Frist Main hader Area =================-->
        <header class="header_menu_area">
-           <nav class="navbar navbar-default">
-               <div class="container">
+           <nav class="navbar navbar-default" style="height: 80px;">
+               <div class="container" style="width: 1200px; height: 80px;">
                    <!-- Brand and toggle get grouped for better mobile display -->
                    <div class="navbar-header">
                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -64,7 +82,7 @@
                            <span class="icon-bar"></span>
                            <span class="icon-bar"></span>
                        </button>
-                       <a class="navbar-brand" href=""><img src="{{ asset('member_assets/img/logo.png') }}" alt=""></a>
+                       <a class="navbar-brand" href="{{ path('news_feed') }}"><img src="{{ asset('member_assets/img/logo.png') }}" alt=""></a>
                    </div>
 
                    <!-- Collect the nav links, forms, and other content for toggling -->
@@ -73,8 +91,8 @@
                            <li class="{% if app.request.attributes.get('_route') == 'news_feed' %}active{% endif %}">
                                <a href="{{ path('news_feed') }}">Home</a>
                            </li>
-                           <li class="{% if app.request.attributes.get('_route') == 'matches' %}active{% endif %}">
-                               <a href="{{ path('matches') }}">Match</a>
+                           <li class="{% if app.request.attributes.get('_route') == 'match' %}active{% endif %}">
+                               <a href="{{ path('match') }}">Match</a>
                            </li>
                            <li class="{% if app.request.attributes.get('_route') == 'events' %}active{% endif %}">
                                <a href="{{ path('events') }}">Events</a>
@@ -95,11 +113,9 @@
                                </ul>
                            </li>
                            <li class="dropdown submenu">
-                               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                   <img src="{{ asset('member_assets/img/message.png') }}" height="25">
+                               <a href="{{ path('_message_inbox') }}" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" style="position: relative">
+                                   {{ render(controller('MessageBundle:Message:messageIcon')) }}
                                </a>
-                               <ul class="dropdown-menu">
-                               </ul>
                            </li>
                            <li class="dropdown submenu">
                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -107,8 +123,8 @@
                                </a>
                                <ul class="dropdown-menu">
                                    <li><a href="{{ path('member_profile') }}">Profile</a></li>
-                                   <li><a href="index-3.html">Feedback</a></li>
-                                   <li><a href="index-4.html">Settings</a></li>
+                                   <li><a href="" data-toggle="modal" data-target="#feedback_modal">Feedback</a></li>
+                                   <li><a href="{{ path('fos_user_change_password') }}">Change Password</a></li>
                                    <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
                                </ul>
                            </li>
@@ -128,6 +144,27 @@
                </div>
            </section>
        {% endblock %}
+       <div id="feedback_modal" class="modal fade centered-modal" role="dialog" style="margin-top: 20vh;">
+           <div class="modal-dialog" style="width: 40%; border-color: #0b5b97">
+               <form id="ajoutFeedback">
+
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <button type="button" class="close" data-dismiss="modal">&times;</button>
+                       <h4 class="modal-title" style="color: #0b5b97">You can add your feedback</h4>
+                   </div>
+                   <div class="modal-body" >
+                      <textarea class="form-control" id="feedback-content" placeholder="Add your feedback" style="height: 90px" required></textarea>
+
+                   </div>
+                   <div class="modal-footer">
+                       <input class="btn btn-primary" type="submit" value="Create" />
+                   </div>
+               </div>
+               </form>
+
+           </div>
+       </div>
        {% block body %}{% endblock %}
 
         <!--================Footer Area =================-->
@@ -219,8 +256,6 @@
         </footer>
         <!--================End Footer Area =================-->
 
-
-
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="{{ asset('member_assets/js/jquery-2.1.4.min.js') }}"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -254,6 +289,30 @@
 
         <script src="{{ asset('member_assets/js/video_player.js') }}"></script>
         <script src="{{ asset('member_assets/js/theme.js') }}"></script>
+
+        <script src="{{ asset('member_assets/js/message/message-popup.js') }}"></script>
+        <script src="{{ asset('member_assets/js/message/message.js') }}"></script>
+        <script >
+            $('#ajoutFeedback').submit(function(event){
+                event.preventDefault();
+                var fContent = $('#feedback-content').val();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('feedback_add') }}",
+                    data: { content : fContent},
+                    success: function (data) {
+                        alert("Your feedback has been added successfully");
+                        $('#feedback_modal').modal('hide');
+
+                    },
+                    error: function (data) {
+                        alert("An error has occured while adding this feedback");
+                        $('#feedback_modal').modal('hide');
+                    }
+                });
+
+            });
+        </script>
         {% block scripts %}{% endblock %}
     </body>
 

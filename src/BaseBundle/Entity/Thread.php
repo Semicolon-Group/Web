@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use FOS\MessageBundle\Entity\Thread as BaseThread;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BaseBundle\Repository\ThreadRepository")
  */
 class Thread extends BaseThread
 {

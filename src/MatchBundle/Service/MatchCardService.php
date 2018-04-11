@@ -13,6 +13,7 @@ use BaseBundle\Entity\Answer;
 use BaseBundle\Entity\Enumerations\Importance;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\User;
+use BaseBundle\Entity\UserLike;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory;
 use MatchBundle\Entity\Filter;
@@ -137,6 +138,10 @@ class MatchCardService
             $couples = getCouples($doctrine, $online, $user);
             $card->setMatch(getMatchTotal($couples));
             $card->setEnemy(getEnemyTotal($couples));
+            $card->setLiked($doctrine->getRepository(UserLike::class)->findOneBy([
+                'likeSender' => $online,
+                'likeReceiver' => $user
+            ]) != null);
             return $card;
         }
         /**
@@ -153,7 +158,7 @@ class MatchCardService
             return $cards;
         }
 
-        $users = $doctrine->getRepository(User::class)->getUsersNotBlocked($online);
+        $users = $doctrine->getRepository(User::class)->getUsersNotBlocked($online, $doctrine);
         $users = FilterService::filter($users, $filter, $online->getAddress());
         $cards = getCards($doctrine, $users, $online);
         return $cards;

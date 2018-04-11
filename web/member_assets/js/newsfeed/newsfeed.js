@@ -15,52 +15,12 @@ $(function () {
 
         var DATA = {'text':text};
         var path = $("#create_post_path").data('path');
-        var editIcon = $("#edit_icon_path").data('path');
-        var deleteIcon = $("#delete_icon_path").data('path');
         $.ajax({
             type:"POST",
             url:path,
             data:DATA,
             success:function(data){
-                var id = data['id'];
-                var type = data['type'];
-                var pic = $("#post_writing_pic").attr('src');
-                var username = $("#online_name").data('name');
-                var post_html = "<div class='media'>" +
-                    "<div class='update_box'>" +
-                    "<button onclick='updateModalText(\"" + id + "\")' class='button' data-toggle='modal' data-target='#edit_post_modal'><img class='update_img' src='" + editIcon + "'></button>" +
-                    "<button class='button' data-toggle='modal' data-target='#delete_post_modal' onclick='showDeleteModal(" + id + ")'><img class='update_img' src='" + deleteIcon + "'></button>" +
-                    "</div>" +
-                    "<div class='media-left'>" +
-                    "<img class='post_pic' src='" + pic + "' alt=''>" +
-                    "</div>" +
-                    "<div class='media-body'>" +
-                    "<b>" + username + "</b>" +
-                    "<p>Now</p><br>" +
-                    "<p  id = '" + id + "'>" + text + "</p>" +
-                    "</div>" +
-                    "<hr>" +
-                    "<div class='reaction-box'>" +
-                    "<div class='react-action'>" +
-                    "<button class=\"button\" onclick=\"toggleComments(" + id + ")\">" +
-                    "<img class='button-icon' src='" + emoPath + "/comment.png'> " +
-                    "<p>Comment</p>" +
-                    "</button>" +
-                    "</div>" +
-                    "</div>" +
-                    "<div class=\"comment-box\" id=\"" + id + "-comment-box\">\n" +
-                    "<div id=\"" + id + "-comments\"></div>" +
-                    "<div class=\"writing-comment\">\n" +
-                    "<div class=\"comment-profile-pic\">\n" +
-                    "<img class=\"comment_pic\" src='" + pic + "' alt=\"\">\n" +
-                    "</div>\n" +
-                    "<div class=\"comment-body comment comment-border comment-space\">\n" +
-                    "<div contenteditable=\"true\" id=\"" + id + "-comment-space\" class=\"comment-space\" data-text=\"Leave a comment...\" onkeypress=\"addComment(event, " + id + ", " + type + ")\"></div>\n" +
-                    "</div>\n" +
-                    "</div>" +
-                    "</div>" +
-                    "</div>";
-                $("#feed").prepend(post_html);
+                $("#feed").prepend(data[0]);
                 $("#post_space").val('');
                 $("#post_space").blur();
             }
@@ -102,7 +62,6 @@ $(function () {
                     var stat = $("#" + selectedPost + "-nbr-comment");
                     var nbr = stat.data('nbr');
                     stat.html(nbr - 1);
-                    console.log(selectedPost);
                 }
             }
         });
@@ -243,10 +202,13 @@ function expandArea(id, max, def){
     var area = $("#" + id + "-comment-space");
     var count = (area.val().match(/\n/g) || []).length;
     var height = def + count * 20;
-    console.log(count);
     if(height < max) {
         area.css('height', height + 'px');
         area = document.getElementById(id + "-comment-space");
         area.scrollTop = area.scrollHeight;
     }
+}
+function viewPhoto(id){
+    var src = $("#" + id).attr('src');
+    $("#photo_modal").html("<img src='" + src + "' style='width:100%;height:auto;'>");
 }

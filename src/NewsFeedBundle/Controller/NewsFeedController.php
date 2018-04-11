@@ -145,6 +145,7 @@ class NewsFeedController extends Controller
             $reactionType = isset(ReactionType::getEnumAsArray()[$reactionType]) ? ReactionType::getEnumAsArray()[$reactionType] : -1;
             $postId = 0;
             $photoId = 0;
+
             if($type == PostType::Status)
                 $postId = $id;
             else if($type == PostType::Picture)
@@ -201,8 +202,14 @@ class NewsFeedController extends Controller
                 $this->updateReaction($reaction);
             }
 
+            $post = $this->preparePost($photoId, $postId);
+            $data ['stats'] = $this->render('@NewsFeed/NewsFeed/postStats.html.twig',[
+                'post' => $post
+            ])->getContent();
+
             $serializer = new Serializer([new ObjectNormalizer()]);
             $data = $serializer->normalize($data);
+
             return new JsonResponse($data);
         }
     }

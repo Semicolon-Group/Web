@@ -115,15 +115,13 @@ function react(id, type, reaction) {
                 button.html(
                     "<p>React</p>"
                 );
-                if(nbr != -1) stat.html(nbr);
             }else{
                 button.html(
                     "<img class='button-icon' src='" + emoPath + "/" + title + ".png'>\n" +
                     "<p>" + title + "</p>"
                 );
-                if(nbr != -1) stat.html("You and " + nbr + " others");
-                else stat.html("You");
             }
+            $("#" + id + "-stats").html(data['stats']);
         },
         error: function () {
             button.html(old);

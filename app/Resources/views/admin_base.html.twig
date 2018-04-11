@@ -81,6 +81,7 @@
                         </a>
                         <div id="subBus" class="collapse {% if (app.request.attributes.get('_route') == 'lister_admin') or ((app.request.attributes.get('_route') == 'admin_promotion_add') or ((app.request.attributes.get('_route') == 'admin_promotions_list'))) %}in{% endif %}">
                             <ul class="nav">
+                                <li class="{% if app.request.attributes.get('_route') == 'admin_businesses' %}active{% endif %}"><a href="{{ path('admin_businesses') }}">List Events</a></li>
                                 <li class="{% if app.request.attributes.get('_route') == 'lister_admin' %}active{% endif %}"><a href="{{ path('lister_admin') }}">List Ads</a></li>
                                 <li class="{% if app.request.attributes.get('_route') == 'admin_promotion_add' %}active{% endif %}"><a href="{{ path('admin_promotion_add') }}">Add promotion</a></li>
                                 <li class="{% if app.request.attributes.get('_route') == 'admin_promotions_list' %}active{% endif %}"><a href="{{ path('admin_promotions_list') }}">List promotions</a></li>

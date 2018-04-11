@@ -252,6 +252,5 @@ function expandArea(id, max, def){
 }
 function viewPhoto(id){
     var src = $("#" + id).attr('src');
-    console.log(src);
     $("#photo_modal").html("<img src='" + src + "' style='width:100%;height:auto;'>");
 }

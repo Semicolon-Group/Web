@@ -25,7 +25,7 @@ class UserRepository extends EntityRepository
      */
     public function getUsersNotBlocked($user)
     {
-        return $this->getEntityManager()->createQuery(
+        $result = $this->getEntityManager()->createQuery(
             "SELECT u FROM BaseBundle:User u LEFT JOIN BaseBundle:UserBlock b
                   WITH :user = b.blockReceiver AND u = b.blockSender
                   WHERE b.blockSender IS NULL AND u.id != :id"
@@ -33,6 +33,13 @@ class UserRepository extends EntityRepository
             ->setParameter('user', $user)
             ->setParameter('id', $user->getId())
             ->getResult();
+        foreach ($result as $key => $u){
+            /** @var User $u */
+            if(in_array('ROLE_ADMIN', $u->getRoles()) || in_array('ROLE_BUSINESS', $u->getRoles())){
+                unset($result[$key]);
+            }
+        }
+        return $result;
     }
     public function getCountMaleByMonth(){
         $emConfig = $this->getEntityManager()->getConfiguration();

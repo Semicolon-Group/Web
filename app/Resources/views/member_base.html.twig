@@ -299,12 +299,12 @@
                     data: { content : fContent},
                     success: function (data) {
                         alert("Your feedback has been added successfully");
-                        $('#ajoutFeedback').modal('hide');
+                        $('#feedback_modal').modal('hide');
 
                     },
                     error: function (data) {
                         alert("An error has occured while adding this feedback");
-                        $('#ajoutFeedback').modal('hide');
+                        $('#feedback_modal').modal('hide');
                     }
                 });
 

@@ -150,14 +150,14 @@
                                             {% endfor %}
                                             <span id="{{ post.id }}-nbr-reaction" data-nbr="{{ post.stats.nbrReaction - 1 }}">
                                                 {% if post.stats.nbrReaction != 0 %}
-                                                    {% if post.currentReaction != -1 %}
-                                                        You
-                                                        {% if post.stats.nbrReaction > 1 %}
-                                                            and {{ post.stats.nbrReaction - 1 }} others
-                                                        {% endif %}
-                                                    {% else %}
+                                                    {#{% if post.currentReaction != -1 %}#}
+                                                        {#You#}
+                                                        {#{% if post.stats.nbrReaction > 1 %}#}
+                                                            {#and {{ post.stats.nbrReaction - 1 }} others#}
+                                                        {#{% endif %}#}
+                                                    {#{% else %}#}
                                                         {{ post.stats.nbrReaction }}
-                                                    {% endif %}
+                                                    {#{% endif %}#}
                                                 {% endif %}
                                             </span>
                                             {% if post.stats.nbrComment != 0 %}
@@ -202,9 +202,19 @@
                                                 <!-- Comment section -->
                                                 <div class="comment-sub-box">
                                                     <div class="comment-profile-pic">
-                                                        <a href="{{ comment.sender.id == online.id ? path('member_profile') : path('other_profile',{'id':comment.sender.id}) }}">
-                                                            <img class="comment_pic" src="{{ comment.profilePhoto }}">
-                                                        </a>
+                                                        {% if comment.sender.gender == online.gender %}
+                                                            {% if comment.sender.id == online.id %}
+                                                                <a href="{{ path('member_profile') }}">
+                                                                    <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                                </a>
+                                                            {% else %}
+                                                                <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <a href="{{ path('other_profile',{'id':comment.sender.id}) }}">
+                                                                <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                            </a>
+                                                        {% endif %}
                                                     </div>
                                                     <div class="comment-body comment">
                                                         <p id="{{ comment.id }}-comment-content">{{ comment.content | raw }}</p>

@@ -36,14 +36,14 @@
                                         {% endfor %}
             <span id="{{ post.id }}-nbr-reaction" data-nbr="{{ post.stats.nbrReaction - 1 }}">
                                             {% if post.stats.nbrReaction != 0 %}
-                                                {% if post.currentReaction != -1 %}
-                                                    You
-                                                    {% if post.stats.nbrReaction > 1 %}
-                                                        and {{ post.stats.nbrReaction - 1 }} others
-                                                    {% endif %}
-                                                {% else %}
+                                                {#{% if post.currentReaction != -1 %}#}
+                                                    {#You#}
+                                                    {#{% if post.stats.nbrReaction > 1 %}#}
+                                                        {#and {{ post.stats.nbrReaction - 1 }} others#}
+                                                    {#{% endif %}#}
+                                                {#{% else %}#}
                                                     {{ post.stats.nbrReaction }}
-                                                {% endif %}
+                                                {#{% endif %}#}
                                             {% endif %}
                                         </span>
             {% if post.stats.nbrComment != 0 %}

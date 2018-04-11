@@ -137,7 +137,6 @@ class NewsFeedController extends Controller
         /** @var PostReaction $reaction */
         if($request->isXmlHttpRequest()){
             /* Parse data */
-            $data = [];
             $user = $this->container->get("security.token_storage")->getToken()->getUser();
             $id = $request->get('id');
             $type = $request->get('type');
@@ -146,20 +145,14 @@ class NewsFeedController extends Controller
             $postId = 0;
             $photoId = 0;
 
-            if($type == PostType::Status)
+            if($type == PostType::Status){
                 $postId = $id;
-            else if($type == PostType::Picture)
+                $exists = $this->getDoctrine()->getRepository(PostReaction::class)->findByPost($postId, $user);
+            }
+            else if($type == PostType::Picture){
                 $photoId = $id;
-
-            /* Check if reaction exists */
-            $exists = $this->getDoctrine()->getRepository(PostReaction::class)->findBy([
-                'postId' => $postId,
-                'user' => $user
-            ]);
-            $exists = array_merge($exists, $this->getDoctrine()->getRepository(PostReaction::class)->findBy([
-                'photoId' => $photoId,
-                'user' => $user
-            ]));
+                $exists = $this->getDoctrine()->getRepository(PostReaction::class)->findByPhoto($photoId, $user);
+            }
 
             /* If reaction exists */
             if(!empty($exists)){
@@ -181,7 +174,7 @@ class NewsFeedController extends Controller
                     ];
                 }
             }
-            /* If reaction exists and new one was none */
+            /* If reaction doesn't exist and new one was none */
             else if($reactionType == -1){
                 $data = [
                     'title' => 'None'

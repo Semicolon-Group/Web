@@ -31,10 +31,11 @@ class UserRepository extends EntityRepository
         $result = $this->getEntityManager()->createQuery(
             "SELECT u FROM BaseBundle:User u LEFT JOIN BaseBundle:UserBlock b
                   WITH :user = b.blockReceiver AND u = b.blockSender
-                  WHERE b.blockSender IS NULL AND u.id != :id"
+                  WHERE b.blockSender IS NULL AND u.id != :id AND u.gender != :gender"
         )
             ->setParameter('user', $user)
             ->setParameter('id', $user->getId())
+            ->setParameter('gender', $user->getGender())
             ->getResult();
         foreach ($result as $key => $u){
             /** @var User $u */

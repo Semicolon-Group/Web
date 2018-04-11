@@ -107,10 +107,10 @@ class UserSignalController extends Controller
     /**
      * Creates a new userSignal entity.
      *
-     * @Route("new", name="Signal_new")
+     * @Route("new/{id}", name="Signal_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, $id)
     {
         $userSignal = new Usersignal();
         $form = $this->createForm('BaseBundle\Form\UserSignalType', $userSignal);
@@ -120,7 +120,7 @@ class UserSignalController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             //**
-            $receiverId = 2;
+            $receiverId = $id;
             $senderId = $this->getUser()->getId();
             $receiver = $em->getRepository('BaseBundle:User')->find($receiverId);
 
@@ -158,7 +158,9 @@ class UserSignalController extends Controller
                 $receiver->setEnabled(0);
                 $em->flush($receiver);
             }
-            return $this->redirectToRoute('Signal_new', array('id' => $userSignal->getId()));
+
+
+
         }
 
         return $this->render('SignalBundle:usersignal:new.html.twig', array(

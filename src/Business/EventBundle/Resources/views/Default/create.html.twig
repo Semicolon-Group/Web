@@ -50,8 +50,10 @@
         <div class="form-group">
             <label  style="color: #0a0a0a" class="control-label" for="first-name" id="start">Start Date: </label><br>
             {{ form_widget(form.startDate, {'attr':{'class':'form-control','required':'true'}}) }}
+            <span id="start_date_error" style="display: none; color: red"> Invalid start date </span>
         </div>
     </div>
+
 
 
     <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
@@ -146,7 +148,8 @@
             console.log(s)
             console.log(diff)
             if(diff<0){
-                alert("Invalid StartDate for event");
+                //alert("Invalid StartDate for event");
+                $("#start_date_error").show();
                 event.preventDefault();
             }
         })

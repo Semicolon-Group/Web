@@ -80,8 +80,9 @@ function search() {
         type: 'POST',
         success: function (data) {
             var grid = $(".active_members");
-            grid.empty();
-            data.forEach(function (card) {
+            grid.html(data[0]);
+            //grid.empty();
+            /*data.forEach(function (card) {
                 grid.append("<div class=\"matchcard\" onclick=\"\">\n" +
                     "<div class=\"photo-div\">\n" +
                     "<img class=\"profile-photo\" src='" + card['photo'] + "'>\n" +
@@ -108,7 +109,7 @@ function search() {
                     "</div>\n" +
                     "</div>\n" +
                     "</div>")
-            });
+            });*/
         }
     });
 }

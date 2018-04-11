@@ -12,18 +12,21 @@
 namespace BaseBundle\Repository;
 
 
+use BaseBundle\Entity\Answer;
 use BaseBundle\Entity\User;
 use DateInterval;
 use DateTime;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
 
 class UserRepository extends EntityRepository
 {
     /**
      * @param $user User
+     * @param $doctrine ManagerRegistry
      * @return array
      */
-    public function getUsersNotBlocked($user)
+    public function getUsersNotBlocked($user, $doctrine)
     {
         $result = $this->getEntityManager()->createQuery(
             "SELECT u FROM BaseBundle:User u LEFT JOIN BaseBundle:UserBlock b
@@ -36,6 +39,10 @@ class UserRepository extends EntityRepository
         foreach ($result as $key => $u){
             /** @var User $u */
             if(in_array('ROLE_ADMIN', $u->getRoles()) || in_array('ROLE_BUSINESS', $u->getRoles())){
+                unset($result[$key]);
+                continue;
+            }
+            if($doctrine->getRepository(Answer::class)->getAnswerCount($u) < 10){
                 unset($result[$key]);
             }
         }

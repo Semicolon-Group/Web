@@ -158,7 +158,7 @@ class MatchCardService
             return $cards;
         }
 
-        $users = $doctrine->getRepository(User::class)->getUsersNotBlocked($online);
+        $users = $doctrine->getRepository(User::class)->getUsersNotBlocked($online, $doctrine);
         $users = FilterService::filter($users, $filter, $online->getAddress());
         $cards = getCards($doctrine, $users, $online);
         return $cards;

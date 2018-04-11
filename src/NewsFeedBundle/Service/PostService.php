@@ -173,4 +173,35 @@ class PostService
 
         return $post;
     }
+
+    /**
+     * @param $post Post
+     * @param $doctrine ManagerRegistry $doctrine
+     * @return Post
+     */
+    static function getReactionStats($post, $doctrine){
+        if($post->getType() == PostType::Status){
+            $post->setReactions($doctrine->getRepository(PostReaction::class)->findBy(['postId' => $post->getId()]));
+            $currentReaction = $doctrine->getRepository(PostReaction::class)->findBy(['postId' => $post->getId(), 'user' => $post->getUser()]);
+        }
+        else{
+            $post->setReactions($doctrine->getRepository(PostReaction::class)->findBy(['photoId' => $post->getId()]));
+            $currentReaction = $doctrine->getRepository(PostReaction::class)->findBy(['photoId' => $post->getId(), 'user' => $post->getUser()]);
+        }
+
+        $post->setComments(PostService::getComments($post, $doctrine));
+        $post->setStats(PostService::getStats($post->getReactions(), $post->getComments()));
+
+        if(empty($currentReaction)){
+            $currentReaction = -1;
+            $post->getStats()->currReacTitle = 'None';
+        }
+        else {
+            $currentReaction = $currentReaction[0]->getReaction();
+            $post->getStats()->currReacTitle = ReactionType::getName($currentReaction);
+        }
+        $post->setCurrentReaction($currentReaction);
+
+        return $post;
+    }
 }

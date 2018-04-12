@@ -136,7 +136,7 @@
                                 <div class="profile_list">
                                     <div class="author_posts_inners">
                                         {% if others_experiences is empty %}
-                                            <h1 class='pressed'>You still don't have any experience :(</h1>
+                                            <h1 class='pressed'>No experiences found :(</h1>
                                         {% endif %}
                                         {% for other_experience in others_experiences %}
                                             <div class="row card-container margins" style="width: 100%;">
@@ -146,16 +146,18 @@
                                                             <div class="card-content">
                                                                 <div class="media" style="border-bottom: none;">
                                                                     <div class="media-left" style="text-align: center; width: 150px;">
-                                                                        <div style="height: 100px; overflow: hidden; border-radius: 50%; border: solid 4px lightgrey;">
-                                                                            <img class=" photo" style="width: 100%; height: 100%;" src='
-                                                                                {% if other_experience.user.profilePhoto is null %}
-                                                                                    {{ asset('member_assets/img/member.jpg') }}
-                                                                                {% else %}
-                                                                                    {{ asset(vich_uploader_asset(other_experience.user.profilePhoto, 'imageFile',  'BaseBundle\\Entity\\Photo')) }}
-                                                                                {% endif %}
-                                                                            ' alt="">
-                                                                        </div>
-                                                                        <h3 style="width: 100%;">{{ other_experience.user.firstname|capitalize }} {{ other_experience.user.lastname|capitalize }}</h3>
+                                                                        <a href="{{ path('other_profile', {'id': other_experience.user.id }) }}">
+                                                                            <div style="height: 100px; overflow: hidden; border-radius: 50%; border: solid 4px lightgrey;">
+                                                                                <img class="" style="width: 100%; height: 100%;" src='
+                                                                                    {% if other_experience.user.profilePhoto is null %}
+                                                                                        {{ asset('member_assets/img/member.jpg') }}
+                                                                                    {% else %}
+                                                                                        {{ asset(vich_uploader_asset(other_experience.user.profilePhoto, 'imageFile',  'BaseBundle\\Entity\\Photo')) }}
+                                                                                    {% endif %}
+                                                                                ' alt="">
+                                                                            </div>
+                                                                            <h3 style="width: 100%;">{{ other_experience.user.firstname|capitalize }} {{ other_experience.user.lastname|capitalize }}</h3>
+                                                                        </a>
                                                                     </div>
                                                                     <div class="media-body">
                                                                         <h4>{{ other_experience.placeName }}<span> - {{ other_experience.address.city }}, {{ other_experience.address.country }}</span></h4>

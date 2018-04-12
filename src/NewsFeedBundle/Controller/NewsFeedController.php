@@ -8,9 +8,11 @@ use BaseBundle\Entity\Enumerations\ReactionType;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
 use BaseBundle\Entity\PostReaction;
+use BaseBundle\Entity\User;
 use BaseBundle\Repository\CommentRepository;
 use BaseBundle\Repository\PostReactionRepository;
 use BaseBundle\Repository\PhotoRepository;
+use MatchBundle\Service\MatchCardService;
 use NewsFeedBundle\Service\PostService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,13 +34,20 @@ class NewsFeedController extends Controller
         $posts = PostService::getPosts($this->getDoctrine(), $user);
         $repo = $this->getDoctrine()->getRepository(Photo::class);
         $photoUrl = $repo->getProfilePhotoUrl($user);
+        $admin = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => 'admin']);
+        $adminPost = $this->getDoctrine()->getRepository(Post::class)->findOneBy(
+            ['user' => $admin],
+            ['id' => 'DESC']
+        );
+        $adminPost->setTime(MatchCardService::getTimeDiffString($adminPost->getDate()));
 
         return $this->render('NewsFeedBundle:NewsFeed:news_feed.html.twig', array(
             'posts' => $posts,
             'photo' => $photoUrl,
             'online' => $user,
             'StatusType' => PostType::Status,
-            'PictureType' => PostType::Picture
+            'PictureType' => PostType::Picture,
+            'adminPost' => $adminPost
         ));
     }
 

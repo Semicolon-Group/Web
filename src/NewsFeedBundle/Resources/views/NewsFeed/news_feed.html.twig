@@ -110,16 +110,18 @@
                         </div>
 
                         <!-- Admin Post -->
-                        <div class="media" style="background: #f35d4e; color: white">
-                            <div class="media-left">
-                                <img class="post_pic" src="{{ asset('admin_assets/admin.png') }}" alt="">
+                        {% if adminPost %}
+                            <div class="media" style="background: #f35d4e; color: white">
+                                <div class="media-left">
+                                    <img class="post_pic" src="{{ asset('admin_assets/admin.png') }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <b>Administration</b>
+                                    <p>{{ adminPost.time }}</p><br>
+                                    <p>{{ adminPost.content }}</p><br>
+                                </div>
                             </div>
-                            <div class="media-body">
-                                <b>Administration</b>
-                                <p>{{ adminPost.time }}</p><br>
-                                <p>{{ adminPost.content }}</p><br>
-                            </div>
-                        </div>
+                        {% endif %}
 
                         <!-- Posts -->
                         <div id="feed">

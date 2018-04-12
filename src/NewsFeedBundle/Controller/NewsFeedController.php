@@ -39,7 +39,7 @@ class NewsFeedController extends Controller
             ['user' => $admin],
             ['id' => 'DESC']
         );
-        $adminPost->setTime(MatchCardService::getTimeDiffString($adminPost->getDate()));
+        if($adminPost != null) $adminPost->setTime(MatchCardService::getTimeDiffString($adminPost->getDate()));
 
         return $this->render('NewsFeedBundle:NewsFeed:news_feed.html.twig', array(
             'posts' => $posts,

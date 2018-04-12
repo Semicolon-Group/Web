@@ -156,3 +156,7 @@ admin_logout:
 fos_message:
     resource: "@FOSMessageBundle/Resources/config/routing.xml"
     prefix: /fosmessage
+
+announce:
+    path:  /admin/announce
+    defaults: { _controller: AdminHomeBundle:Default:announce }

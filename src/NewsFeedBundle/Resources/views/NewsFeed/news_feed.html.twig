@@ -109,6 +109,20 @@
                             </div>
                         </div>
 
+                        <!-- Admin Post -->
+                        {% if adminPost %}
+                            <div class="media" style="background: #f35d4e; color: white">
+                                <div class="media-left">
+                                    <img class="post_pic" src="{{ asset('admin_assets/admin.png') }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <b>Administration</b>
+                                    <p>{{ adminPost.time }}</p><br>
+                                    <p>{{ adminPost.content }}</p><br>
+                                </div>
+                            </div>
+                        {% endif %}
+
                         <!-- Posts -->
                         <div id="feed">
                             {% for post in posts %}
@@ -144,30 +158,30 @@
                                     <!-- Reactions -->
                                     <div class="reaction-box">
                                         <!-- Statistics -->
-                                        <span class="reaction-statistics">
-                                        {% for r in post.stats.reactions %}
-                                            <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
-                                        {% endfor %}
+                                        <span id="{{ post.id }}-stats" class="reaction-statistics">
+                                            {% for r in post.stats.reactions %}
+                                                <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
+                                            {% endfor %}
                                             <span id="{{ post.id }}-nbr-reaction" data-nbr="{{ post.stats.nbrReaction - 1 }}">
-                                            {% if post.stats.nbrReaction != 0 %}
-                                                {% if post.currentReaction != -1 %}
-                                                    You
-                                                    {% if post.stats.nbrReaction > 1 %}
-                                                        and {{ post.stats.nbrReaction - 1 }} others
-                                                    {% endif %}
-                                                {% else %}
-                                                    {{ post.stats.nbrReaction }}
+                                                {% if post.stats.nbrReaction != 0 %}
+                                                    {#{% if post.currentReaction != -1 %}#}
+                                                        {#You#}
+                                                        {#{% if post.stats.nbrReaction > 1 %}#}
+                                                            {#and {{ post.stats.nbrReaction - 1 }} others#}
+                                                        {#{% endif %}#}
+                                                    {#{% else %}#}
+                                                        {{ post.stats.nbrReaction }}
+                                                    {#{% endif %}#}
                                                 {% endif %}
-                                            {% endif %}
-                                        </span>
+                                            </span>
                                             {% if post.stats.nbrComment != 0 %}
                                                 &nbsp;
                                                 <img src="{{ asset('member_assets/img/Emoticons/comment.png') }}" class="emo-stat">
                                                 <span id="{{ post.id }}-nbr-comment" data-nbr="{{ post.stats.nbrComment }}">
-                                                {{ post.stats.nbrComment }}
-                                            </span>
+                                                    {{ post.stats.nbrComment }}
+                                                </span>
                                             {% endif %}
-                                    </span>
+                                        </span>
 
                                         <!-- React Action -->
                                         <div class="react-action">
@@ -202,9 +216,19 @@
                                                 <!-- Comment section -->
                                                 <div class="comment-sub-box">
                                                     <div class="comment-profile-pic">
-                                                        <a href="{{ comment.sender.id == online.id ? path('member_profile') : path('other_profile',{'id':comment.sender.id}) }}">
-                                                            <img class="comment_pic" src="{{ comment.profilePhoto }}">
-                                                        </a>
+                                                        {% if comment.sender.gender == online.gender %}
+                                                            {% if comment.sender.id == online.id %}
+                                                                <a href="{{ path('member_profile') }}">
+                                                                    <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                                </a>
+                                                            {% else %}
+                                                                <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <a href="{{ path('other_profile',{'id':comment.sender.id}) }}">
+                                                                <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                            </a>
+                                                        {% endif %}
                                                     </div>
                                                     <div class="comment-body comment">
                                                         <p id="{{ comment.id }}-comment-content">{{ comment.content | raw }}</p>

@@ -129,7 +129,7 @@ function update(id) {
                 requestReceived = true;
             }
         });
-    }, 6000);
+    }, 3000);
 }
 function update1(id) {
     console.log(time);

@@ -1,0 +1,67 @@
+{% extends "member_base.html.twig" %}
+
+{% block title %}Events{% endblock %}
+
+{% block banner_img %}
+    {{ asset('member_assets/img/banner/banner-bg-1.jpg') }}
+{% endblock %}
+
+{% block banner_title %}Events{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/starrating/css/rating.css') }}" />
+    <script src="{{ asset('//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/starrating/js/rating.js') }}"></script>
+{% endblock %}
+
+
+
+{% block body %}
+    <!--================Blog grid Area =================-->
+    <section class="blog_grid_area sticky_story_area">
+        <div class="container">
+            <div class="welcome_title">
+                <h1>List events</h1>
+                <img src="{{ asset('member_assets/') }}img/w-title-b.png" alt="">
+            </div>
+
+
+                        <div class="item" style="text-align: center">
+                            <div class="blog_grid_item">
+                                <div class="blog_grid_img">
+                                    <div class="blog_grid_img">
+                                        <img src="{{ asset('business_assets/images/img_event/') }}{{ m.photoUrl }}" alt=""  style="width: 70%; height: auto">
+                                    </div>
+                                </div>
+                                <div class="blog_grid_content">
+                                     <h3>Name: {{ m.title }}</h3>
+                                    <div class="blog_grid_date">
+                                        Business :<a href="#">{{m.business }}</a><br>
+                                        Date :<a href="#">{{ m.startDate | date('y-M-d') }}</a><br>
+                                        Address :<a href="#">{{ m.address.city }}</a>
+                                    </div>
+
+
+                                    <p>Content :{{ m.content }}</p>
+
+
+
+                                    {{ form_start(f) }}
+                                    <div class="row">{{ form_widget(f.rating ) }}
+                                        {{ form_widget(f.valider) }}
+                                    </div>
+                                    {{ form_end(f) }}
+
+
+                                </div>
+                            </div>
+                        </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block scripts %}
+    <script src="{{ asset('member_assets/js/events.js') }}"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="{{ asset('bundles/rating/js/rating.js') }}"></script>
+{% endblock %}

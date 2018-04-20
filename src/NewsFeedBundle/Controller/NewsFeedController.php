@@ -8,9 +8,11 @@ use BaseBundle\Entity\Enumerations\ReactionType;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
 use BaseBundle\Entity\PostReaction;
+use BaseBundle\Entity\User;
 use BaseBundle\Repository\CommentRepository;
 use BaseBundle\Repository\PostReactionRepository;
 use BaseBundle\Repository\PhotoRepository;
+use MatchBundle\Service\MatchCardService;
 use NewsFeedBundle\Service\PostService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,13 +34,20 @@ class NewsFeedController extends Controller
         $posts = PostService::getPosts($this->getDoctrine(), $user);
         $repo = $this->getDoctrine()->getRepository(Photo::class);
         $photoUrl = $repo->getProfilePhotoUrl($user);
+        $admin = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => 'admin']);
+        $adminPost = $this->getDoctrine()->getRepository(Post::class)->findOneBy(
+            ['user' => $admin],
+            ['id' => 'DESC']
+        );
+        if($adminPost != null) $adminPost->setTime(MatchCardService::getTimeDiffString($adminPost->getDate()));
 
         return $this->render('NewsFeedBundle:NewsFeed:news_feed.html.twig', array(
             'posts' => $posts,
             'photo' => $photoUrl,
             'online' => $user,
             'StatusType' => PostType::Status,
-            'PictureType' => PostType::Picture
+            'PictureType' => PostType::Picture,
+            'adminPost' => $adminPost
         ));
     }
 
@@ -137,7 +146,6 @@ class NewsFeedController extends Controller
         /** @var PostReaction $reaction */
         if($request->isXmlHttpRequest()){
             /* Parse data */
-            $data = [];
             $user = $this->container->get("security.token_storage")->getToken()->getUser();
             $id = $request->get('id');
             $type = $request->get('type');
@@ -145,20 +153,15 @@ class NewsFeedController extends Controller
             $reactionType = isset(ReactionType::getEnumAsArray()[$reactionType]) ? ReactionType::getEnumAsArray()[$reactionType] : -1;
             $postId = 0;
             $photoId = 0;
-            if($type == PostType::Status)
-                $postId = $id;
-            else if($type == PostType::Picture)
-                $photoId = $id;
 
-            /* Check if reaction exists */
-            $exists = $this->getDoctrine()->getRepository(PostReaction::class)->findBy([
-                'postId' => $postId,
-                'user' => $user
-            ]);
-            $exists = array_merge($exists, $this->getDoctrine()->getRepository(PostReaction::class)->findBy([
-                'photoId' => $photoId,
-                'user' => $user
-            ]));
+            if($type == PostType::Status){
+                $postId = $id;
+                $exists = $this->getDoctrine()->getRepository(PostReaction::class)->findByPost($postId, $user);
+            }
+            else if($type == PostType::Picture){
+                $photoId = $id;
+                $exists = $this->getDoctrine()->getRepository(PostReaction::class)->findByPhoto($photoId, $user);
+            }
 
             /* If reaction exists */
             if(!empty($exists)){
@@ -180,7 +183,7 @@ class NewsFeedController extends Controller
                     ];
                 }
             }
-            /* If reaction exists and new one was none */
+            /* If reaction doesn't exist and new one was none */
             else if($reactionType == -1){
                 $data = [
                     'title' => 'None'
@@ -201,8 +204,14 @@ class NewsFeedController extends Controller
                 $this->updateReaction($reaction);
             }
 
+            $post = $this->preparePost($photoId, $postId);
+            $data ['stats'] = $this->render('@NewsFeed/NewsFeed/postStats.html.twig',[
+                'post' => $post
+            ])->getContent();
+
             $serializer = new Serializer([new ObjectNormalizer()]);
             $data = $serializer->normalize($data);
+
             return new JsonResponse($data);
         }
     }
@@ -230,7 +239,7 @@ class NewsFeedController extends Controller
             $postId = $request->get('postId');
             $photoId = $request->get('photoId');
             $content = $request->get('content');
-            $user = $this->container->get("security.token_storage")->getToken()->getUser();
+            $user = $this->getUser();
 
             /* Create comment */
             $comment = new Comment();
@@ -240,23 +249,30 @@ class NewsFeedController extends Controller
             $comment->setPostId($postId);
             $comment->setContent($content);
             $comment->setDate(new \DateTime());
+            $comment->setProfilePhoto($this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($user));
 
             /* Persist comment */
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
 
-            /* Retrive new comment id */
-            $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(
-                [],
-                [
-                    'id' => 'DESC'
-            ]);
-            $data = ['id' => $comment->getId()];
-            $serializer = new Serializer([new ObjectNormalizer()]);
-            $data = $serializer->normalize($data);
+            $post = $this->preparePost($photoId, $postId);
 
-            return new JsonResponse($data);
+            $content = [];
+            $content [] = $this->render('@NewsFeed/NewsFeed/comment.html.twig',[
+                'online' => $user,
+                'comment' => $comment,
+                'post' => $post
+            ])->getContent();
+
+            $content [] = $this->render('@NewsFeed/NewsFeed/postStats.html.twig',[
+                'post' => $post
+            ])->getContent();
+
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $content = $serializer->normalize($content);
+
+            return new JsonResponse($content);
         }
     }
 
@@ -270,11 +286,24 @@ class NewsFeedController extends Controller
             $id = $request->get('id');
             $comment = $this->getDoctrine()->getRepository(Comment::class)->find($id);
 
+            $photoId = $comment->getPhotoId();
+            $postId = $comment->getPostId();
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($comment);
             $em->flush();
 
-            return new JsonResponse();
+            $post = $this->preparePost($photoId, $postId);
+
+            $content = [];
+            $content [] = $this->render('@NewsFeed/NewsFeed/postStats.html.twig',[
+                'post' => $post
+            ])->getContent();
+
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $content = $serializer->normalize($content);
+
+            return new JsonResponse($content);
         }
     }
 
@@ -297,5 +326,26 @@ class NewsFeedController extends Controller
 
             return new JsonResponse();
         }
+    }
+
+    /**
+     * @param $photoId int
+     * @param $postId int
+     * @return Post
+     */
+    function preparePost($photoId, $postId){
+        $post = new Post;
+        if($postId == 0){
+            $post->setId($photoId);
+            $post->setType(PostType::Picture);
+            $post->setUser($this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser());
+        }else{
+            $post->setId($postId);
+            $post->setType(PostType::Status);
+            $post->setUser($this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser());
+        }
+        $post = PostService::getReactionStats($post, $this->getDoctrine());
+
+        return $post;
     }
 }

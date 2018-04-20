@@ -1,0 +1,17 @@
+<div class="comment-sub-box">
+    <div class="comment-profile-pic">
+        <a href="{{ comment.sender.id == online.id ? path('member_profile') : path('other_profile',{'id':comment.sender.id}) }}">
+            <img class="comment_pic" src="{{ comment.profilePhoto }}">
+        </a>
+    </div>
+    <div class="comment-body comment">
+        <p id="{{ comment.id }}-comment-content">{{ comment.content | raw }}</p>
+    </div>
+
+    <!-- Update/Delete comment -->
+    {% if comment.sender.id == online.id %}
+        <div class="update-comment-box">
+            <span class="button far fa-edit" onclick="updateModalText({{ comment.id }})" data-toggle="modal" data-target="#edit_post_modal"></span><span class="button far fa-trash-alt" onclick="showDeleteModal({{ comment.id }}, {{ post.id }})" data-toggle="modal" data-target="#delete_post_modal"></span>
+        </div>
+    {% endif %}
+</div>

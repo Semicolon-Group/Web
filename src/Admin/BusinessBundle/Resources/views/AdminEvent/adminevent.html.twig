@@ -1,0 +1,148 @@
+{% extends 'admin_base.html.twig' %}
+{% block title %}Admin | Businesses{% endblock %}
+{% block page_title %}Businesses{% endblock %}
+
+{% block navbar %}
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="brand">
+            <a href="index.html"><img src="{{ asset('admin_assets/') }}img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
+        </div>
+        <div class="container-fluid">
+            <div class="navbar-btn">
+                <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
+            </div>
+            <form class="navbar-form navbar-left">
+                <div class="input-group">
+                    <input type="text" value="" class="form-control" placeholder="Search dashboard...">
+                    <span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
+                </div>
+            </form>
+            <div id="navbar-menu">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+                            <i class="lnr lnr-alarm"></i>
+                            <span class="badge bg-danger">{% block notifications_number %}{{ notifs |length }}  {% endblock %}</span>
+                        </a>
+                        <ul class="dropdown-menu notifications">
+                            {% block notifications %}
+                                {% for m in notifs %}
+                                    <li><a href="{{ path('Admin_events_edit', {'id':m.id}) }}" class="notification-item"><span class="dot bg-warning"></span> New Add : {{ m.content }} </a></li>
+                                {% endfor %}
+                            {% endblock %}
+
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{ asset('admin_assets/') }}img/user.png" class="img-circle" alt="Avatar"> <span>Admin</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="lnr lnr-envelope"></i> <span>Message</span></a></li>
+                            <li><a href="#"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
+                            <li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Event</h3>
+        </div>
+
+        <div id="selected_post" data-id=""></div>
+        <div class="panel-body">
+            <label for='Recherche' class="menu-item kode-parent-menu" style="color: dodgerblue">Recherche :</label>
+            <input type="text" name="search" id="search" />
+            <br><br>
+            <div id="selected_post" data-id=""></div>
+            <table class="table" id="contenu">
+                <thead>
+                <tr>
+                    <th>Title</th>
+
+
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in events %}
+                    <tr id="{{ event.id }}">
+                        <td>{{ event.title }}</td>
+
+                        <td><button type="button" class="btn btn-warning" ><i class="fa fa-warning"></i>
+                            <a href="{{ path('Admin_events_edit', {'id':event.id}) }}"> Modify </a></button></td>
+                        <td><span class="label label-{% if event.state==1 %}success{% elseif event.state==0 %}warning{% elseif event.state==2 %}danger{% endif %}">{% if event.state==1 %} approved {% elseif event.state==0 %}not processed{% elseif event.state==2 %} denied {% endif %}</span></td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="navbar-btn">
+                <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
+            </div>
+
+        </div>
+    </div>
+    <script src="{{ asset('business_assets/js/jquery-3.2.1.js') }}"></script>
+
+    <script>
+
+        function delete_event(id) {
+            var DATA = {'id':id};
+            var path = $("#admin_events_delete").data('path');
+            $.ajax({
+                type: 'POST',
+                data: DATA,
+                url: path,
+                success: function(data){
+                    $("#" + id).remove();
+                }
+
+            });
+        }
+
+        $(document).ready( function() {
+            // déterminer l'index des colonnes les colonnes
+            var colonnes = {};
+            $("#contenu thead th").each(function(index, th)
+                {
+                    colonnes[index] = $(th).text();
+                }
+            );
+
+// faire la recherche dans le tableau
+            $("#search").keyup(function()
+            {
+                var mots = $(this).val().toLowerCase().split(" ");
+                $("#contenu tbody tr").each(function(index, tr)
+                {
+                    if (mots[0].length > 0) $(tr).hide(); else $(tr).show();
+                    $("td", tr).each(function(index, td)
+                    {
+                        if (colonnes[index] in {'Title':true,'content':true})
+                        {
+                            for (mot in mots)
+                            {
+                                if (mots[mot].length > 0 && $(td).text().toLowerCase().indexOf(mots[mot])>= 0)
+                                {
+                                    $(tr).show();
+                                    return false;
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+
+        });
+
+    </script>
+{% endblock %}

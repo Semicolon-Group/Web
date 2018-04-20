@@ -3,6 +3,7 @@
 namespace Admin\ChartBundle\Controller;
 
 use BaseBundle\BaseBundle;
+use BaseBundle\Entity\Enumerations\Categorie;
 use BaseBundle\Entity\Enumerations\Topic;
 use BaseBundle\Entity\User;
 use DateTime;
@@ -98,7 +99,7 @@ class BusinessChartsController extends Controller
         $nbMembers=array();
 
         foreach($datas as $data) {
-            array_push($categories,$data['category']);
+            array_push($categories,Categorie::getName($data['category']));
             array_push($nbMembers,(int)$data['total']);
         }
         $series = array(

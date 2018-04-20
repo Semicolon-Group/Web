@@ -39,6 +39,7 @@ class AppKernel extends Kernel
             new PubliciteBundle\PubliciteBundle(),
             new Business\FOSSecurityBundle\BusinessFOSSecurityBundle(),
             new Admin\FOSSecurityBundle\AdminFOSSecurityBundle(),
+            new blackknight467\StarRatingBundle\StarRatingBundle(),
             new FOS\MessageBundle\FOSMessageBundle(),
             new MessageBundle\MessageBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),

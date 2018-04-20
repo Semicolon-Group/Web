@@ -27,11 +27,17 @@ class ExperienceController extends Controller
     public function experiencesAction(Request $request, $placeId=null){
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $otherExperiences = $this->getDoctrine()->getRepository(Experience::class)->getExperiences($user);
+        $photos=null;
+        foreach ($otherExperiences as $otherExperience){
+            $photos = $this->getDoctrine()->getRepository(Photo::class)
+                ->findBy(array('user' => $otherExperience->getUser(), 'type' => \BaseBundle\Entity\Enumerations\PhotoType::Profile));
+            $otherExperience->getUser()->setProfilePhoto($photos[0]);
+        }
         $myExperiences = $this->getDoctrine()->getRepository(Experience::class)->findBy(array('user' => $user));
         return $this->render('ExperienceBundle:Experience:experiences.html.twig', array(
             'others_experiences' => $otherExperiences,
             'my_experiences' => $myExperiences,
-            'place_id' => $placeId
+            'place_id' => $placeId,
         ));
     }
 

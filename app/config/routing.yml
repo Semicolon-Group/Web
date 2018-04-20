@@ -1,7 +1,7 @@
 service:
     resource: "@ServiceBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /service
 
 message:
     resource: "@MessageBundle/Resources/config/routing.xml"

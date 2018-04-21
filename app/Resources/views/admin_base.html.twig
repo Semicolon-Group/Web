@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="{{  asset('admin_assets/') }}css/main.css">
     <!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
     <link rel="stylesheet" href="{{ asset('admin_assets/') }}css/demo.css">
+    <link href="{{ asset('business_assets/') }}css/helper.css" rel="stylesheet">
+    <link href="{{ asset('business_assets/') }}css/style.css" rel="stylesheet">
+
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
     <!-- ICONS -->
@@ -45,18 +48,6 @@
             <div id="navbar-menu">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-                            <i class="lnr lnr-alarm"></i>
-                            <span class="badge bg-danger">{% block notifications_number %}5{% endblock %}</span>
-                        </a>
-                        <ul class="dropdown-menu notifications">
-                            {% block notifications %}
-                                <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
-                            {% endblock %}
-                            <li><a href="#" class="more">See all notifications</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{ asset('member_assets/img/member.jpg') }}" style="border-radius: 50%; object-fit: cover; height: 20px; width: 20px;" alt="Avatar"> <span>Admin</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ path('fos_user_security_logout') }}"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
@@ -74,43 +65,33 @@
             <nav>
                 <ul class="nav">
                     <li><a href="{{ path('admin_home') }}" class="{% if app.request.attributes.get('_route') == 'admin_home' %}active{% endif %}"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="{{ path('admin_members') }}" class="{% if app.request.attributes.get('_route') == 'admin_members' %}active{% endif %}"><i class="lnr lnr lnr-user"></i> <span>Members</span></a></li>
                     <li><a href="{{ path('admin_questions') }}" class="{% if app.request.attributes.get('_route') == 'admin_questions' %}active{% endif %}"><i class="lnr lnr-question-circle"></i> <span>Questions</span></a></li>
+                    <li><a href="{{ path('admin_businesses') }}" class="{% if app.request.attributes.get('_route') == 'admin_businesses' %}active{% endif %}"><i class="lnr lnr-store"></i> <span>Businesses</span></a></li>
                     <li>
-                        <a href="#subBus" data-toggle="collapse" class="{% if (app.request.attributes.get('_route') == 'lister_admin') or ((app.request.attributes.get('_route') == 'admin_promotion_add') or ((app.request.attributes.get('_route') == 'admin_promotions_list'))) %}active{% else %}collapsed{% endif %}">
-                            <i class="lnr lnr-store"></i><span>Businesses</span> <i class="icon-submenu lnr lnr-chevron-left"></i>
-                        </a>
-                        <div id="subBus" class="collapse {% if (app.request.attributes.get('_route') == 'lister_admin') or ((app.request.attributes.get('_route') == 'admin_promotion_add') or ((app.request.attributes.get('_route') == 'admin_promotions_list'))) %}in{% endif %}">
+                        <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Businesses</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                        <div id="subPages" class="collapse ">
                             <ul class="nav">
-                                <li class="{% if app.request.attributes.get('_route') == 'admin_businesses' %}active{% endif %}"><a href="{{ path('admin_businesses') }}">List Events</a></li>
                                 <li class="{% if app.request.attributes.get('_route') == 'lister_admin' %}active{% endif %}"><a href="{{ path('lister_admin') }}">List Ads</a></li>
                                 <li class="{% if app.request.attributes.get('_route') == 'admin_promotion_add' %}active{% endif %}"><a href="{{ path('admin_promotion_add') }}">Add promotion</a></li>
                                 <li class="{% if app.request.attributes.get('_route') == 'admin_promotions_list' %}active{% endif %}"><a href="{{ path('admin_promotions_list') }}">List promotions</a></li>
 
                             </ul>
                         </div>
-                    </li>
                     <li>
-                        <a href="#subPages" data-toggle="collapse" class="{% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}active{% else %}collapsed{% endif %}" aria-expanded="{% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}true{% endif %}">
-                            <i class="lnr lnr-chart-bars"></i> <span>Chart</span> <i class="icon-submenu lnr lnr-chevron-left"></i>
-                        </a>
-                        <div id="subPages" class="collapse {% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}in{% endif %}">
+
+
+                    </li>
+                    <li><a href="" class="{% if app.request.attributes.get('_route') == 'admin_charts' %}active{% endif %}"><i class="lnr lnr-chart-bars"></i> <span>Chart</span></a></li>
+                    <!--<li>
+                        <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Pages</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                        <div id="subPages" class="collapse ">
                             <ul class="nav">
                                 <li><a href="{{ path('admin_member_charts') }}" class="{% if app.request.attributes.get('_route') == 'admin_member_charts' %}active{% endif %}">Members</a></li>
                                 <li><a href="{{ path('admin_business_charts') }}" class="{% if app.request.attributes.get('_route') == 'admin_business_charts' %}active{% endif %}">Business</a></li>
                             </ul>
                         </div>
-                    </li>
-                    <li>
-                        <a href="#subMembers" data-toggle="collapse" class="{% if ((app.request.attributes.get('_route') == 'Signal_index') or (app.request.attributes.get('_route') == 'feedback_index') or (app.request.attributes.get('_route') == 'Signal_show') or (app.request.attributes.get('_route') == 'Bans')) %}active{% else %}collapsed{% endif %}" aria-expanded="{% if (app.request.attributes.get('_route') == 'admin_member_charts') or ((app.request.attributes.get('_route') == 'admin_business_charts')) %}true{% endif %}">
-                            <i class="lnr lnr-user"></i> <span>Members</span> <i class="icon-submenu lnr lnr-chevron-left"></i>
-                        </a>
-                        <div id="subMembers" class="collapse {% if (app.request.attributes.get('_route') == 'Signal_index') or ((app.request.attributes.get('_route') == 'feedback_index') or (app.request.attributes.get('_route') == 'Signal_show') or (app.request.attributes.get('_route') == 'Bans')) %}in{% endif %}">
-                            <ul class="nav">
-                                <li><a href="{{ path('Signal_index') }}" class="{% if ( (app.request.attributes.get('_route') == 'Signal_index') or (app.request.attributes.get('_route') == 'Signal_show') or (app.request.attributes.get('_route') == 'Bans')) %}active{% endif %}">Reports</a></li>
-                                <li><a href="{{ path('feedback_index') }}" class="{% if app.request.attributes.get('_route') == 'feedback_index' %}active{% endif %}">Feedbacks</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                    </li>-->
                 </ul>
             </nav>
         </div>

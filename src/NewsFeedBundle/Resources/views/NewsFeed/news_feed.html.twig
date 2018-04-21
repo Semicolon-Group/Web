@@ -239,107 +239,15 @@
                 </div>
 
                 <!-- Adverts -->
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <div class="right_sidebar_area">
-                        <!-- *****Default template content*****
-                        <aside class="s_widget search_widget">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search Here">
-                                <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                    </span>
-                            </div>
-                        </aside>
-                        <aside class="s_widget recent_post_widget">
-                            <div class="s_title">
-                                <h4>Memers</h4>
-                                <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
-                            </div>
-                            <div class="mbedia">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-1.png') }}" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Maria Doe</h4>
-                                    <a href="#">Active 16 hours ago</a>
+                        <div class="col-md-11 col-sm-6">
+                            <div class="blog_grid_item">
+                                <div class="blog_grid_img">
+                                    {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherSide')) }}
                                 </div>
                             </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-2.png') }}" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Alex Jones</h4>
-                                    <a href="#">Active 16 hours ago</a>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-3.png') }}" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Nancy Martin</h4>
-                                    <a href="#">Active 16 hours ago</a>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-4.png') }}" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <h4>Kavin Smith</h4>
-                                    <a href="#">Active 16 hours ago</a>
-                                </div>
-                            </div>
-                        </aside>
-                        <aside class="s_widget group_widget">
-                            <div class="s_title">
-                                <h4>Groups</h4>
-                                <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
-                            </div>
-                            <div class="group_list">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <img class="img-circle" src="{{ asset('member_assets/img/photo/group/group-1.png') }}" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>VeroDate Lovers</h4>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <img class="img-circle" src="{{ asset('member_assets/img/photo/group/group-2.png') }}" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>VeroDate Lovers</h4>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <img class="img-circle" src="{{ asset('member_assets/img/photo/group/group-3.png') }}" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>VeroDate Lovers</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </aside>
-                        <aside class="s_widget replies_widget">
-                            <div class="s_title">
-                                <h4>Recent Replies</h4>
-                                <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
-                            </div>
-                            <ul>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Lorem ipsum dolor sit amet.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Ut sed massa eget tellus.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Integer non odio ullamcorper.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Vestibulum facilisis lacus in nunc.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i> Morbi euismod turpis finibus.</a></li>
-                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Nunc quis sapien a nunc luctus</a></li>
-                            </ul>
-                        </aside>
-                        -->
-                        {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherSide')) }}
+                        </div>
                     </div>
                 </div>
             </div>

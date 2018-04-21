@@ -109,6 +109,20 @@
                             </div>
                         </div>
 
+                        <!-- Admin Post -->
+                        {% if adminPost %}
+                            <div class="media" style="background: #f35d4e; color: white">
+                                <div class="media-left">
+                                    <img class="post_pic" src="{{ asset('admin_assets/admin.png') }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <b>Administration</b>
+                                    <p>{{ adminPost.time }}</p><br>
+                                    <p>{{ adminPost.content }}</p><br>
+                                </div>
+                            </div>
+                        {% endif %}
+
                         <!-- Posts -->
                         <div id="feed">
                             {% for post in posts %}
@@ -144,30 +158,30 @@
                                     <!-- Reactions -->
                                     <div class="reaction-box">
                                         <!-- Statistics -->
-                                        <span class="reaction-statistics">
-                                        {% for r in post.stats.reactions %}
-                                            <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
-                                        {% endfor %}
+                                        <span id="{{ post.id }}-stats" class="reaction-statistics">
+                                            {% for r in post.stats.reactions %}
+                                                <img src="{{ asset('member_assets/img/Emoticons/' ~ r ~ '.png') }}" class="emo-stat">
+                                            {% endfor %}
                                             <span id="{{ post.id }}-nbr-reaction" data-nbr="{{ post.stats.nbrReaction - 1 }}">
-                                            {% if post.stats.nbrReaction != 0 %}
-                                                {% if post.currentReaction != -1 %}
-                                                    You
-                                                    {% if post.stats.nbrReaction > 1 %}
-                                                        and {{ post.stats.nbrReaction - 1 }} others
-                                                    {% endif %}
-                                                {% else %}
-                                                    {{ post.stats.nbrReaction }}
+                                                {% if post.stats.nbrReaction != 0 %}
+                                                    {#{% if post.currentReaction != -1 %}#}
+                                                        {#You#}
+                                                        {#{% if post.stats.nbrReaction > 1 %}#}
+                                                            {#and {{ post.stats.nbrReaction - 1 }} others#}
+                                                        {#{% endif %}#}
+                                                    {#{% else %}#}
+                                                        {{ post.stats.nbrReaction }}
+                                                    {#{% endif %}#}
                                                 {% endif %}
-                                            {% endif %}
-                                        </span>
+                                            </span>
                                             {% if post.stats.nbrComment != 0 %}
                                                 &nbsp;
                                                 <img src="{{ asset('member_assets/img/Emoticons/comment.png') }}" class="emo-stat">
                                                 <span id="{{ post.id }}-nbr-comment" data-nbr="{{ post.stats.nbrComment }}">
-                                                {{ post.stats.nbrComment }}
-                                            </span>
+                                                    {{ post.stats.nbrComment }}
+                                                </span>
                                             {% endif %}
-                                    </span>
+                                        </span>
 
                                         <!-- React Action -->
                                         <div class="react-action">
@@ -202,9 +216,19 @@
                                                 <!-- Comment section -->
                                                 <div class="comment-sub-box">
                                                     <div class="comment-profile-pic">
-                                                        <a href="{{ comment.sender.id == online.id ? path('member_profile') : path('other_profile',{'id':comment.sender.id}) }}">
-                                                            <img class="comment_pic" src="{{ comment.profilePhoto }}">
-                                                        </a>
+                                                        {% if comment.sender.gender == online.gender %}
+                                                            {% if comment.sender.id == online.id %}
+                                                                <a href="{{ path('member_profile') }}">
+                                                                    <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                                </a>
+                                                            {% else %}
+                                                                <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <a href="{{ path('other_profile',{'id':comment.sender.id}) }}">
+                                                                <img class="comment_pic" src="{{ comment.profilePhoto }}">
+                                                            </a>
+                                                        {% endif %}
                                                     </div>
                                                     <div class="comment-body comment">
                                                         <p id="{{ comment.id }}-comment-content">{{ comment.content | raw }}</p>
@@ -239,15 +263,107 @@
                 </div>
 
                 <!-- Adverts -->
-                <div class="col-sm-4">
+                <div class="col-md-4">
                     <div class="right_sidebar_area">
-                        <div class="col-md-11 col-sm-6">
-                            <div class="blog_grid_item">
-                                <div class="blog_grid_img">
-                                    {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherSide')) }}
+                        <!-- *****Default template content*****
+                        <aside class="s_widget search_widget">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search Here">
+                                <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    </span>
+                            </div>
+                        </aside>
+                        <aside class="s_widget recent_post_widget">
+                            <div class="s_title">
+                                <h4>Memers</h4>
+                                <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
+                            </div>
+                            <div class="mbedia">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-1.png') }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Maria Doe</h4>
+                                    <a href="#">Active 16 hours ago</a>
                                 </div>
                             </div>
-                        </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-2.png') }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Alex Jones</h4>
+                                    <a href="#">Active 16 hours ago</a>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-3.png') }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Nancy Martin</h4>
+                                    <a href="#">Active 16 hours ago</a>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <img class="img-circle" src="{{ asset('member_assets/img/members/w-members/w-m-4.png') }}" alt="">
+                                </div>
+                                <div class="media-body">
+                                    <h4>Kavin Smith</h4>
+                                    <a href="#">Active 16 hours ago</a>
+                                </div>
+                            </div>
+                        </aside>
+                        <aside class="s_widget group_widget">
+                            <div class="s_title">
+                                <h4>Groups</h4>
+                                <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
+                            </div>
+                            <div class="group_list">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="img-circle" src="{{ asset('member_assets/img/photo/group/group-1.png') }}" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>VeroDate Lovers</h4>
+                                    </div>
+                                </div>
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="img-circle" src="{{ asset('member_assets/img/photo/group/group-2.png') }}" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>VeroDate Lovers</h4>
+                                    </div>
+                                </div>
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="img-circle" src="{{ asset('member_assets/img/photo/group/group-3.png') }}" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>VeroDate Lovers</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <aside class="s_widget replies_widget">
+                            <div class="s_title">
+                                <h4>Recent Replies</h4>
+                                <img src="{{ asset('member_assets/img/widget-title-border.png') }}" alt="">
+                            </div>
+                            <ul>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Lorem ipsum dolor sit amet.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Ut sed massa eget tellus.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Integer non odio ullamcorper.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Vestibulum facilisis lacus in nunc.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i> Morbi euismod turpis finibus.</a></li>
+                                <li><a href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i>Nunc quis sapien a nunc luctus</a></li>
+                            </ul>
+                        </aside>
+                        -->
+                        {{ render(controller('BusinessAdvertBundle:BusinessAdvert:AfficherSide')) }}
                     </div>
                 </div>
             </div>

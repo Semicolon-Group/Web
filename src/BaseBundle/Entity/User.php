@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints\Date;
  *
  * @ORM\Table(name="user", indexes={@ORM\Index(name="address_id", columns={"address_id"})})
  * @ORM\Entity(repositoryClass="BaseBundle\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class User extends BaseUser implements ParticipantInterface
 {
@@ -230,6 +231,15 @@ class User extends BaseUser implements ParticipantInterface
      * )
      */
     private $event;
+
+    /**
+     * @ORM\PrePersist()
+     *
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime;
+    }
 
     /**
      * Constructor

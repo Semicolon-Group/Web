@@ -217,24 +217,5 @@ class MessageController extends Controller implements ContainerAwareInterface
      */
     public function getThread($part1, $part2){
         return $this->getDoctrine()->getRepository(Thread::class)->getCommonThread($part1, $part2);
-        /*$tmd1 = $this->getDoctrine()->getRepository(ThreadMetadata::class)->findBy([
-            'participant' => $part1
-        ]);
-        $tmd2 = $this->getDoctrine()->getRepository(ThreadMetadata::class)->findBy([
-            'participant' => $part2
-        ]);
-        $thread = null;
-        $found = false;
-        foreach ($tmd1 as $t1){
-            foreach ($tmd2 as $t2){
-                if($t1->getThread()->getId() == $t2->getThread()->getId()){
-                    $thread = $t1->getThread();
-                    $found = true;
-                    break;
-                }
-            }
-            if($found == true) break;
-        }
-        return $thread;*/
     }
 }

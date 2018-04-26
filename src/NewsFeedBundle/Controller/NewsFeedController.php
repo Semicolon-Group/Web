@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use BaseBundle\Entity\Promotion;
-use BaseBundle\Entity\User;
 use MongoDB\BSON\Timestamp;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;

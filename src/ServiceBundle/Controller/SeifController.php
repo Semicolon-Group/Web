@@ -38,6 +38,15 @@ class SeifController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/seif/test", name="seif_test")
+     */
+    public function testEditAction(Request $request){
+        return new JsonResponse((boolean)$request->get('test'));
+    }
+
+    /**
      * @Route("/seif/editUser/{id}", name="seif_editUser")
      */
     public function editUserAction(Request $request, $id){
@@ -178,10 +187,33 @@ class SeifController extends Controller
             $em->flush();
 
             $handler = $this->get('vich_uploader.templating.helper.uploader_helper');
-            return new JsonResponse(array('photoUri' =>  $baseurl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath().'/'.$handler->asset($photo, 'imageFile'), 'updateDate' => $photo->getDate()));
+            return new JsonResponse(array('id' => $photo->getId(), 'photoUri' =>  $baseurl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath().'/'.$handler->asset($photo, 'imageFile'), 'updateDate' => $photo->getDate()));
         }
         //return $this->render('@Service/Default/index.html.twig', array('form' => $form->createView()));
         return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @Route("/seif/getPhoto/{id}", name="seif_getPhoto")
+     */
+    public function getPhotoAction(Request $request, $id){
+        $photo = $this->getDoctrine()->getRepository(Photo::class)->find($id);
+        if($photo != null){
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(1);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $handler = $this->get('vich_uploader.templating.helper.uploader_helper');
+            $photo->setImage($request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath().'/'.$handler->asset($photo, 'imageFile'));
+            $data = $serializer->normalize($photo);
+            return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -245,7 +277,7 @@ class SeifController extends Controller
     /**
      * @param Request $request
      * @param $userId
-     * @Route("/seif/getCoverPhoto/{userId}", name="seif_getProfilePhoto")
+     * @Route("/seif/getCoverPhoto/{userId}", name="seif_getCoverPhoto")
      */
     public function getCoverPhotoAction(Request $request, $userId){
         $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
@@ -335,6 +367,31 @@ class SeifController extends Controller
             $this->getDoctrine()->getManager()->remove($photo);
             $this->getDoctrine()->getManager()->flush();
             return new Response(Response::HTTP_OK);
+        }
+        return new Response(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @Route("/seif/getUserLikes/{id}", name="seif_getUserLikes")
+     */
+    public function getUserLikesAction(Request $request, $id){
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if($user != null){
+            $likes = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeSender' => $user));
+            if(sizeof($likes)<=0){
+                return new JsonResponse(null);
+            }
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(1);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $data = $serializer->normalize($likes);
+            return new JsonResponse($data);
         }
         return new Response(Response::HTTP_NOT_FOUND);
     }

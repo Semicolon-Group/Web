@@ -196,7 +196,7 @@ class MatchCardService
             return "1 month ago";
         if($diff->month < 12 && floor($diff->month) > 0)
             return floor($diff->month) . " months ago";
-        if($diff->week == 1)
+        if(floor($diff->week) == 1)
             return "1 week ago";
         if($diff->week < 4 && floor($diff->week) > 0)
             return floor($diff->week) . " weeks ago";

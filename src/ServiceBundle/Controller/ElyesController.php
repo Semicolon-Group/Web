@@ -90,6 +90,7 @@ class ElyesController extends Controller  implements ContainerAwareInterface
             /** @var User $participant */
             $participant = $thread->getOtherParticipants($user)[0];
             $c = [
+                'threadId' => $thread->getId(),
                 'participantId' => $participant->getId(),
                 'lastMessage' => $thread->getLastMessage()->getBody(),
                 'timeSince' => MatchCardService::getTimeDiffString($thread->getLastMessage()->getCreatedAt()),
@@ -115,9 +116,7 @@ class ElyesController extends Controller  implements ContainerAwareInterface
      * @Route("/get_messages", name="get_messages")
      */
     public function getMessagesAction(Request $request){
-        $user1 = $this->getDoctrine()->getRepository(User::class)->find($request->get('id1'));
-        $user2 = $this->getDoctrine()->getRepository(User::class)->find($request->get('id2'));
-        $messages = $this->getThread($user1, $user2)->getMessages();
+        $messages = $this->getDoctrine()->getRepository(Thread::class)->find($request->get('id'))->getMessages();
         $data = [];
         foreach ($messages as $message){
             /** @var Message $message */

@@ -71,6 +71,8 @@ class SeifController extends Controller
             $user->setCivilStatus($request->get('civil_status'));
             $user->getAddress()->setCity($request->get('city'));
             $user->getAddress()->setCountry($request->get('country'));
+            $user->getAddress()->setLongitude($request->get("lng"));
+            $user->getAddress()->setLatitude($request->get("lat"));
 
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
@@ -392,6 +394,108 @@ class SeifController extends Controller
             $serializer = new Serializer(array($normalizer));
             $data = $serializer->normalize($likes);
             return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @Route("/seif/getUserLike/{senderId}/{receiverId}", name="seif_getUserLike")
+     */
+    public function getUserLikeAction(Request $request, $senderId, $receiverId){
+        $sender = $this->getDoctrine()->getRepository(User::class)->find($senderId);
+        $receiver = $this->getDoctrine()->getRepository(User::class)->find($receiverId);
+        if($sender != null && $receiver != null){
+            $likes = $this->getDoctrine()->getRepository(UserLike::class)->findBy(array('likeSender' => $sender, 'likeReceiver' => $receiver));
+            if(sizeof($likes) <= 0){
+                return new JsonResponse(null);
+            }
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(1);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $data = $serializer->normalize($likes[0]);
+            return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param Request $request
+     * @param $userId
+     * @return Response
+     * @Route("/seif/getUserBlocks/{userId}", name="seif_getUserBlocks")
+     */
+    public function getUserBlocksAction(Request $request, $userId){
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        if($user != null){
+            $blocks = $this->getDoctrine()->getRepository(UserBlock::class)->findBy(array("blockSender" => $user));
+            if(sizeof($blocks) <= 0){
+                return new JsonResponse(null);
+            }
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(1);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $data = $serializer->normalize($blocks);
+            return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param Request $request
+     * @param $senderId
+     * @param $receiverId
+     * @return Response
+     * @Route("/seif/getUserBlock/{senderId}/{receiverId}", name="seif_getBlock")
+     */
+    public function getBlockAction(Request $request, $senderId, $receiverId){
+        $sender = $this->getDoctrine()->getRepository(User::class)->find($senderId);
+        $receiver = $this->getDoctrine()->getRepository(User::class)->find($receiverId);
+        if($sender != null && $receiver != null){
+            $blocks = $this->getDoctrine()->getRepository(UserBlock::class)->findBy(array("blockSender" => $sender, "blockReceiver" => $receiver));
+            if(sizeof($blocks) <= 0){
+                return new JsonResponse(null);
+            }
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(1);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $data = $serializer->normalize($blocks[0]);
+            return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param Request $request
+     * @param $senderId
+     * @param $receiverId
+     * @return Response
+     * @Route("/seif/removeBlock/{senderId}/{receiverId}", name="seif_removeBlock")
+     */
+    public function removeBlockAction(Request $request, $senderId, $receiverId){
+        $sender = $this->getDoctrine()->getRepository(User::class)->find($senderId);
+        $receiver = $this->getDoctrine()->getRepository(User::class)->find($receiverId);
+        if($sender != null && $receiver != null){
+            $blocks = $this->getDoctrine()->getRepository(UserBlock::class)->findBy(array("blockSender" => $sender, "blockReceiver" => $receiver));
+            if(sizeof($blocks) <= 0){
+                return new Response(Response::HTTP_NOT_FOUND);
+            }
+            $this->getDoctrine()->getManager()->remove($blocks[0]);
+            $this->getDoctrine()->getManager()->flush();
+            return new Response(Response::HTTP_OK);
         }
         return new Response(Response::HTTP_NOT_FOUND);
     }

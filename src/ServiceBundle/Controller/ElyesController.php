@@ -3,7 +3,9 @@
 namespace ServiceBundle\Controller;
 
 use BaseBundle\Entity\Comment;
+use BaseBundle\Entity\Enumerations\PostType;
 use BaseBundle\Entity\Message;
+use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
 use BaseBundle\Entity\Thread;
 use BaseBundle\Entity\User;
@@ -73,6 +75,68 @@ class ElyesController extends Controller  implements ContainerAwareInterface
             ];
             $data[] = $c;
         }
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $data = $serializer->normalize($data);
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/create_comment", name="create_comment")
+     */
+    public function createCommentAction(Request $request){
+        $comment = new Comment();
+        $comment->setSender($this->getDoctrine()->getRepository(User::class)->find($request->get('senderId')));
+        $comment->setContent($request->get('text'));
+        $comment->setDate(new \DateTime());
+        $id = $request->get('postId');
+        $type = $request->get('type');
+        $postId = $id;
+        $photoId = 0;
+        if($type == PostType::Picture){
+            $postId = 0;
+            $photoId = $id;
+        }
+        $comment->setPhotoId($photoId);
+        $comment->setPostId($postId);
+        $this->getDoctrine()->getManager()->persist($comment);
+        $this->getDoctrine()->getManager()->flush();
+        $data = [];
+        $c = [
+            'id' => $comment->getId(),
+            'senderId' => $comment->getSender()->getId(),
+            'photoUrl' => $this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($comment->getSender()),
+            'content' => $comment->getContent()
+        ];
+        $data[] = $c;
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $data = $serializer->normalize($data);
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/create_post", name="create_post_service")
+     */
+    public function createPostAction(Request $request){
+        $post = new Post();
+        $post->setUser($this->getDoctrine()->getRepository(User::class)->find($request->get('userId')));
+        $post->setContent($request->get('text'));
+        $post->setDate(new \DateTime());
+        $this->getDoctrine()->getManager()->persist($post);
+        $this->getDoctrine()->getManager()->flush();
+        $data = [];
+        $p = [
+            'id' => $post->getId(),
+            'type' => PostType::Status,
+            'userId' => $post->getUser()->getId(),
+            'userPhoto' => $this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($post->getUser()),
+            'userName' => $post->getUser()->getFirstName() . ' ' . $post->getUser()->getLastName(),
+            'time' => "Now",
+            'content' => $post->getContent(),
+            'currReaction' => 0,
+            'nbrReaction' => 0,
+            'nbrComment' => 0
+        ];
+        $data[] = $p;
         $serializer = new Serializer([new ObjectNormalizer()]);
         $data = $serializer->normalize($data);
         return new JsonResponse($data);

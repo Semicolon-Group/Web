@@ -14,6 +14,7 @@ use BaseBundle\Entity\User;
 use BaseBundle\Repository\CommentRepository;
 use BaseBundle\Repository\PostReactionRepository;
 use FOS\MessageBundle\Provider\ProviderInterface;
+use MatchBundle\Entity\MatchCard;
 use MatchBundle\Service\MatchCardService;
 use NewsFeedBundle\Service\PostService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -253,6 +254,29 @@ class ElyesController extends Controller  implements ContainerAwareInterface
         $em = $this->getDoctrine()->getManager();
         $em->persist($reaction);
         $em->flush();
+    }
+
+    /**
+     * @Route("/get_cards", name="get_cards_service")
+     */
+    public function getCardsAction(Request $request){
+        $user = $this->getDoctrine()->getRepository(User::class)->find($request->get('id'));
+        $cards = MatchCardService::getMatches($this->getDoctrine(), $user, null, "service");
+        $data = [];
+        foreach ($cards as $card){
+            /** @var MatchCard $card */
+            $c = [
+                'memberId' => $card->getUser()->getId(),
+                'match' => $card->getMatch(),
+                'enemy' => $card->getEnemy(),
+                'name' => $card->getUser()->getFirstname() . ' ' . $card->getUser()->getLastname(),
+                'photoUrl' => $card->getPhoto()
+            ];
+            $data[] = $c;
+        }
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $data = $serializer->normalize($data);
+        return new JsonResponse($data);
     }
 
     /**

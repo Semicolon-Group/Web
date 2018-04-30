@@ -13,6 +13,7 @@ use BaseBundle\Entity\Answer;
 use BaseBundle\Entity\Enumerations\Importance;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\User;
+use BaseBundle\Entity\UserBlock;
 use BaseBundle\Entity\UserLike;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory;
@@ -26,9 +27,10 @@ class MatchCardService
      * @param User $online
      * @param ManagerRegistry $doctrine
      * @param Filter $filter
+     * @param string $source
      * @return array
      */
-    public static function getMatches($doctrine, $online, $filter){
+    public static function getMatches($doctrine, $online, $filter, $source){
 
         /**
          * @param \stdClass
@@ -158,7 +160,31 @@ class MatchCardService
             return $cards;
         }
 
-        $users = $doctrine->getRepository(User::class)->getUsersNotBlocked($online, $doctrine);
+        $notBlocked = $doctrine->getRepository(User::class)->getUsersNotBlocked($online, $doctrine);
+        $blocking = $doctrine->getRepository(User::class)->getUsersBlocking($online, $doctrine);
+        if($source == "service"){
+            $notliked = $doctrine->getRepository(User::class)->getUsersNotLiked($online, $doctrine);
+            $users = [];
+            foreach ($notBlocked as $nb) {
+                /** @var User $nl */
+                /** @var User $nb */
+                foreach ($notliked as $nl){
+                    if($nb->getId() == $nl->getId())
+                        $users [] = $nb;
+                }
+            }
+        }else{
+            $users = $notBlocked;
+        }
+        foreach ($users as $key => $user) {
+            foreach ($blocking as $nb){
+                if($user->getId() == $nb->getId()){
+                    unset($users[$key]);
+                    continue;
+                }
+            }
+        }
+
         $users = FilterService::filter($users, $filter, $online->getAddress());
         $cards = getCards($doctrine, $users, $online);
         return $cards;

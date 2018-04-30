@@ -72,7 +72,15 @@ class InscriptionController extends Controller
         $user->setHeight($request->get('height'));
         $em->persist($user);
         $em->flush();
-        $serializer = new Serializer([new ObjectNormalizer()]);
+
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $serializer = new Serializer(array($normalizer));
+
         $formatted = $serializer->normalize($user);
         return new JsonResponse($formatted);
 

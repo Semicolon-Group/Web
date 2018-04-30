@@ -50,7 +50,15 @@ class UserSignalController extends Controller
         $signal->setReason($reason);
         $em->persist($signal);
         $em->flush();
-        $serializer = new Serializer([new ObjectNormalizer()]);
+
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $serializer = new Serializer(array($normalizer));
+
         $formatted = $serializer->normalize($signal);
         return new JsonResponse($formatted);
 

@@ -41,7 +41,15 @@ class FeedbackController extends Controller
         $feedback->setSender($this->getDoctrine()->getRepository(User::class)->find($id));
         $em->persist($feedback);
         $em->flush();
-        $serializer = new Serializer([new ObjectNormalizer()]);
+
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $serializer = new Serializer(array($normalizer));
+
         $formatted = $serializer->normalize($feedback);
         return new JsonResponse($formatted);
 

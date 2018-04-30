@@ -1,7 +1,20 @@
-service:
-    resource: "@ServiceBundle/Controller/"
+serviceFeedback:
+    resource: "@ServiceBundle/Controller/FeedbackController.php"
     type:     annotation
-    prefix:   /service
+    prefix:   /service/feed
+
+serviceSignal:
+    resource: "@ServiceBundle/Controller/UserSignalController.php"
+    type:     annotation
+    prefix:   /service/signal
+
+serviceInscription:
+    resource: "@ServiceBundle/Controller/InscriptionController.php"
+    type:     annotation
+    prefix:   /service/inscription
+
+
+
 
 message:
     resource: "@MessageBundle/Resources/config/routing.xml"

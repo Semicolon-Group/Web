@@ -122,7 +122,9 @@ class ElyesController extends Controller  implements ContainerAwareInterface
             /** @var Message $message */
             $c = [
                 'senderId' => $message->getSender()->getId(),
-                'body' => $message->getBody()
+                'body' => $message->getBody(),
+                'id' =>$message->getId()
+
             ];
             $data[] = $c;
         }
@@ -134,6 +136,7 @@ class ElyesController extends Controller  implements ContainerAwareInterface
     /**
      * @Route("/send_message", name="send_message")
      */
+    //
     public function sendMessageAction(Request $request){
         $sender = $this->getDoctrine()->getRepository(User::class)->find($request->get('sender'));
         $receiver = $this->getDoctrine()->getRepository(User::class)->find($request->get('receiver'));
@@ -178,4 +181,46 @@ class ElyesController extends Controller  implements ContainerAwareInterface
     {
         $this->container = $container;
     }
+
+    /**
+     * @Route("get_sff", name="updates")
+     */
+    public function update(Request $request){
+
+            $data = [];
+            $nbr = $request->get('nbr');
+            $participant = $this->getDoctrine()->getRepository(User::class)->find($request->get('Id'));
+            $receiver = $this->getDoctrine()->getRepository(User::class)->find($request->get('receiver'));
+
+        $thread = $this->getThread($receiver,$participant);
+            if($thread != null){
+
+
+
+                $messages = $thread->getMessages();
+
+
+                $count = count($messages);
+                if($count > $nbr){
+                    for($i=$nbr; $i < $count; $i++){
+                        if($messages[$i]->getSender()->getId() != $participant->getId())
+                        {
+                            $c = [
+                                'senderId' => $messages[$i]->getSender()->getId(),
+                                'body' => $messages[$i]->getBody(),
+                                'id'=>$messages[$i]->getId()
+                            ];
+                        $data[] = $c;
+                        }
+                    }
+                }
+            }
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $data = $serializer->normalize($data);
+            return new JsonResponse($data);
+
+    }
+
+
+
 }

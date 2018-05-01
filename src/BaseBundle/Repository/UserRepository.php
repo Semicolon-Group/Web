@@ -50,6 +50,61 @@ class UserRepository extends EntityRepository
         return $result;
     }
 
+    /**
+     * @param $user User
+     * @param $doctrine ManagerRegistry
+     * @return array
+     */
+    public function getUsersBlocking($user, $doctrine)
+    {
+        $result = $this->getEntityManager()->createQuery(
+            "SELECT u FROM BaseBundle:User u JOIN BaseBundle:UserBlock b
+                  WITH u = b.blockReceiver AND :user = b.blockSender"
+        )
+            ->setParameter('user', $user)
+            ->getResult();
+        foreach ($result as $key => $u){
+            /** @var User $u */
+            if(in_array('ROLE_ADMIN', $u->getRoles()) || in_array('ROLE_BUSINESS', $u->getRoles())){
+                unset($result[$key]);
+                continue;
+            }
+            if($doctrine->getRepository(Answer::class)->getAnswerCount($u) < 10){
+                unset($result[$key]);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param $user User
+     * @param $doctrine ManagerRegistry
+     * @return array
+     */
+    public function getUsersNotLiked($user, $doctrine)
+    {
+        $result = $this->getEntityManager()->createQuery(
+            "SELECT u FROM BaseBundle:User u LEFT JOIN BaseBundle:UserLike l
+                  WITH :user = l.likeSender AND u = l.likeReceiver
+                  WHERE l.likeReceiver IS NULL AND u.id != :id AND u.gender != :gender"
+        )
+            ->setParameter('user', $user)
+            ->setParameter('id', $user->getId())
+            ->setParameter('gender', $user->getGender())
+            ->getResult();
+        foreach ($result as $key => $u){
+            /** @var User $u */
+            if(in_array('ROLE_ADMIN', $u->getRoles()) || in_array('ROLE_BUSINESS', $u->getRoles())){
+                unset($result[$key]);
+                continue;
+            }
+            if($doctrine->getRepository(Answer::class)->getAnswerCount($u) < 10){
+                unset($result[$key]);
+            }
+        }
+        return $result;
+    }
+
     public function getCountMaleByMonth(){
         $emConfig = $this->getEntityManager()->getConfiguration();
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');

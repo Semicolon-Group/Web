@@ -19,7 +19,13 @@ class LoginController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->findBy( array('firstname' => $nom,
             'lastname' =>$mdp));
-        $serializer = new Serializer(array(new ObjectNormalizer()));
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(1);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $serializer = new Serializer(array($normalizer));
         $data = $serializer->normalize($user);
         return new JsonResponse($data);
     }

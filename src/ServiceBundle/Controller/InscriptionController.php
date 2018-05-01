@@ -7,6 +7,7 @@
  */
 
 namespace ServiceBundle\Controller;
+use BaseBundle\Entity\Address;
 use BaseBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -70,6 +71,12 @@ class InscriptionController extends Controller
         $user->setRelegionImportance($request->get('relegionImportance'));
         $user->setCivilStatus($request->get('civilStatus'));
         $user->setHeight($request->get('height'));
+        $address = new Address();
+        $address->setCity($request->get("city"));
+        $address->setCountry($request->get("country"));
+        $address->setLatitude($request->get("lat"));
+        $address->setLongitude($request->get("lng"));
+        $user->setAddress($address);
         $em->persist($user);
         $em->flush();
 

@@ -309,6 +309,30 @@ class ElyesController extends Controller  implements ContainerAwareInterface
         $data = $serializer->normalize($data);
         return new JsonResponse($data);
     }
+    /**
+     * @Route("/get_messages2", name="get_messages99")
+     */
+    public function getMessagesAction2(Request $request){
+        $sender = $this->getDoctrine()->getRepository(User::class)->find($request->get('sender'));
+        $receiver = $this->getDoctrine()->getRepository(User::class)->find($request->get('receiver'));
+        $thread = $this->getThread($sender, $receiver);
+        $data = [];
+
+            /** @var Message $message */
+            $c = [
+                'senderId' => $sender->getId(),
+                'receiver'=>$receiver->getId(),
+
+
+                'thread'=>$thread->getId()
+
+            ];
+            $data[] = $c;
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $data = $serializer->normalize($data);
+        return new JsonResponse($data);
+    }
 
     /**
      * @Route("/send_message", name="send_message")

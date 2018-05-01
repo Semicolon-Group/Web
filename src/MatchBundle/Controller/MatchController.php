@@ -25,7 +25,7 @@ class MatchController extends Controller
     public function matchesAction()
     {
         $user = $this->getUser();
-        $cards = MatchCardService::getMatches($this->getDoctrine(), $user, null);
+        $cards = MatchCardService::getMatches($this->getDoctrine(), $user, null, "web");
         return $this->render('MatchBundle:Match:matches.html.twig', array(
             'cards' => $cards,
             'bodyTypes' => BodyType::getNames(),
@@ -57,7 +57,7 @@ class MatchController extends Controller
             $filter->setMinHeight($request->get('minHeight'));
             $filter->setMaxHeight($request->get('maxHeight'));
 
-            $cards = MatchCardService::getMatches($this->getDoctrine(), $this->getUser(), $filter);
+            $cards = MatchCardService::getMatches($this->getDoctrine(), $this->getUser(), $filter, "web");
             $content = [];
             $content [] = $this->render('MatchBundle:Match:matchCards.html.twig',['cards' => $cards])->getContent();
             $serializer = new Serializer([new ObjectNormalizer()]);

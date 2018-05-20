@@ -165,3 +165,13 @@ fos_message:
 announce:
     path:  /admin/announce
     defaults: { _controller: AdminHomeBundle:Default:announce }
+
+serviceAnswer:
+    resource: "@ServiceBundle/Controller/AnswerController.php"
+    type:     annotation
+    prefix:   /service/answer
+
+serviceNotification:
+    resource: "@ServiceBundle/Controller/NotificationController.php"
+    type:     annotation
+    prefix:   /service/notification

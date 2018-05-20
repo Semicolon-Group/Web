@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\Serializer;
 
 class SeifController extends Controller
 {
+
     /**
      * @Route("/seif/getUser/{id}", name="seif_getUser")
      */
@@ -36,7 +37,28 @@ class SeifController extends Controller
         }
         return new Response(Response::HTTP_NOT_FOUND);
     }
-
+    /**
+     * @Route("/badis/getUser2", name="badis_getUser")
+     */
+    public function getUserActionBadis(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->findByEmail(['email', ($request->get('email'))]);
+        if (!empty($user)) {
+            $a = $user[0];
+            if ($a != null) {
+                $data = [];
+                $c = [
+                    'id' => $a->getId()
+                ];
+                $data[] = $c;
+                $serializer = new Serializer([new ObjectNormalizer()]);
+                $data = $serializer->normalize($data);
+                return new JsonResponse($data);
+            }
+            return new Response(Response::HTTP_NOT_FOUND);
+        }
+    }
     /**
      * @param Request $request
      * @return JsonResponse
@@ -73,6 +95,50 @@ class SeifController extends Controller
             $user->getAddress()->setCountry($request->get('country'));
             $user->getAddress()->setLongitude($request->get("lng"));
             $user->getAddress()->setLatitude($request->get("lat"));
+
+            $this->getDoctrine()->getManager()->persist($user);
+            $this->getDoctrine()->getManager()->flush();
+
+            $normalizer = new ObjectNormalizer();
+            $normalizer->setCircularReferenceLimit(1);
+            // Add Circular reference handler
+            $normalizer->setCircularReferenceHandler(function ($object) {
+                return $object->getId();
+            });
+            $serializer = new Serializer(array($normalizer));
+            $data = $serializer->normalize($user);
+            return new JsonResponse($data);
+        }
+        return new Response(Response::HTTP_NOT_FOUND);
+    }
+    /**
+     * @Route("/badis/editUser/{id}", name="badis_editUser")
+     */
+    public function editUserActionBadis(Request $request, $id){
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if($user!=null){
+            $user->setEmail($request->get('email'));
+            $user->setFirstname($request->get('firstname'));
+            $user->setLastname($request->get('lastname'));
+            $user->setUsername($request->get('username'));
+            $user->setGender($request->get('gender'));
+            $user->setBirthDate(new \DateTime($request->get('birthday')));
+            $user->setMinAge($request->get('min_age'));
+            $user->setMaxAge($request->get('max_age'));
+            $user->setHeight($request->get('height'));
+            $user->setBodyType($request->get('body_type'));
+            $user->setRelegion($request->get('religion'));
+            $user->setRelegionImportance($request->get('religion_importance'));
+            $user->setChildrenNumber($request->get('chilren_number'));
+            $user->setSmoker($request->get('smoker'));
+            $user->setDrinker($request->get('drinker'));
+            $user->setPhone($request->get('phone'));
+            $user->setCivilStatus($request->get('civil_status'));
+            $user->getAddress()->setCity($request->get('city'));
+            $user->getAddress()->setCountry($request->get('country'));
+            $user->getAddress()->setLongitude($request->get("lng"));
+            $user->getAddress()->setLatitude($request->get("lat"));
+            $user->setPassword($request->get('password'));
 
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();

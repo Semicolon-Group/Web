@@ -62,14 +62,14 @@ class AdvertRepository extends EntityRepository
             ->setParameter('pos','1')->getSingleScalarResult();
         return $q->createQuery('select m from BaseBundle:Advert m where  m.id>=:rand and m.position=:pos and m.payed=:payed 
           and m.endDate>=CURRENT_TIMESTAMP() ')
-            ->setParameter('rand',rand(0,$max))->setParameter('pos','1')->setParameter('payed','1')
+            ->setParameter('rand',rand(23,$max))->setParameter('pos','1')->setParameter('payed','1')
             ->setMaxResults(1)
             ->getResult();
     }
 
     public function findThisUserPubs($user)
     {
-        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.business=:a ORDER BY m.state')
+        $q=$this->getEntityManager()->createQuery('select m from BaseBundle:Advert m where m.business=:a ORDER BY m.payed ')
             ->setParameter('a',$user);
         return $q->getResult();
 

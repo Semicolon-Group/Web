@@ -1,7 +1,7 @@
 {% extends 'business_base.html.twig' %}
 
 
-{% block title %}PubliciteBundle:Advert:Lister{% endblock %}
+{% block title %}List of adverts{% endblock %}
 {% block stylesheets %}
 
 
@@ -15,7 +15,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">Delete this Advert ?</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -76,7 +76,7 @@
                     <td ><button type="button" class="btn btn-warning" ><i class="fa fa-warning"></i>
                             <a href="{{ path('traiter_business', {'id':m.id}) }}"> Modify </a></button>
 
-                     {% if m.payed==0 and m.state == 1 %}   <button type="button" class="btn btn-success"  id="#paypal-button">
+                     {% if m.payed==0 and m.state == 1 %}   <button type="button" class="btn btn-paypal"  id="#paypal-button">
                             <a href="{{ path('payer_business', {'id':m.id}) }}" > <img src="{{ asset('member_assets/images/Paypal.png') }}">Paypal</a></button>
                         {% else %}<a></a>{% endif %}
                         <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ m.id }})" data-toggle="modal" data-target="#delete_post_modal" ><i class="fa fa-trash-o" ></i> <a >Delete</a>  </button></td>

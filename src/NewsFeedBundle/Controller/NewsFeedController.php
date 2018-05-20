@@ -20,6 +20,34 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use BaseBundle\Entity\Promotion;
+use MongoDB\BSON\Timestamp;
+use PayPal\Api\Amount;
+use PayPal\Api\Details;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\Payment;
+use PayPal\Api\RedirectUrls;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Exception\PayPalConnectionException;
+use PayPal\Rest\ApiContext;
+
+use BaseBundle\Form\AdvertType;
+use PubliciteBundle\Entity\Advert2;
+use PayPal\Api\Transaction;
+use BaseBundle\Entity\Advert;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PubliciteBundle\Repository\AdvertRepository;
+use Symfony\Component\HttpFoundation\Response;
+
+use Swift_Message;
+use Symfony\Component\Validator\Constraints\Date;
 
 class NewsFeedController extends Controller
 {
@@ -348,4 +376,72 @@ class NewsFeedController extends Controller
 
         return $post;
     }
+
+    /**
+     * @Route("/Increment" , name="increment")
+     */
+
+    public function IncrementAction(Request $request)
+    {
+        $id = $request->request->get('id');
+        $advert = new Advert();
+        $repo = $this->getDoctrine()->getRepository(Advert::class);
+        $advert = $repo->IncrementClickDQL($id);
+        $var1 = $this->getDoctrine()->getRepository(Advert::class)->find($id);
+        if ($var1->getClicks() == 50) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
+                    le seuil de 50 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        } else if ($var1->getClicks() == 100) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
+                    le seuil de 100 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        } else if ($var1->getClicks() == 150) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
+                    le seuil de 150 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        } else if ($var1->getClicks() == 200) {
+
+            $message = (new Swift_Message())
+                ->setSubject('MySoulmate | Add approved !')
+                ->setFrom('mysoulmatepi@gmail.com')
+                ->setTo($var1->getBusiness()->getEmail())
+                ->setBody(
+                    "Bonjour Monsieur " . $var1->getBusiness()->getFirstName() . " , Votre Publicité : " . $var1->getContent() . " vient d'achever 
+                    le seuil de 250 clicks ! ",
+
+                    'text/html'
+                );
+            $this->get('mailer')->send($message);
+        }
+        return new Response("nice done kid");
+    }
+
 }

@@ -75,6 +75,7 @@ class SeifController extends Controller
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         if($user!=null){
             $user->setEmail($request->get('email'));
+            $user->setAbout($request->get('about'));
             $user->setFirstname($request->get('firstname'));
             $user->setLastname($request->get('lastname'));
             $user->setUsername($request->get('username'));

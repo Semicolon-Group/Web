@@ -30,7 +30,7 @@ class AnswerController extends Controller
     /**
      * show answer.
      *
-     * @Route("/allanswer", name="answer_getall")
+     * @Route("/allanswer", name="haithem_answer_getall")
      */
     public function AllAnswerAction()
     {
@@ -43,7 +43,7 @@ class AnswerController extends Controller
     }
 
     /**
-     * @Route("/answers/getQuestion", name="get_question");
+     * @Route("/answers/getQuestion", name="haithem_get_question");
      */
     public function getQuestionAction(Request $request){
         if($request->isXmlHttpRequest()){
@@ -73,7 +73,7 @@ class AnswerController extends Controller
 
 
     /**
-     * @Route("/addanswer", name="add_answer");
+     * @Route("/addanswer", name="haithem_add_answer");
      */
     public function addAnswerAction(Request $request){
 
@@ -102,7 +102,7 @@ class AnswerController extends Controller
     }
 
     /**
-     * @Route("/question",name="question")
+     * @Route("/question",name="haithem_question")
      */
     public function show_queApi()
 
@@ -128,7 +128,7 @@ class AnswerController extends Controller
 
     }
     /**
-     * @Route("/quest",name="quest")
+     * @Route("/quest",name="haithem_quest")
      */
     public function show_queiApi(Request $request)
 
@@ -156,7 +156,7 @@ class AnswerController extends Controller
 
 
     /**
-     * @Route("/new",name="new")
+     * @Route("/new",name="haithem_new")
      */
 
     public function newAction(Request $request)
@@ -185,7 +185,7 @@ class AnswerController extends Controller
 
 
     /**
-     * @Route("/reponse",name="reponse")
+     * @Route("/reponse",name="haithem_reponse")
      */
     public function CommentAction()
 

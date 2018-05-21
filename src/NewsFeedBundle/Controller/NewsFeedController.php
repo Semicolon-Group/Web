@@ -3,8 +3,10 @@
 namespace NewsFeedBundle\Controller;
 
 use BaseBundle\Entity\Comment;
+use BaseBundle\Entity\Enumerations\NotificationType;
 use BaseBundle\Entity\Enumerations\PostType;
 use BaseBundle\Entity\Enumerations\ReactionType;
+use BaseBundle\Entity\Notification;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
 use BaseBundle\Entity\PostReaction;
@@ -91,6 +93,7 @@ class NewsFeedController extends Controller
             $post = new Post;
             $post->setContent($text);
             $post->setUser($user);
+            date_default_timezone_set("Africa/Tunis");
             $post->setDate(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
@@ -230,6 +233,28 @@ class NewsFeedController extends Controller
                 $reaction->setPhotoId($photoId);
 
                 $this->updateReaction($reaction);
+
+                /* Create Notification */
+                $notif = new Notification();
+                $notif->setSender($this->getUser());
+                $notif->setPostId($postId);
+                $notif->setPhotoId($photoId);
+                date_default_timezone_set("Africa/Tunis");
+                $notif->setDate(new \DateTime());
+                $notif->setSeen(false);
+                $notif->setType(NotificationType::Reaction);
+                $notif->setIcon(null);
+                if($postId != 0){
+                    $receiver = $this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser();
+                    $notif->setContent("has reacted to your post.");
+                }
+                else{
+                    $receiver = $this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser();
+                    $notif->setContent("has reacted to your photo.");
+                }
+                $notif->setReceiver($receiver);
+                $this->getDoctrine()->getManager()->persist($notif);
+                $this->getDoctrine()->getManager()->flush();
             }
 
             $post = $this->preparePost($photoId, $postId);
@@ -276,6 +301,7 @@ class NewsFeedController extends Controller
             $comment->setPhotoId($photoId);
             $comment->setPostId($postId);
             $comment->setContent($content);
+            date_default_timezone_set("Africa/Tunis");
             $comment->setDate(new \DateTime());
             $comment->setProfilePhoto($this->getDoctrine()->getRepository(Photo::class)->getProfilePhotoUrl($user));
 
@@ -283,6 +309,27 @@ class NewsFeedController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
+
+            /* Create Notification */
+            $notif = new Notification();
+            $notif->setSender($this->getUser());
+            $notif->setPostId($postId);
+            $notif->setPhotoId($photoId);
+            $notif->setDate(new \DateTime());
+            $notif->setSeen(false);
+            $notif->setType(NotificationType::Comment);
+            $notif->setIcon(null);
+            if($postId != 0){
+                $receiver = $this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser();
+                $notif->setContent("has commented on your post.");
+            }
+            else{
+                $receiver = $this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser();
+                $notif->setContent("has commented on your photo.");
+            }
+            $notif->setReceiver($receiver);
+            $this->getDoctrine()->getManager()->persist($notif);
+            $this->getDoctrine()->getManager()->flush();
 
             $post = $this->preparePost($photoId, $postId);
 

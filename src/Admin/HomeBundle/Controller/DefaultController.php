@@ -27,6 +27,7 @@ class DefaultController extends Controller
         if($request->isXmlHttpRequest()){
             $post = new Post();
             $post->setUser($this->getUser());
+            date_default_timezone_set("Africa/Tunis");
             $post->setDate(new DateTime('now'));
             $post->setContent($request->get('text'));
 

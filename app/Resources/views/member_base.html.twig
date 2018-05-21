@@ -118,6 +118,7 @@
                            <li class="dropdown submenu">
                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                    <img src="{{ asset('member_assets/img/account.png') }}" height="25">
+                                   &nbsp;{{ app.user.firstname ~ ' ' ~ app.user.lastname }}
                                </a>
                                <ul class="dropdown-menu">
                                    <li><a href="{{ path('member_profile') }}">Profile</a></li>

@@ -16,6 +16,7 @@ abstract class NotificationType
     const Reaction = 2;
     const Signal = 3;
     const Feedback = 4;
+    const Comment = 5;
 
     public static function getName($bodyType){
         switch ($bodyType){
@@ -34,6 +35,9 @@ abstract class NotificationType
             case 4:
                 return 'Feedback';
                 break;
+            case 5:
+                return 'Comment';
+                break;
             default:
                 return null;
                 break;
@@ -45,7 +49,8 @@ abstract class NotificationType
             'Like' => 1,
             'Reaction' => 2,
             'Signal' => 3,
-            'Feedback' => 4
+            'Feedback' => 4,
+            'Comment' => 5
         );
     }
 }

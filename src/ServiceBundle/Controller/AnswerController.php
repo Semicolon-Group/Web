@@ -9,6 +9,8 @@
 namespace ServiceBundle\Controller;
 
 use BaseBundle\Entity\Choice;
+use BaseBundle\Entity\Enumerations\Importance;
+use BaseBundle\Entity\Enumerations\Topic;
 use BaseBundle\Entity\Question;
 use Symfony\Bundle\FrameworkBundle\Tests\Fixtures\BaseBundle\BaseBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

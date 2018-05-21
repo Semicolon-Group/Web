@@ -315,6 +315,7 @@ class NewsFeedController extends Controller
             $notif->setSender($this->getUser());
             $notif->setPostId($postId);
             $notif->setPhotoId($photoId);
+            date_default_timezone_set("Africa/Tunis");
             $notif->setDate(new \DateTime());
             $notif->setSeen(false);
             $notif->setType(NotificationType::Comment);

@@ -3,9 +3,11 @@
 namespace ServiceBundle\Controller;
 
 use BaseBundle\Entity\Comment;
+use BaseBundle\Entity\Enumerations\NotificationType;
 use BaseBundle\Entity\Enumerations\PostType;
 use BaseBundle\Entity\Enumerations\ReactionType;
 use BaseBundle\Entity\Message;
+use BaseBundle\Entity\Notification;
 use BaseBundle\Entity\Photo;
 use BaseBundle\Entity\Post;
 use BaseBundle\Entity\PostReaction;
@@ -90,7 +92,8 @@ class ElyesController extends Controller  implements ContainerAwareInterface
      */
     public function createCommentAction(Request $request){
         $comment = new Comment();
-        $comment->setSender($this->getDoctrine()->getRepository(User::class)->find($request->get('senderId')));
+        $user = $this->getDoctrine()->getRepository(User::class)->find($request->get('senderId'));
+        $comment->setSender($user);
         $comment->setContent($request->get('text'));
         $comment->setDate(new \DateTime());
         $id = $request->get('postId');
@@ -105,6 +108,30 @@ class ElyesController extends Controller  implements ContainerAwareInterface
         $comment->setPostId($postId);
         $this->getDoctrine()->getManager()->persist($comment);
         $this->getDoctrine()->getManager()->flush();
+
+        /* Create Notification */
+        $notif = new Notification();
+        $notif->setSender($user);
+        $notif->setPostId($postId);
+        $notif->setPhotoId($photoId);
+        date_default_timezone_set("Africa/Tunis");
+        $notif->setDate(new \DateTime());
+        $notif->setSeen(false);
+        $notif->setType(NotificationType::Comment);
+        $notif->setIcon(null);
+        if($postId != 0){
+            $receiver = $this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser();
+            $notif->setContent("has commented on your post.");
+        }
+        else{
+            $receiver = $this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser();
+            $notif->setContent("has commented on your photo.");
+        }
+        $notif->setReceiver($receiver);
+        $this->getDoctrine()->getManager()->persist($notif);
+        $this->getDoctrine()->getManager()->flush();
+
+
         $data = [];
         $c = [
             'id' => $comment->getId(),
@@ -239,6 +266,28 @@ class ElyesController extends Controller  implements ContainerAwareInterface
             $reaction->setPhotoId($photoId);
 
             $this->updateReaction($reaction);
+
+            /* Create Notification */
+            $notif = new Notification();
+            $notif->setSender($user);
+            $notif->setPostId($postId);
+            $notif->setPhotoId($photoId);
+            date_default_timezone_set("Africa/Tunis");
+            $notif->setDate(new \DateTime());
+            $notif->setSeen(false);
+            $notif->setType(NotificationType::Reaction);
+            $notif->setIcon(null);
+            if($postId != 0){
+                $receiver = $this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser();
+                $notif->setContent("has reacted to your post.");
+            }
+            else{
+                $receiver = $this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser();
+                $notif->setContent("has reacted to your photo.");
+            }
+            $notif->setReceiver($receiver);
+            $this->getDoctrine()->getManager()->persist($notif);
+            $this->getDoctrine()->getManager()->flush();
         }
 
         return new JsonResponse();

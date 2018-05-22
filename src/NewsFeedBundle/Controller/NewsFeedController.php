@@ -60,6 +60,7 @@ class NewsFeedController extends Controller
     {
         /**@var PhotoRepository $repo */
 
+        date_default_timezone_set('Africa/Tunis');
         $user = $this->getUser();
         $posts = PostService::getPosts($this->getDoctrine(), $user);
         $repo = $this->getDoctrine()->getRepository(Photo::class);
@@ -77,7 +78,7 @@ class NewsFeedController extends Controller
             'online' => $user,
             'StatusType' => PostType::Status,
             'PictureType' => PostType::Picture,
-            'adminPost' => $adminPost
+            'adminPost' => $adminPost,
         ));
     }
 

@@ -76,12 +76,12 @@ class MemberController extends Controller
      * @Route("/answer/generate_mandatory", name="generate_mandatory_answer");
      */
     public function getMandatoryQuestions(Request $request){
-        if($request->isXmlHttpRequest()){
+        //if($request->isXmlHttpRequest()){
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $data=null;
             if(sizeof($this->getDoctrine()->getRepository(Answer::class)->getMandatoryAnswers($user))<10){
                 $normalizer = new ObjectNormalizer();
-                $normalizer->setCircularReferenceLimit(2);
+                $normalizer->setCircularReferenceLimit(1);
                 // Add Circular reference handler
                 $normalizer->setCircularReferenceHandler(function ($object) {
                     return $object->getId();
@@ -110,8 +110,8 @@ class MemberController extends Controller
                 }
             }
             return new JsonResponse($data);
-        }
-        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+        //}
+        //return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function getAvailableQuestionCount(){

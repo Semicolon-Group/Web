@@ -21,7 +21,7 @@ class AnswerController extends Controller
      * @Route("/answer/generate", name="generate_answer")
      */
     public function generateAnswerAction(Request $request){
-        if($request->isXmlHttpRequest()){
+        //if($request->isXmlHttpRequest()){
             $normalizer = new ObjectNormalizer();
             $normalizer->setCircularReferenceLimit(2);
             // Add Circular reference handler
@@ -53,17 +53,17 @@ class AnswerController extends Controller
                 $data = null;
             }
             return new JsonResponse($data);
-        }
-        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+        //}
+        //return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * @Route("/answers", name="get_answers");
      */
     public function getAnswersAction(Request $request){
-        if($request->isXmlHttpRequest()){
+        //if($request->isXmlHttpRequest()){
             $normalizer = new ObjectNormalizer();
-            $normalizer->setCircularReferenceLimit(2);
+            $normalizer->setCircularReferenceLimit(1);
             // Add Circular reference handler
             $normalizer->setCircularReferenceHandler(function ($object) {
                 return $object->getId();
@@ -71,6 +71,7 @@ class AnswerController extends Controller
             $serializer = new Serializer(array($normalizer));
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(array('user'=>$user));
+
             if(sizeof($answers)==0){
                 return null;
             }else{
@@ -78,8 +79,8 @@ class AnswerController extends Controller
                 $data = $serializer->normalize($toSend);
                 return new JsonResponse($data);
             }
-        }
-        return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
+        //}
+        //return new Response(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function getAvailableQuestionCount(){

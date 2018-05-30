@@ -237,14 +237,6 @@ class NewsFeedController extends Controller
 
                 /* Create Notification */
                 $notif = new Notification();
-                $notif->setSender($this->getUser());
-                $notif->setPostId($postId);
-                $notif->setPhotoId($photoId);
-                date_default_timezone_set("Africa/Tunis");
-                $notif->setDate(new \DateTime());
-                $notif->setSeen(false);
-                $notif->setType(NotificationType::Reaction);
-                $notif->setIcon(null);
                 if($postId != 0){
                     $receiver = $this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser();
                     $notif->setContent("has reacted to your post.");
@@ -253,9 +245,19 @@ class NewsFeedController extends Controller
                     $receiver = $this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser();
                     $notif->setContent("has reacted to your photo.");
                 }
-                $notif->setReceiver($receiver);
-                $this->getDoctrine()->getManager()->persist($notif);
-                $this->getDoctrine()->getManager()->flush();
+                if($this->getUser()->getId() != $receiver->getId()){
+                    $notif->setSender($this->getUser());
+                    $notif->setPostId($postId);
+                    $notif->setPhotoId($photoId);
+                    date_default_timezone_set("Africa/Tunis");
+                    $notif->setDate(new \DateTime());
+                    $notif->setSeen(false);
+                    $notif->setType(NotificationType::Reaction);
+                    $notif->setIcon(null);
+                    $notif->setReceiver($receiver);
+                    $this->getDoctrine()->getManager()->persist($notif);
+                    $this->getDoctrine()->getManager()->flush();
+                }
             }
 
             $post = $this->preparePost($photoId, $postId);
@@ -313,14 +315,6 @@ class NewsFeedController extends Controller
 
             /* Create Notification */
             $notif = new Notification();
-            $notif->setSender($this->getUser());
-            $notif->setPostId($postId);
-            $notif->setPhotoId($photoId);
-            date_default_timezone_set("Africa/Tunis");
-            $notif->setDate(new \DateTime());
-            $notif->setSeen(false);
-            $notif->setType(NotificationType::Comment);
-            $notif->setIcon(null);
             if($postId != 0){
                 $receiver = $this->getDoctrine()->getRepository(Post::class)->find($postId)->getUser();
                 $notif->setContent("has commented on your post.");
@@ -329,9 +323,19 @@ class NewsFeedController extends Controller
                 $receiver = $this->getDoctrine()->getRepository(Photo::class)->find($photoId)->getUser();
                 $notif->setContent("has commented on your photo.");
             }
-            $notif->setReceiver($receiver);
-            $this->getDoctrine()->getManager()->persist($notif);
-            $this->getDoctrine()->getManager()->flush();
+            if($this->getUser()->getId() != $receiver->getId()){
+                $notif->setSender($this->getUser());
+                $notif->setPostId($postId);
+                $notif->setPhotoId($photoId);
+                date_default_timezone_set("Africa/Tunis");
+                $notif->setDate(new \DateTime());
+                $notif->setSeen(false);
+                $notif->setType(NotificationType::Comment);
+                $notif->setIcon(null);
+                $notif->setReceiver($receiver);
+                $this->getDoctrine()->getManager()->persist($notif);
+                $this->getDoctrine()->getManager()->flush();
+            }
 
             $post = $this->preparePost($photoId, $postId);
 
